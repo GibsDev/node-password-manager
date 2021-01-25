@@ -33,9 +33,6 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 - React?
 - Generate a private key each time the server starts or put it in a config? for JWT signing
 - Token expiration renewal on successful request?
-- Need to create a command line tool for generating config files
-- Come up with JWT body scheme
-- Create a favicon (simple lock icon)
 - Remove all sync functions? (atleast the ones that occur during HTTP requests)
 - Implement password storage functionality
 
