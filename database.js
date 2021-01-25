@@ -23,7 +23,6 @@ database.createUser = (username, password) => {
         salt: encrypted.salt
     };
     writeUsers(users);
-    ensurePasswordFolder();
     createPasswordFile(username);
 };
 
@@ -60,14 +59,16 @@ function writeUsers(users) {
     jsonfile.writeFileSync(userfile, users, { spaces: 4 });
 }
 
-function ensurePasswordFolder() {
+/**
+ * Makes sure there is a password file for the given username
+ * Does not overwrite an existing password file
+ * @param {string} username the username of the owner of the password file
+ */
+function createPasswordFile(username) {
+    let file = passwordDir + '/' + username + '.json';
     if (!fs.existsSync(passwordDir)) {
         fs.mkdirSync(passwordDir);
     }
-}
-
-function createPasswordFile(username) {
-    let file = passwordDir + '/' + username + '.json';
     if (!fs.existsSync(file)) {
         jsonfile.writeFileSync(file, {}, { spaces: 4 });
     }
