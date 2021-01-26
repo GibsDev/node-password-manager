@@ -9,7 +9,7 @@ let cryptography = {};
  * One way hash that will generate a salt
  * @param {string} plaintext the plaintext to be hashed
  * @param {string} salt hex encoded salt string (length 32)
- * @return Object { salt: <salt>, hash: <hash> }
+ * @returns Object { salt: <salt>, hash: <hash> }
  */
 cryptography.hash = (plaintext, salt) => {
     if (salt == undefined) {

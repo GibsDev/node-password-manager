@@ -1,77 +1,103 @@
-const { json } = require('express');
 const jsonfile = require('jsonfile');
 const fs = require('fs');
-const cryptography = require('./cryptography.js');
+const path = require('path');
 
-// User storage file
-const userfile = 'users.json';
-const passwordDir = './passwords';
+const databaseDir = './database';
 
 // For module.exports
 let database = {};
 
 /**
- * Stores the user into the database with a one way password hash
- * @param {string} username username
- * @param {string} password password
+ * Inserts an object into the database
+ * @param {string} node path of the file (.json omitted)
+ * @param {string} key the property of the root json object at which to store the object
+ * @param {object} object the object to be stored
+ * @returns {Promise<void>} that resolves when complete
  */
-database.createUser = (username, password) => {
-    let users = readUsers();
-    let encrypted = cryptography.hash(password);
-    users[username] = {
-        password: encrypted.hash,
-        salt: encrypted.salt
-    };
-    writeUsers(users);
-    createPasswordFile(username);
+database.put = (node, key, object) => {
+    return new Promise((resolve, reject) => {
+        try {
+            let file = path.join(databaseDir, node + '.json');
+            let filepath = path.parse(file);
+            let dir = filepath.dir;
+            
+            console.log(`Put "${key}" in ${file} as:`);
+            console.log(object);
+            
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+            
+            let fileobj = {};
+            if (fs.existsSync(file)) {
+                fileobj = jsonfile.readFileSync(file);
+            }
+            fileobj[key] = object;
+            jsonfile.writeFile(file, fileobj, { spaces: 4 }).then(resolve);
+        } catch (e) {
+            reject(e);
+        }
+    });
 };
 
 /**
- * Checks if the given credentials are valid
- * @param {string} username username
- * @param {string} password password
- * @return {boolean} if the credentials are valid
+ * Retreives an object from the database
+ * @param {string} node the node to get from
+ * @param {string} key the JSON property of the root object
+ * @returns {Promise<object>} the object from the database
  */
-database.verifyUser = (username, password) => {
-    let users = readUsers();
-    let hashedpassword = users[username];
-    let encrypted = cryptography.hash(password, hashedpassword.salt);
-    return users[username].password == encrypted.hash;
+database.get = (node, key) => {
+    return new Promise((resolve, reject) => {
+        let file = path.join(databaseDir, node + '.json');
+        console.log(`Get "${key}" from ${file}:`);
+        jsonfile.readFile(file).then(fileobj => {
+            console.log(fileobj[key]);
+            resolve(fileobj[key]);
+        }).catch(err => reject(err));
+    });
 };
 
 /**
- * Gets the js object of the users.json file.
- * Creates users.json if it doesn't exist
+ * Retreives the all of the contents of a node (whole json object)
+ * @param {string} node the node to be accessed
+ * @returns {Promise<object>} the entire json object from the node file
  */
-function readUsers() {
-    // Create users.json if it does not exist
-    if (!fs.existsSync(userfile)) {
-        writeUsers({});
-    }
-    return jsonfile.readFileSync(userfile);
+database.getNode = (node) => {
+    return new Promise((resolve, reject) => {
+        let file = path.join(databaseDir, node + '.json');
+        console.log(`Get all from ${file}:`);
+        jsonfile.readFile(file).then(fileobj => {
+            resolve(fileobj);
+        }).catch(err => reject(err));
+    });
 }
 
 /**
- * Saves the state of the given object to the users.json file
- * @param {object} users the users json object
+ * @param {string} node the node to be checked
+ * @returns {Promise<void>} resolves if exists
  */
-function writeUsers(users) {
-    jsonfile.writeFileSync(userfile, users, { spaces: 4 });
-}
+database.nodeExists = (node) => {
+    return new Promise((resolve, reject) => {
+        let file = path.join(databaseDir, node + '.json');
+        fs.stat(file, (err, stats) => {
+            if (err) reject(new Error('Node does not exist'));
+            resolve();
+        });
+    });
+};
 
 /**
- * Makes sure there is a password file for the given username
- * Does not overwrite an existing password file
- * @param {string} username the username of the owner of the password file
+ * @param {string} node the node to be checked
+ * @param {string} key the key to be checked
+ * @returns {Promise<void>} resolves if the key exists
  */
-function createPasswordFile(username) {
-    let file = passwordDir + '/' + username + '.json';
-    if (!fs.existsSync(passwordDir)) {
-        fs.mkdirSync(passwordDir);
-    }
-    if (!fs.existsSync(file)) {
-        jsonfile.writeFileSync(file, {}, { spaces: 4 });
-    }
-}
+database.keyExists = (node, key) => {
+    return new Promise((resolve, reject) => {
+        database.get(node, key).then(obj => {
+            if (obj == undefined) reject(new Error('Key does not exist'));
+            resolve();
+        }).catch(err => reject(err));
+    });
+};
 
 module.exports = database;

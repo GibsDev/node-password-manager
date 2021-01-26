@@ -6,7 +6,7 @@ const { JsonWebTokenError, TokenExpiredError } = require('jsonwebtoken');
 const express = require('express');
 const auth = express.Router();
 const cookieParser = require('cookie-parser');
-const database = require('./database.js');
+const users = require('./users.js');
 const crypto = require('crypto');
 
 // Generate a private key for signing JWT tokens each time the server starts
@@ -14,7 +14,7 @@ const privateKey = crypto.randomBytes(16).toString('hex');
 
 // TODO configure this in dotenv
 // Hard coded value for how long tokens last
-const token_time = 10 * 1000; // milliseconds
+const token_time = 60 * 1000; // milliseconds
 
 // The identifier used for storing JWT token in cookies
 const jwtCookieName = 'jwt';
@@ -26,7 +26,7 @@ auth.use(cookieParser());
 auth.post('/login', express.json(), (req, res) => {
     console.log('Logging someone in...');
     console.log(req.body.username);
-    let valid = database.verifyUser(req.body.username, req.body.password);
+    let valid = users.verify(req.body.username, req.body.password);
     if (!valid) {
         res.status(401).send('Invalid login');
         return;
@@ -48,7 +48,7 @@ function authorize(req, res, next) {
     // Default error message
     let errorMessage = 'Unauthorized: No tokens';
 
-    // Check if there is a token specified in the 'Authorization' header
+    // Check JWT in the 'Authorization' header
     let authorization = req.headers.authorization;
     // 'Bearer <token>' (or undefined)
     console.log(`Authorization header: ${authorization}`);

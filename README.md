@@ -31,10 +31,7 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 ## TODO
 
 - React?
-- Generate a private key each time the server starts or put it in a config? for JWT signing
 - Token expiration renewal on successful request?
-- Remove all sync functions? (atleast the ones that occur during HTTP requests)
-- Implement password storage functionality
 
 ## JWT schema
 
@@ -42,7 +39,7 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 - Server sends back JWT with the users username in the payload.
 - Each subsequent request from the client includes the JWT token in the HTTP cookie until it expires
 - On each request the server verifies the JWT token and gets the username of the person sending the request
-- The server now has the ability to serve content specific to that username
+- When the JWT is verified by the server (auth.js) it injects a req.user property so subsequent request processors have access to the user making the request. This way the server now has the ability to serve content specific to that username
 
 ## Resource structure
 ```
@@ -71,27 +68,29 @@ provides:
 
 ## JSON objects and structures
 ```
-User object
+User object (don't store plaintext passwords)
 {
     username: <username>,
-    password: <password>
+    password: {
+        salt: <salt>,
+        hash: <hash>
+    }
 }
-
 
 Password object
 {
     name: <password name>
-    user: <login username>,
-    pass: <login password>,
+    username: <login username>,
+    password: <login password>,
     info: <public info>,
     pinfo: <private information>
 }
 
-Encrypted password object
+Encrypted Password object
 {
     name: <name of the password>,
-    user: <encrypted string>,
-    pass: <encrypted string>,
+    username: <encrypted string>,
+    password: <encrypted string>,
     info: <some unencrypted string about this password>,
     pinfo: <encrypted string about this password>,
     iv: <initialization vector string>
@@ -103,30 +102,41 @@ Encrypted password object
 
 File structure:
 ```
-users.json
-/passwords
-    <user1>.json
-    <user2>.json
+database.js
+
+/database
+    users.json
+    /passwords
+        <user1>.json
+        <user2>.json
 ```
 
-`users.json`
+`/database/users.json`
 ```
 {
     <username1>: {
-        salt: <salt>,
-        password: <hash>
+        password: <hash>,
+        salt: <salt>
     },
     <username2>: {
-        salt: <salt>,
-        password: <hash>
+        password: <hash>,
+        salt: <salt>
     },
     ...
 }
 ```
 
-`/passwords/<exampleuser>.json`
+`/database/passwords/<exampleuser>.json`
 ```
 {
-    <id1>: <encrypted password object>
+    "<name>": {
+        "name": "<name>",
+        "username": "<encrypted hex string>",
+        "password": "<encrypted hex string>",
+        "info": "<some plaintext info>",
+        "pinfo": "<encrypted hex string>",
+        "iv": "<hex string>"
+    },
+    ...
 }
 ```
