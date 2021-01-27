@@ -1,6 +1,7 @@
 const jsonfile = require('jsonfile');
 const fs = require('fs');
 const path = require('path');
+const util = require('util');
 
 const databaseDir = './database';
 
@@ -14,31 +15,44 @@ let database = {};
  * @param {object} object the object to be stored
  * @returns {Promise<void>} that resolves when complete
  */
-database.put = (node, key, object) => {
-    return new Promise((resolve, reject) => {
+database.put = async (node, key, object) => {
+    return new Promise(async (resolve, reject) => {
+        let file = path.join(databaseDir, node + '.json');
+        let filepath = path.parse(file);
+        let dir = filepath.dir;
+
+        console.log(`Put "${key}" in ${file} as:`);
+        console.log(object);
+
+        const stat = util.promisify(fs.stat);
+        const mkdir = util.promisify(fs.mkdir);
+
+        // Check if dir needs to be created
         try {
-            let file = path.join(databaseDir, node + '.json');
-            let filepath = path.parse(file);
-            let dir = filepath.dir;
-            
-            console.log(`Put "${key}" in ${file} as:`);
-            console.log(object);
-            
-            if (!fs.existsSync(dir)) {
-                fs.mkdirSync(dir, { recursive: true });
-            }
-            
-            let fileobj = {};
-            if (fs.existsSync(file)) {
-                fileobj = jsonfile.readFileSync(file);
-            }
-            fileobj[key] = object;
-            jsonfile.writeFile(file, fileobj, { spaces: 4 }).then(resolve);
-        } catch (e) {
-            reject(e);
+            await stat(dir);
+        } catch (err) {
+            if (err.code == 'ENOENT') await mkdir(dir, { recursive: true });
+        }
+        
+        let fileobj = {};
+        
+        // Check if we need to read from an existing file
+        try {
+            await stat(file);
+            fileobj = await jsonfile.readFile(file);
+        } catch (err) {}
+
+        fileobj[key] = object;
+
+        try {
+            await jsonfile.writeFile(file, fileobj, { spaces: 4 });
+            resolve();
+        } catch (err) {
+            reject(err);
         }
     });
 };
+
 
 /**
  * Retreives an object from the database
