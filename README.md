@@ -34,6 +34,17 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 
 ## TODO
 
+- Get webpack
+- Configure babel through webpack.config.js
+- make sure to use node development environment variable 
+- change `dev` script to `start:dev`
+- change `start:dev` script to use webpack instead of babel
+- add development mode flag to `start:dev` script (`NODE_ENV=development node <app.js>`) and make sure to check for it in `webpack.config.js` using `process.env.NODE_ENV`
+- remove `/public` and replace it with /build (change `server.js` to statically serve `/build` instead of `/public`)
+- make sure webpack "builds" all file types we need (html, assets)
+- Do react coding? Profit?
+
+
 - Frontend
 - Token expiration renewal on successful request?
 
