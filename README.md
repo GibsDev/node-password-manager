@@ -5,6 +5,10 @@ When Firefox receives a Set-Cookie header from an XMLHttpRequest, it DOES set th
 
 AES256 requires specific initialization vector (128 bit) and key (256 bit) lengths.
 
+## React reference
+
+[Add React in One Minute](https://reactjs.org/docs/add-react-to-a-website.html#add-react-in-one-minute)
+
 ## Hosting
 
 In order for the NodeJS server to be visible on shared hosting, you need to setup an .htaccess rewrite rule to proxy traffic from the subdomain to the local NodeJS webserver.
@@ -30,7 +34,7 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 
 ## TODO
 
-- React?
+- Frontend
 - Token expiration renewal on successful request?
 
 ## JWT schema

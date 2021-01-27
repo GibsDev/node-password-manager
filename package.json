@@ -4,7 +4,8 @@
   "description": "A NodeJS password manager server",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx babel src --out-dir ./public/build",
+    "dev": "concurrently -n \"server,babel\" \"nodemon server.js\" \"npx babel src --watch --out-dir ./public/build\"",
     "start": "node server.js"
   },
   "author": "GibsDev",
@@ -15,5 +16,30 @@
     "jsonfile": "^6.1.0",
     "jsonwebtoken": "^8.5.1",
     "prompt": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-react": "^7.12.10",
+    "babel-preset-minify": "^0.5.1",
+    "concurrently": "^5.3.0",
+    "nodemon": "^2.0.7"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "public/*",
+      "database/*",
+      "utilities/*"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react",
+      "minify"
+    ],
+    "comments": false,
+    "sourceMaps": "inline"
   }
 }
