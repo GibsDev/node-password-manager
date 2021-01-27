@@ -15,7 +15,7 @@ let database = {};
  * @param {object} object the object to be stored
  * @returns {Promise<void>} that resolves when complete
  */
-database.put = async (node, key, object) => {
+database.put = (node, key, object) => {
     return new Promise(async (resolve, reject) => {
         let file = path.join(databaseDir, node + '.json');
         let filepath = path.parse(file);
