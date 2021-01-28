@@ -40,8 +40,8 @@ users.create = (username, password) => {
 users.verify = (username, password) => {
     return new Promise((resolve, reject) => {
         database.get(users_db, username).then(dbobj => {
-            let hash = cryptography.hash(password, dbobj.salt);
-            if (dbobj.password == hash) resolve();
+            let hashObj = cryptography.hash(password, dbobj.salt);
+            if (dbobj.password == hashObj.hash) resolve();
             reject(new Error('Password hash did not match'));
         }).catch(err => reject(err));
     });

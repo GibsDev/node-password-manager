@@ -62,6 +62,8 @@ database.put = (node, key, object) => {
  */
 database.get = (node, key) => {
     return new Promise((resolve, reject) => {
+        if (!key) reject(new Error('Node undefined'));
+        if (!key) reject(new Error('Key undefined'));
         let file = path.join(databaseDir, node + '.json');
         console.log(`Get "${key}" from ${file}:`);
         jsonfile.readFile(file).then(fileobj => {

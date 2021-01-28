@@ -4,9 +4,9 @@
   "description": "A NodeJS password manager server",
   "main": "server.js",
   "scripts": {
-    "build": "npx babel src --out-dir ./public/build",
-    "dev": "concurrently -n \"server,babel\" \"nodemon server.js\" \"npx babel src --watch --out-dir ./public/build\"",
-    "start": "node server.js"
+    "build": "cross-env NODE_ENV=production npx webpack",
+    "start:dev": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"nodemon server.js\"",
+    "start": "npm run build && node server.js"
   },
   "author": "GibsDev",
   "license": "MIT",
@@ -22,9 +22,23 @@
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.12.10",
+    "babel-loader": "^8.2.2",
     "babel-preset-minify": "^0.5.1",
+    "bootstrap": "^4.6.0",
     "concurrently": "^5.3.0",
-    "nodemon": "^2.0.7"
+    "cross-env": "^7.0.3",
+    "css-loader": "^5.0.1",
+    "html-loader": "^1.3.2",
+    "jquery": "^3.5.1",
+    "nodemon": "^2.0.7",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-loader": "^2.4.7",
+    "sass": "^1.32.5",
+    "sass-loader": "^10.1.1",
+    "style-loader": "^2.0.0",
+    "webpack": "^5.18.0",
+    "webpack-cli": "^4.4.0"
   },
   "nodemonConfig": {
     "ignore": [
@@ -32,14 +46,5 @@
       "database/*",
       "utilities/*"
     ]
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-react",
-      "minify"
-    ],
-    "comments": false,
-    "sourceMaps": "inline"
   }
 }

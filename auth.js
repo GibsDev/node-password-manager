@@ -26,14 +26,16 @@ auth.use(cookieParser());
 auth.post('/login', express.json(), (req, res) => {
     console.log('Logging someone in...');
     console.log(req.body.username);
-    let valid = users.verify(req.body.username, req.body.password);
-    if (!valid) {
+    users.verify(req.body.username, req.body.password).then(() => {
+        let token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: token_time });
+        res.cookie(jwtCookieName, token, { maxAge: token_time });
+        res.type('application/json');
+        res.send(JSON.stringify({ token: token }));
+    }).catch((err) => {
+        console.log(err);
         res.status(401).send('Invalid login');
         return;
-    }
-    let token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: token_time });
-    res.cookie(jwtCookieName, token, { maxAge: token_time });
-    res.send(token);
+    });
 });
 
 /**
