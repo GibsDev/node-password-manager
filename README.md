@@ -34,7 +34,9 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 
 ## TODO
 
+- Setup git hooks so that we always build production code before comitting
 - Webpack is warning bundle is bigger than recommended for production. One possible solution is adding `externals` for jquery and react
+- Filter out more files for webpack watch (package.json)
 
 
 - Frontend
