@@ -32,6 +32,40 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 
 ```
 
+## `package.json` scripts
+
+### `build`
+
+`cross-env NODE_ENV=production npx webpack`
+
+Builds the production frontend
+NODE_ENV is an environment variable that node recognizes. Packages like webpack are also aware of it.
+`cross-env` gives cross platform syntax consistency for setting environment variables
+
+### `start`
+
+`node server.js`
+
+Starts server.js
+
+### `githooks`
+
+`git config core.hooksPath .githooks`
+
+Configures git to use the `.githooks` directory for git hooks. Git hooks are normally stores in the .git directory and are not comitted with the project. We need a place to store them in the project, and this tells git where to find them.
+
+The custom `pre-commit` githook is used to do a production build before comitting. This ensures the repo has production ready code already in it so anyone who downlods the project can run it without needing to install dev dependencies first.
+
+### `start:dev`
+
+`npm run githooks && concurrently -n "webpack,server" "cross-env NODE_ENV=development npx webpack" "cross-env NODE_ENV=development nodemon server.js"`
+
+Registers the githook script in the case a developer makes changes that need to be built for production.
+
+Starts the server using nodemon for auto restarts on crashes and changes.
+
+Starts webpack (it will default to watch mode because of the development flag)
+
 ## TODO
 
 - Webpack is warning bundle is bigger than recommended for production. One possible solution is adding `externals` for jquery and react
