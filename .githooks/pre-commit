@@ -1,5 +1,8 @@
 #!/bin/sh
 # Make sure we build production code before comitting!
+echo "Building production code before comitting..."
 npm run build
+
+echo "Re adding intended commit files"
 git add $(git diff --name-only --cached)
 
