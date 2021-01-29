@@ -12,10 +12,6 @@ let babelPresets = [
     "@babel/preset-react"
 ];
 
-if (IS_PRODUCTION) {
-    babelPresets.unshift("minify");
-}
-
 module.exports = {
     mode: MODE,
     watch: IS_DEVELOPMENT,
@@ -32,8 +28,7 @@ module.exports = {
                 exclude: /node_modules/,
                 options: {
                     presets: babelPresets,
-                    comments: IS_DEVELOPMENT,
-                    //sourceMaps: "inline"
+                    comments: IS_DEVELOPMENT
                 }
             },
             {
