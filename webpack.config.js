@@ -1,4 +1,5 @@
 const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const PRODUCTION = "production";
 const DEVELOPMENT = "development";
@@ -12,7 +13,7 @@ let babelPresets = [
 ];
 
 if (IS_PRODUCTION) {
-    babelPresets.push("minify");
+    babelPresets.unshift("minify");
 }
 
 module.exports = {
@@ -20,31 +21,36 @@ module.exports = {
     watch: IS_DEVELOPMENT,
     entry: './src/main.jsx',
     output: {
-        path: path.resolve(__dirname, "public"),
+        path: path.resolve(__dirname, "public/dist"),
         filename: 'bundle.js'
     },
     module: {
         rules: [
             {
-                test: /\.jsx$/,
+                test: /\.jsx?$/,
                 loader: "babel-loader",
+                exclude: /node_modules/,
                 options: {
                     presets: babelPresets,
                     comments: IS_DEVELOPMENT,
-                    sourceMaps: "inline"
+                    //sourceMaps: "inline"
                 }
             },
             {
                 test: /\.s[ac]ss$/i,
                 use: [
-                  // Creates `style` nodes from JS strings
-                  "style-loader",
-                  // Translates CSS into CommonJS
-                  "css-loader",
-                  // Compiles Sass to CSS
-                  "sass-loader",
+                    MiniCssExtractPlugin.loader,
+                    // Translates CSS into CommonJS
+                    { loader: 'css-loader', options: { sourceMap: true, import: false } },
+                    // Compiles Sass to CSS
+                    { loader: 'sass-loader', options: { sourceMap: true } },
                 ],
             },
         ]
-    }
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: "style.css"
+        })
+    ]
 };

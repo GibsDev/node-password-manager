@@ -33,7 +33,6 @@ class LoginForm extends React.Component {
     }
 
     submit() {
-        console.log();
         let loginData = {
             username: this.username,
             password: this.password

@@ -34,8 +34,7 @@ RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
 
 ## TODO
 
-- Webpack is compiling everything into a single js file. It would be much better to be able to separate CSS from the js
-- Configure webpack to turn sass into proper css files
+- Webpack is warning bundle is bigger than recommended for production. One possible solution is adding `externals` for jquery and react
 
 
 - Frontend
