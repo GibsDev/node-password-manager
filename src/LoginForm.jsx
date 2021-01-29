@@ -7,16 +7,13 @@ class LoginForm extends React.Component {
         super()
         this.username = '';
         this.password = '';
-        this.userChanged = this.userChanged.bind(this);
-        this.passChanged = this.passChanged.bind(this);
-        this.submit = this.submit.bind(this);
     }
 
-    userChanged(event) {
+    userChanged = (event) => {
         this.username = event.target.value;
     }
     
-    passChanged(event) {
+    passChanged = (event) => {
         this.password = event.target.value;
     }
 
@@ -32,7 +29,7 @@ class LoginForm extends React.Component {
         );
     }
 
-    submit() {
+    submit = () => {
         let loginData = {
             username: this.username,
             password: this.password

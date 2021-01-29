@@ -7,11 +7,6 @@ const MODE = process.env.NODE_ENV || PRODUCTION;
 const IS_PRODUCTION = MODE === PRODUCTION;
 const IS_DEVELOPMENT = MODE === DEVELOPMENT;
 
-let babelPresets = [
-    "@babel/preset-env",
-    "@babel/preset-react"
-];
-
 module.exports = {
     mode: MODE,
     watch: IS_DEVELOPMENT,
@@ -27,7 +22,13 @@ module.exports = {
                 loader: "babel-loader",
                 exclude: /node_modules/,
                 options: {
-                    presets: babelPresets,
+                    presets: [
+                        "@babel/preset-env",
+                        "@babel/preset-react"
+                    ],
+                    plugins: [
+                        "@babel/plugin-proposal-class-properties"
+                    ],
                     comments: IS_DEVELOPMENT
                 }
             },
