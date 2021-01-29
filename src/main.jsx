@@ -7,4 +7,4 @@ const domContainer = document.querySelector('#react_root');
 
 ReactDOM.render(<LoginForm />, domContainer);
 
-console.log('Hello from JSX');
+console.log('Hello from JSX!');
