@@ -1,3 +1,5 @@
 #!/bin/sh
 # Make sure we build production code before comitting!
 npm run build
+git add $(git diff --name-only --cached)
+
