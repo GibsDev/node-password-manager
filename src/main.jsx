@@ -1,7 +1,7 @@
 import './scss/style.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LoginForm from './LoginForm.jsx';
+import LoginForm from './components/LoginForm.jsx';
 
 const domContainer = document.querySelector('#react_root');
 

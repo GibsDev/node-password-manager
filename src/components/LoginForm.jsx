@@ -7,6 +7,7 @@ class LoginForm extends React.Component {
         super()
         this.username = '';
         this.password = '';
+        this.tokenListeners = [];
     }
 
     userChanged = (event) => {
@@ -24,7 +25,7 @@ class LoginForm extends React.Component {
                 <input onChange={this.userChanged} type="text" id="username" name="username"/><br/>
                 <label htmlFor="password">Password:</label><br/>
                 <input onChange={this.passChanged} type="password" id="password" name="password"/><br/>
-                <input type="button" value="Submit" onClick={this.submit}/>
+                <input type="button" value="Login" onClick={this.submit}/>
             </form>
         );
     }
@@ -42,12 +43,19 @@ class LoginForm extends React.Component {
             data: JSON.stringify(loginData),
             success: (data) => {
                 console.log(data);
+                for (let tokenListener of this.tokenListeners) {
+                    tokenListener(data.token);
+                }
             }
         };
         
         $.ajax(options);
 
         console.log('Submitted!');
+    }
+
+    addTokenListener = (func) => {
+        this.tokenListeners.push(func);
     }
 }
 
