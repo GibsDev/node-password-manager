@@ -81,9 +81,16 @@ function authorize(req, res, next) {
         }
     }
 
-    res.status(401);
-    // TODO check if client can accept redirect and send redirect
-    res.send(errorMessage);
+    if (req.accepts('html')) {
+        // TODO redirect to login
+        res.redirect('/login');
+    } else {
+        
+        res.status(401);
+        // TODO check if client can accept redirect and send redirect
+        res.send(errorMessage);
+    }
+
 }
 auth.use(authorize);
 

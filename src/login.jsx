@@ -9,5 +9,5 @@ let loginForm = new LoginForm();
 ReactDOM.render(loginForm.render(), domContainer);
 
 loginForm.addTokenListener(token => {
-    console.log(`Token: ${token}`);
+    window.location.href = '/';
 });

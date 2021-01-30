@@ -1,7 +1,6 @@
 const path = require('path');
 const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PRODUCTION = "production";
 const DEVELOPMENT = "development";
@@ -9,35 +8,15 @@ const MODE = process.env.NODE_ENV || PRODUCTION;
 const IS_PRODUCTION = MODE === PRODUCTION;
 const IS_DEVELOPMENT = MODE === DEVELOPMENT;
 
-const htmlFiles = [];
-
-// Get all html files in ./src
-fs.readdirSync(path.resolve(__dirname, "src")).forEach( file => {
-    if (file.endsWith('.html')) {
-        htmlFiles.push(file.substring(0, file.length - 5));
-    }
-});
-
-const htmlWebpackPlugins = [];
-const htmlEntry = {};
-
-for (let name of htmlFiles) {
-    htmlEntry[name] = `./src/${name}.jsx`;
-    htmlWebpackPlugins.push(
-        new HtmlWebpackPlugin({
-            filename: `${name}.html`,
-            template: `./src/${name}.html`,
-            chunks: [name]
-        })
-    );
-}
-
 module.exports = {
     mode: MODE,
     watch: IS_DEVELOPMENT,
-    entry: htmlEntry,
+    entry: {
+        index: './src/index.jsx',
+        login: './src/login.jsx'
+    },
     output: {
-        path: path.resolve(__dirname, "public")
+        path: path.resolve(__dirname, "public/dist")
     },
     module: {
         rules: [
@@ -72,5 +51,5 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "style.css"
         })
-    ].concat(htmlWebpackPlugins)
+    ]
 };
