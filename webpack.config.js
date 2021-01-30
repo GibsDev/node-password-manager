@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -8,12 +9,19 @@ const MODE = process.env.NODE_ENV || PRODUCTION;
 const IS_PRODUCTION = MODE === PRODUCTION;
 const IS_DEVELOPMENT = MODE === DEVELOPMENT;
 
-const HTML_FILES = ['index', 'login'];
+const htmlFiles = [];
 
-let htmlWebpackPlugins = [];
-let htmlEntry = {};
+// Get all html files in ./src
+fs.readdirSync(path.resolve(__dirname, "src")).forEach( file => {
+    if (file.endsWith('.html')) {
+        htmlFiles.push(file.substring(0, file.length - 5));
+    }
+});
 
-for (let name of HTML_FILES) {
+const htmlWebpackPlugins = [];
+const htmlEntry = {};
+
+for (let name of htmlFiles) {
     htmlEntry[name] = `./src/${name}.jsx`;
     htmlWebpackPlugins.push(
         new HtmlWebpackPlugin({
