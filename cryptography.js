@@ -3,6 +3,7 @@
  */
 const crypto = require('crypto');
 
+// For module.exports
 const cryptography = {};
 
 /**

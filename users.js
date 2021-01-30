@@ -10,6 +10,7 @@ class User {
 	}
 }
 
+// For module.exports
 const users = {};
 
 /**

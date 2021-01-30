@@ -2,27 +2,32 @@
  * Middlware to authorize requests using JWT tokens
  */
 const jwt = require('jsonwebtoken');
-const { JsonWebTokenError, TokenExpiredError } = require('jsonwebtoken');
+const crypto = require('crypto');
 const express = require('express');
-const auth = express.Router();
+const { JsonWebTokenError, TokenExpiredError } = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const users = require('./users.js');
-const crypto = require('crypto');
+
+// For module.exports
+const auth = express.Router();
 
 // Generate a private key for signing JWT tokens each time the server starts
 const privateKey = crypto.randomBytes(16).toString('hex');
 
-// TODO configure this in dotenv
-// Hard coded value for how long tokens last
-const token_time = 60 * 1000; // milliseconds
+// Hard coded value for how long tokens last (milliseconds)
+const token_time = 60 * 1000; // TODO configure this in dotenv
 
 // The identifier used for storing JWT token in cookies
 const jwtCookieName = 'jwt';
 
-// Enable cookie parsing
+/**
+ * Enable cookie parsing
+ */
 auth.use(cookieParser());
 
-// Node for handing out JWT tokens
+/**
+ * Node for handing out JWT tokens
+ */
 auth.post('/login', express.json(), (req, res) => {
 	console.log('Logging someone in...');
 	console.log(req.body.username);

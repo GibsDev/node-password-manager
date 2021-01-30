@@ -12,14 +12,21 @@ function apiRequest (req, res, next) {
 }
 api.use(apiRequest);
 
-// Authenticate the request to the api
+/**
+ * Authenticate the request to the api
+ */
 api.use(auth);
 
-// A secret test resource
-api.get('/secret', (req, res) => {
-	res.send('You are logged in!');
+/**
+ * A test resource from the API
+ */
+api.get('/ping', (req, res) => {
+	res.send('Pong');
 });
 
+/**
+ * Gets a list of all password names (ids)
+ */
 api.get('/passwords', (req, res) => {
 	res.setHeader('Content-Type', 'application/json');
 	passwords.getNames(req.user).then(names => {
@@ -30,6 +37,9 @@ api.get('/passwords', (req, res) => {
 	});
 });
 
+/**
+ * Inserts a password into the manager
+ */
 api.post('/passwords', (req, res) => {
 	// TODO insert password
 });
