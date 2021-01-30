@@ -17,7 +17,7 @@
         "react"
     ],
     "rules": {
-        "semi": ["error", "tab"],
+        "semi": ["error", "always"],
         "indent": ["error", "tab"]
     }
 }
