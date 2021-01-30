@@ -1,12 +1,12 @@
 import './scss/style.scss';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Password from './components/Password.jsx';
+import PasswordList from './components/PasswordList.jsx';
 
 const domContainer = document.querySelector('#react_root');
 
 // TODO list passwords
-let password = new Password();
+let passwords = new PasswordList();
 
-ReactDOM.render(password.render(), domContainer);
+ReactDOM.render(passwords.render(), domContainer);
 
