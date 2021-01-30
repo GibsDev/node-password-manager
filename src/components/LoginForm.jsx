@@ -8,6 +8,8 @@ class LoginForm extends React.Component {
 		this.password = '';
 		this.tokenListeners = [];
 		this.submit = this.submit.bind(this);
+		this.userChanged = this.userChanged.bind(this);
+		this.passChanged = this.passChanged.bind(this);
 		this.addTokenListener = this.addTokenListener.bind(this);
 	}
 
@@ -55,7 +57,7 @@ class LoginForm extends React.Component {
 		console.log('Submitted!');
 	}
 
-	addTokenListener () {
+	addTokenListener (func) {
 		this.tokenListeners.push(func);
 	}
 }

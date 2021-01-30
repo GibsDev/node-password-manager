@@ -9,5 +9,11 @@ const loginForm = new LoginForm();
 ReactDOM.render(loginForm.render(), domContainer);
 
 loginForm.addTokenListener(token => {
-	window.location.href = '/';
+	const url = new URL(window.location.href);
+	const returnurl = url.searchParams.get('returnurl');
+	if (returnurl) {
+		window.location.href = decodeURIComponent(returnurl);
+	} else {
+		window.location.href = '/';
+	}
 });

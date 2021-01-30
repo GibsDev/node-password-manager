@@ -86,7 +86,11 @@ function authorize (req, res, next) {
 	}
 
 	if (req.accepts('html')) {
-		res.redirect('/login');
+		// req.url is relative to where this middlware function is intercepting
+		// req.originalUrl is the full path
+		// Set redirect for after login
+		let redirect = '?returnurl=' + encodeURIComponent(req.originalUrl);
+		res.redirect('/login' + redirect);
 	} else {
 		res.status(401);
 		res.send(errorMessage);
