@@ -1,5 +1,6 @@
 const path = require('path');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const PRODUCTION = "production";
 const DEVELOPMENT = "development";
@@ -7,13 +8,28 @@ const MODE = process.env.NODE_ENV || PRODUCTION;
 const IS_PRODUCTION = MODE === PRODUCTION;
 const IS_DEVELOPMENT = MODE === DEVELOPMENT;
 
+const HTML_FILES = ['index', 'login'];
+
+let htmlWebpackPlugins = [];
+let htmlEntry = {};
+
+for (let name of HTML_FILES) {
+    htmlEntry[name] = `./src/${name}.jsx`;
+    htmlWebpackPlugins.push(
+        new HtmlWebpackPlugin({
+            filename: `${name}.html`,
+            template: `./src/${name}.html`,
+            chunks: [name]
+        })
+    );
+}
+
 module.exports = {
     mode: MODE,
     watch: IS_DEVELOPMENT,
-    entry: './src/main.jsx',
+    entry: htmlEntry,
     output: {
-        path: path.resolve(__dirname, "public/dist"),
-        filename: 'bundle.js'
+        path: path.resolve(__dirname, "public")
     },
     module: {
         rules: [
@@ -48,5 +64,5 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "style.css"
         })
-    ]
+    ].concat(htmlWebpackPlugins)
 };

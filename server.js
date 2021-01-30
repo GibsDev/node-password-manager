@@ -16,7 +16,9 @@ app.use(requestInspector);
 app.use('/api', api);
 
 // Server statis files from public folder
-app.use(express.static('public'));
+app.use(express.static('public', {
+    extensions: ['html']
+}));
 
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
