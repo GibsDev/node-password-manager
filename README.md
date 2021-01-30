@@ -64,7 +64,7 @@ Starts webpack (it will default to watch mode because of the development flag)
 
 Same as start dev, but enables the `--noauth` flag. Every time the server restarts (from nodemon), a new token for JWT encryption is created so this flag makes every request validate automatically in the auth.js router. The username for JWT token will always be `noauth`, and the `req.user` property will also be `noauth`.
 
-In order to have test data while developing, you will need to create a user using `node ./utilities/new-user.js` with the `noauth` username. You will also need to create test passwords using `node ./utilities/new-pass.js` for the `noauth` user.
+In order to have test data while developing, you will need to create a user using `node ./utilities/new-user.js` with the `noauth` username. The password for the `noauth` is never checked so you can make it whatever you want, but it can't be empty. You will also need to create test passwords using `node ./utilities/new-pass.js` for the `noauth` user.
 
 ## TODO
 
