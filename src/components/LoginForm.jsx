@@ -23,17 +23,20 @@ class LoginForm extends React.Component {
 
 	render () {
 		return (
-			<form>
+			<form onSubmit={this.submit}>
 				<label htmlFor="username">Username:</label><br/>
 				<input onChange={this.userChanged} type="text" id="username" name="username"/><br/>
 				<label htmlFor="password">Password:</label><br/>
 				<input onChange={this.passChanged} type="password" id="password" name="password"/><br/>
-				<input type="button" value="Login" onClick={this.submit}/>
+				<input type="submit" value="Login"/>
 			</form>
 		);
 	}
 
-	submit () {
+	submit (event) {
+		// DO NOT POST PARAMS TO URL
+		event.preventDefault();
+		// AJAX username and password
 		const loginData = {
 			username: this.username,
 			password: this.password
