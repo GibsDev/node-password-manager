@@ -29,8 +29,6 @@ app.get('/login', (req, res) => {
 	}
 });
 
-app.get('/passwords', auth);
-
 // Server statis files from public folder
 app.use(express.static('public'));
 
