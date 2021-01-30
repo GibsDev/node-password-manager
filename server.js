@@ -8,9 +8,9 @@ const port = 30000;
 /**
  * A middleware function for inspecting every request to the server
  */
-function requestInspector(req, res, next) {
-    console.log(`\n${req.method} ${req.url}`);
-    next();
+function requestInspector (req, res, next) {
+	console.log(`\n${req.method} ${req.url}`);
+	next();
 }
 app.use(requestInspector);
 
@@ -18,16 +18,16 @@ app.use(requestInspector);
 app.use('/api', api);
 
 app.get('/', auth, (req, res) => {
-    if(req.accepts('html')) {
-        res.sendFile(path.resolve(__dirname, 'index.html'));
-    }
+	if (req.accepts('html')) {
+		res.sendFile(path.resolve(__dirname, 'index.html'));
+	}
 });
 
 app.get('/login', (req, res) => {
-    if(req.accepts('html')) {
-        res.sendFile(path.resolve(__dirname, 'login.html'));
-    }
-})
+	if (req.accepts('html')) {
+		res.sendFile(path.resolve(__dirname, 'login.html'));
+	}
+});
 
 app.get('/passwords', auth);
 
@@ -35,5 +35,5 @@ app.get('/passwords', auth);
 app.use(express.static('public'));
 
 app.listen(port, () => {
-    console.log(`Server listening at http://localhost:${port}`);
+	console.log(`Server listening at http://localhost:${port}`);
 });

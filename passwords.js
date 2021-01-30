@@ -5,44 +5,42 @@ const users = require('./users.js');
 const passwords_db = 'passwords'; // Directory node
 
 class Password {
+	constructor (name, user, pass, info, pinfo, iv) {
+		this.name = name;
+		this.username = user;
+		this.password = pass;
+		this.info = info;
+		this.pinfo = pinfo;
+		if (iv != undefined) {
+			this.iv = iv;
+		}
+	}
 
-    constructor(name, user, pass, info, pinfo, iv) {
-        this.name = name;
-        this.username = user;
-        this.password = pass;
-        this.info = info;
-        this.pinfo = pinfo;
-        if (iv != undefined) {
-            this.iv = iv;
-        }
-    }
+	isEncrypted () {
+		return this.iv != undefined;
+	}
 
-    isEncrypted() {
-        return this.iv != undefined;
-    }
+	encrypt (key) {
+		if (!this.isEncrypted()) {
+			const e_username = cryptography.encrypt(this.username, key);
+			this.iv = e_username.iv;
+			this.username = e_username.ciphertext;
+			this.password = cryptography.encrypt(this.password, key, this.iv).ciphertext;
+			this.pinfo = cryptography.encrypt(this.pinfo, key, this.iv).ciphertext;
+		}
+	}
 
-    encrypt(key) {
-        if (!this.isEncrypted()) {
-            let e_username = cryptography.encrypt(this.username, key);
-            this.iv = e_username.iv;
-            this.username = e_username.ciphertext;
-            this.password = cryptography.encrypt(this.password, key, this.iv).ciphertext;
-            this.pinfo = cryptography.encrypt(this.pinfo, key, this.iv).ciphertext;
-        }
-    }
-
-    decrypt(key) {
-        if (this.isEncrypted()) {
-            this.username = cryptography.decrypt(this.username, key, this.iv);
-            this.password = cryptography.decrypt(this.password, key, this.iv);
-            this.pinfo = cryptography.decrypt(this.pinfo, key, this.iv);
-            delete this.iv;
-        }
-    }
-
+	decrypt (key) {
+		if (this.isEncrypted()) {
+			this.username = cryptography.decrypt(this.username, key, this.iv);
+			this.password = cryptography.decrypt(this.password, key, this.iv);
+			this.pinfo = cryptography.decrypt(this.pinfo, key, this.iv);
+			delete this.iv;
+		}
+	}
 }
 
-let passwords = {};
+const passwords = {};
 
 /**
  * Stores a password for the given (server) username
@@ -56,9 +54,9 @@ let passwords = {};
  * @returns {Promise<void>} when the password is stored
  */
 passwords.put = (username, name, user, pass, info, pinfo, key) => {
-    let password = new Password(name, user, pass, info, pinfo);
-    password.encrypt(key);
-    return database.put(passwords_db + '/' + username, password.name, password);
+	const password = new Password(name, user, pass, info, pinfo);
+	password.encrypt(key);
+	return database.put(passwords_db + '/' + username, password.name, password);
 };
 
 /**
@@ -69,13 +67,13 @@ passwords.put = (username, name, user, pass, info, pinfo, key) => {
  * @returns {Promise} that resolves to the decrypted password
  */
 passwords.get = (username, passwordname, key) => {
-    return new Promise((resolve, reject) => {
-        database.get(passwords_db + '/' + username, passwordname).then(p => {
-            let password = new Password(p.name, p.username, p.password, p.info, p.pinfo, p.iv);
-            password.decrypt(key);
-            resolve(password);
-        }).catch(err => reject(err));
-    });
+	return new Promise((resolve, reject) => {
+		database.get(passwords_db + '/' + username, passwordname).then(p => {
+			const password = new Password(p.name, p.username, p.password, p.info, p.pinfo, p.iv);
+			password.decrypt(key);
+			resolve(password);
+		}).catch(err => reject(err));
+	});
 };
 
 /**
@@ -84,11 +82,11 @@ passwords.get = (username, passwordname, key) => {
  * @returns {Promise} that resolves to an array of password names
  */
 passwords.getNames = (username) => {
-    return new Promise((resolve, reject) => {
-        database.getNode(passwords_db + '/' + username).then(passwords => {
-            resolve(Object.keys(passwords));
-        }).catch(err => reject(err));
-    });
+	return new Promise((resolve, reject) => {
+		database.getNode(passwords_db + '/' + username).then(passwords => {
+			resolve(Object.keys(passwords));
+		}).catch(err => reject(err));
+	});
 };
 
 module.exports = passwords;

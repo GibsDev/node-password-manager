@@ -4,13 +4,13 @@
 const prompt = require('prompt');
 const users = require('../users.js');
 
-prompt.message = "";
+prompt.message = '';
 prompt.start();
 
 prompt.get([
-    { name: 'username', required: true },
-    { name: 'password', required: true, hidden: true }
+	{ name: 'username', required: true },
+	{ name: 'password', required: true, hidden: true }
 ], (err, results) => {
-    users.create(results.username, results.password);
-    console.log('Account created');
+	users.create(results.username, results.password);
+	console.log('Account created');
 });

@@ -4,10 +4,10 @@ import LoginForm from './components/LoginForm.jsx';
 
 const domContainer = document.querySelector('#react_root');
 
-let loginForm = new LoginForm();
+const loginForm = new LoginForm();
 
 ReactDOM.render(loginForm.render(), domContainer);
 
 loginForm.addTokenListener(token => {
-    window.location.href = '/';
+	window.location.href = '/';
 });

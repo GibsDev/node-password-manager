@@ -3,7 +3,7 @@
  */
 const crypto = require('crypto');
 
-let cryptography = {};
+const cryptography = {};
 
 /**
  * One way hash that will generate a salt
@@ -12,16 +12,16 @@ let cryptography = {};
  * @returns Object { salt: <salt>, hash: <hash> }
  */
 cryptography.hash = (plaintext, salt) => {
-    if (salt == undefined) {
-        salt = crypto.randomBytes(16).toString('hex');
-    }
-    let hash = crypto.createHmac('sha512', salt);
-    hash.update(plaintext);
-    let value = hash.digest('hex');
-    return {
-        salt: salt,
-        hash: value
-    };
+	if (salt == undefined) {
+		salt = crypto.randomBytes(16).toString('hex');
+	}
+	const hash = crypto.createHmac('sha512', salt);
+	hash.update(plaintext);
+	const value = hash.digest('hex');
+	return {
+		salt: salt,
+		hash: value
+	};
 };
 
 /**
@@ -30,20 +30,20 @@ cryptography.hash = (plaintext, salt) => {
  * @param {string} iv initialization vector hex encoded string (length 32)
  */
 cryptography.encrypt = (plaintext, key, iv) => {
-    if (iv == undefined) {
-        iv = crypto.randomBytes(16);
-    } else if (typeof iv === 'string') {
-        iv = Buffer.from(iv, 'hex');
-    }
-    // Hash key to 256 bit
-    let hashedkey = crypto.createHash('sha256').update(key).digest();
-    let cipher = crypto.createCipheriv('aes256', hashedkey, iv);
-    cipher.update(plaintext);
-    let ciphertext = cipher.final('hex');
-    return {
-        ciphertext: ciphertext,
-        iv: iv.toString('hex')
-    }
+	if (iv == undefined) {
+		iv = crypto.randomBytes(16);
+	} else if (typeof iv === 'string') {
+		iv = Buffer.from(iv, 'hex');
+	}
+	// Hash key to 256 bit
+	const hashedkey = crypto.createHash('sha256').update(key).digest();
+	const cipher = crypto.createCipheriv('aes256', hashedkey, iv);
+	cipher.update(plaintext);
+	const ciphertext = cipher.final('hex');
+	return {
+		ciphertext: ciphertext,
+		iv: iv.toString('hex')
+	};
 };
 
 /**
@@ -52,11 +52,11 @@ cryptography.encrypt = (plaintext, key, iv) => {
  * @param {string} iv initialzation vector hex encoded string
  */
 cryptography.decrypt = (ciphertext, key, iv) => {
-    // Hash key to 256 bit
-    let hashedkey = crypto.createHash('sha256').update(key).digest();
-    let decipher = crypto.createDecipheriv('aes256', hashedkey, Buffer.from(iv, 'hex'));
-    decipher.update(ciphertext, 'hex');
-    return decipher.final('utf8');
+	// Hash key to 256 bit
+	const hashedkey = crypto.createHash('sha256').update(key).digest();
+	const decipher = crypto.createDecipheriv('aes256', hashedkey, Buffer.from(iv, 'hex'));
+	decipher.update(ciphertext, 'hex');
+	return decipher.final('utf8');
 };
 
 module.exports = cryptography;
