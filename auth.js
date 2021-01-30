@@ -8,6 +8,9 @@ const { JsonWebTokenError, TokenExpiredError } = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const users = require('./users.js');
 
+const NO_AUTH = process.argv.includes('--noauth');
+const AUTH_USERNAME = 'noauth';
+
 // For module.exports
 const auth = express.Router();
 
@@ -15,7 +18,7 @@ const auth = express.Router();
 const privateKey = crypto.randomBytes(16).toString('hex');
 
 // Hard coded value for how long tokens last (milliseconds)
-const token_time = 60 * 1000; // TODO configure this in dotenv
+const TOKEN_TIME = 60 * 1000; // TODO configure this in dotenv
 
 // The identifier used for storing JWT token in cookies
 const jwtCookieName = 'jwt';
@@ -32,8 +35,8 @@ auth.post('/login', express.json(), (req, res) => {
 	console.log('Logging someone in...');
 	console.log(req.body.username);
 	users.verify(req.body.username, req.body.password).then(() => {
-		const token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: token_time });
-		res.cookie(jwtCookieName, token, { maxAge: token_time });
+		const token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: TOKEN_TIME });
+		res.cookie(jwtCookieName, token, { maxAge: TOKEN_TIME });
 		res.type('application/json');
 		res.send(JSON.stringify({ token: token }));
 	}).catch((err) => {
@@ -51,6 +54,12 @@ auth.post('/login', express.json(), (req, res) => {
 function authorize (req, res, next) {
 	console.log(`Authorizing: ${req.url}`);
 
+	if (NO_AUTH) {
+		console.log(`Authorization disabled, req.user = 'noauth'`);
+		req.user = AUTH_USERNAME;
+		return next();
+	}
+
 	// Default error message
 	let errorMessage = 'Unauthorized: No tokens';
 
@@ -62,9 +71,9 @@ function authorize (req, res, next) {
 		const token = authorization.split(' ')[1];
 		// Check validity of token
 		try {
-			validateToken(req, token);
-			next();
-			return;
+			const username = validateToken(token);
+			req.user = username;
+			return next();
 		} catch (err) {
 			errorMessage = 'Authorization header token error: ' + err.message;
 		}
@@ -75,9 +84,9 @@ function authorize (req, res, next) {
 	if (cookieToken) {
 		// Check validity of token
 		try {
-			validateToken(req, cookieToken);
-			next();
-			return;
+			const username = validateToken(token);
+			req.user = username;
+			return next();
 		} catch (err) {
 			errorMessage = 'Cookie token error: ' + err.message;
 			// Remove invalid JWT from cookies;
@@ -102,14 +111,17 @@ auth.use(authorize);
  * Validates a given JWT token
  * @param token The JWT token string to be verified
  * @throws Will throw an error if the token is invalid
+ * @returns The username from the auth token. The user will always be 'noauth' if --noauth enabled
  */
-function validateToken (req, token) {
+function validateToken (token) {
+	if (NO_AUTH) return AUTH_USERNAME;
+
 	try {
 		console.log(`Token: ${token}`);
 		const decoded = jwt.verify(token, privateKey);
 		console.log('Successfullly validated token: ', decoded);
 		// Add the .user object to the req object for future request processors
-		req.user = decoded.username;
+		return decoded.username;
 	} catch (err) {
 		console.log(err);
 		if (err instanceof JsonWebTokenError) {
