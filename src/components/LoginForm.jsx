@@ -1,45 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 const $ = require('jquery');
 
-class LoginForm extends React.Component {
-	constructor () {
-		super();
-		this.username = '';
-		this.password = '';
-		this.tokenListeners = [];
-		this.submit = this.submit.bind(this);
-		this.userChanged = this.userChanged.bind(this);
-		this.passChanged = this.passChanged.bind(this);
-		this.addTokenListener = this.addTokenListener.bind(this);
-	}
+const LoginForm = ({ onToken }) => {
 
-	userChanged (event) {
-		this.username = event.target.value;
-	}
+	// TODO use state?
+	let username = '';
+	let password = '';
 
-	passChanged (event) {
-		this.password = event.target.value;
-	}
+	const userChanged = (event) => {
+		username = event.target.value;
+	};
 
-	render () {
-		return (
-			<form onSubmit={this.submit}>
-				<label htmlFor="username">Username:</label><br/>
-				<input onChange={this.userChanged} type="text" id="username" name="username"/><br/>
-				<label htmlFor="password">Password:</label><br/>
-				<input onChange={this.passChanged} type="password" id="password" name="password"/><br/>
-				<input type="submit" value="Login"/>
-			</form>
-		);
-	}
+	const passChanged = (event) => {
+		password = event.target.value;
+	};
 
-	submit (event) {
+	const submit = (event) => {
 		// DO NOT POST PARAMS TO URL
 		event.preventDefault();
 		// AJAX username and password
 		const loginData = {
-			username: this.username,
-			password: this.password
+			username: username,
+			password: password
 		};
 		const options = {
 			url: 'api/login',
@@ -49,20 +32,28 @@ class LoginForm extends React.Component {
 			data: JSON.stringify(loginData),
 			success: (data) => {
 				console.log(data);
-				for (const tokenListener of this.tokenListeners) {
-					tokenListener(data.token);
-				}
+				onToken(data.token);
 			}
 		};
 
 		$.ajax(options);
 
 		console.log('Submitted!');
-	}
+	};
 
-	addTokenListener (func) {
-		this.tokenListeners.push(func);
-	}
-}
+	return (
+		<form onSubmit={submit}>
+			<label htmlFor="username">Username:</label><br/>
+			<input onChange={userChanged} type="text" id="username" name="username"/><br/>
+			<label htmlFor="password">Password:</label><br/>
+			<input onChange={passChanged} type="password" id="password" name="password"/><br/>
+			<input type="submit" value="Login"/>
+		</form>
+	);
+};
+
+LoginForm.propTypes = {
+	onToken: PropTypes.func
+};
 
 export default LoginForm;

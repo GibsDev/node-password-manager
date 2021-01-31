@@ -4,16 +4,16 @@ import LoginForm from './components/LoginForm.jsx';
 
 const domContainer = document.querySelector('#react_root');
 
-const loginForm = new LoginForm();
-
-ReactDOM.render(loginForm.render(), domContainer);
-
-loginForm.addTokenListener(token => {
-	const url = new URL(window.location.href);
-	const returnurl = url.searchParams.get('returnurl');
-	if (returnurl) {
-		window.location.href = decodeURIComponent(returnurl);
-	} else {
-		window.location.href = '/';
+const loginForm = LoginForm({
+	onToken: token => {
+		const url = new URL(window.location.href);
+		const returnurl = url.searchParams.get('returnurl');
+		if (returnurl) {
+			window.location.href = decodeURIComponent(returnurl);
+		} else {
+			window.location.href = '/';
+		}
 	}
 });
+
+ReactDOM.render(loginForm, domContainer);
