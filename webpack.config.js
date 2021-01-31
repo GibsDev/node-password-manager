@@ -17,7 +17,7 @@ module.exports = {
 		login: './src/login.jsx'
 	},
 	output: {
-		path: path.resolve(__dirname, 'public/dist')
+		path: path.resolve(__dirname, 'public/dist' + ((IS_DEVELOPMENT) ? '-dev' : '') )
 	},
 	module: {
 		rules: [
