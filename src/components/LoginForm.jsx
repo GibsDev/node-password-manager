@@ -1,23 +1,14 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 const $ = require('jquery');
 
 const LoginForm = ({ onToken }) => {
 
-	// TODO use state?
-	let username = '';
-	let password = '';
-
-	const userChanged = (event) => {
-		username = event.target.value;
-	};
-
-	const passChanged = (event) => {
-		password = event.target.value;
-	};
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
 
 	const submit = (event) => {
-		// DO NOT POST PARAMS TO URL
+		// DO NOT POST PARAMS
 		event.preventDefault();
 		// AJAX username and password
 		const loginData = {
@@ -44,9 +35,9 @@ const LoginForm = ({ onToken }) => {
 	return (
 		<form onSubmit={submit}>
 			<label htmlFor="username">Username:</label><br/>
-			<input onChange={userChanged} type="text" id="username" name="username"/><br/>
+			<input value={username} onChange={e => setUsername(e.target.value)} type="text" id="username" name="username"/><br/>
 			<label htmlFor="password">Password:</label><br/>
-			<input onChange={passChanged} type="password" id="password" name="password"/><br/>
+			<input value={password} onChange={e => setPassword(e.target.value)} type="password" id="password" name="password"/><br/>
 			<input type="submit" value="Login"/>
 		</form>
 	);
