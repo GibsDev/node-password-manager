@@ -2,12 +2,12 @@
 	"name": "password-manager",
 	"version": "1.0.0",
 	"description": "A NodeJS password manager server",
-	"main": "server.js",
+	"main": "./core/server.js",
 	"scripts": {
 		"build": "cross-env NODE_ENV=production npx webpack",
-		"start:dev": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon server.js\"",
-		"start:dev:noauth": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon server.js --noauth\"",
-		"start": "node server.js"
+		"start:dev": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js\"",
+		"start:dev:noauth": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js --noauth\"",
+		"start": "node ./core/server.js"
 	},
 	"author": "GibsDev",
 	"license": "MIT",

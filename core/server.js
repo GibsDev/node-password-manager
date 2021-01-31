@@ -42,7 +42,7 @@ const getDevHTML = async (filename) => {
  */
 app.get('/', auth, async (req, res) => {
 	if (req.accepts('html')) {
-		const file = path.resolve(__dirname, 'pages/index.html');
+		const file = path.resolve(__dirname, '../pages/index.html');
 		if (IS_DEVELOPMENT) {
 			return res.send(await getDevHTML(file));
 		}
@@ -55,7 +55,7 @@ app.get('/', auth, async (req, res) => {
  */
 app.get('/login', async (req, res) => {
 	if (req.accepts('html')) {
-		const file = path.resolve(__dirname, 'pages/login.html');
+		const file = path.resolve(__dirname, '../pages/login.html');
 		if (IS_DEVELOPMENT) {
 			return res.send(await getDevHTML(file));
 		}
@@ -66,7 +66,7 @@ app.get('/login', async (req, res) => {
 /**
  * Servers static content at the root node (/)
  */
-app.use(express.static('public'));
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 /**
  * Start the server

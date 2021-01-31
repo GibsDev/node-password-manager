@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
-const databaseDir = './database';
+const databaseDir = '../database';
 
 // For module.exports
 const database = {};
@@ -17,7 +17,7 @@ const database = {};
  */
 database.put = (node, key, object) => {
 	return new Promise(async (resolve, reject) => {
-		const file = path.join(databaseDir, node + '.json');
+		const file = path.resolve(__dirname, databaseDir, node + '.json');
 		const filepath = path.parse(file);
 		const dir = filepath.dir;
 
@@ -63,7 +63,7 @@ database.get = (node, key) => {
 	return new Promise((resolve, reject) => {
 		if (!key) reject(new Error('Node undefined'));
 		if (!key) reject(new Error('Key undefined'));
-		const file = path.join(databaseDir, node + '.json');
+		const file = path.resolve(__dirname, databaseDir, node + '.json');
 		console.log(`Get "${key}" from ${file}:`);
 		jsonfile.readFile(file).then(fileobj => {
 			console.log(fileobj[key]);
@@ -79,7 +79,7 @@ database.get = (node, key) => {
  */
 database.getNode = (node) => {
 	return new Promise((resolve, reject) => {
-		const file = path.join(databaseDir, node + '.json');
+		const file = path.resolve(__dirname, databaseDir, node + '.json');
 		console.log(`Get all from ${file}:`);
 		jsonfile.readFile(file).then(fileobj => {
 			resolve(fileobj);
@@ -93,7 +93,7 @@ database.getNode = (node) => {
  */
 database.nodeExists = (node) => {
 	return new Promise((resolve, reject) => {
-		const file = path.join(databaseDir, node + '.json');
+		const file = path.resolve(__dirname, databaseDir, node + '.json');
 		fs.stat(file, (err, stats) => {
 			if (err) reject(new Error('Node does not exist'));
 			resolve();
