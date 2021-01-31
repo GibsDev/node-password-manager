@@ -10,12 +10,12 @@ const Password = ({ password }) => {
 		<div className="card">
 			<div className="card-header">{passwordObject.name}</div>
 			<div className="card-body">
-				<p className="card-text">
+				<pre className="card-text">
 					Username: {passwordObject.username}<br/>
 					Password: {passwordObject.password}<br/>
 					Info: {passwordObject.info}<br/>
 					Private Info: {passwordObject.pinfo}
-				</p>
+				</pre>
 			</div>
 		</div>
 	);

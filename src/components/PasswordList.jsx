@@ -30,7 +30,7 @@ const PasswordList = ({ query }) => {
 	});
 
 	return (
-		<div>
+		<div className="d-flex justify-content-between flex-row flex-wrap">
 			{passwordComps}
 		</div>
 	);
