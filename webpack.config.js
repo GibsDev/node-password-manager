@@ -9,7 +9,7 @@ const IS_PRODUCTION = MODE === PRODUCTION;
 const IS_DEVELOPMENT = MODE === DEVELOPMENT;
 
 module.exports = {
-	devtool : (IS_DEVELOPMENT) ? 'inline-source-map' : undefined,
+	devtool: (IS_DEVELOPMENT) ? 'inline-source-map' : undefined,
 	mode: MODE,
 	watch: IS_DEVELOPMENT,
 	entry: {
@@ -28,7 +28,7 @@ module.exports = {
 				options: {
 					presets: [
 						'@babel/preset-env',
-						'@babel/preset-react'
+						['@babel/preset-react', { runtime: 'automatic' }]
 					],
 					plugins: [
 						'@babel/plugin-proposal-class-properties'
