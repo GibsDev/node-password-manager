@@ -84,10 +84,11 @@ function authorize (req, res, next) {
 	if (cookieToken) {
 		// Check validity of token
 		try {
-			const username = validateToken(token);
+			const username = validateToken(cookieToken);
 			req.user = username;
 			return next();
 		} catch (err) {
+			console.log(err);
 			errorMessage = 'Cookie token error: ' + err.message;
 			// Remove invalid JWT from cookies;
 			res.clearCookie(jwtCookieName);
