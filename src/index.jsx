@@ -1,5 +1,4 @@
 import './scss/style.scss';
-import React from 'react';
 import ReactDOM from 'react-dom';
 //import PasswordList from './components/PasswordList.jsx';
 import Password from './components/Password.jsx';

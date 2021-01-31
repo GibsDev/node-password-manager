@@ -1,4 +1,3 @@
-import React from 'react';
 import Password from './Password.jsx';
 const $ = require('jquery');
 
