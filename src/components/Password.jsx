@@ -1,16 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 const $ = require('jquery');
 
-const Password = (props) => {
-	
+const Password = ({ name, username, password, info, pinfo }) => {
+
+	const [passwordObject, setPasswordObject] = useState({
+		name: name,
+		username: username,
+		password: password,
+		info: info,
+		pinfo: pinfo
+	});
+
 	return (
 		<div className="card">
-			<ul className="list-group list-group-flush">
-				{Object.keys(props).map((propName) => (
-					<li key={propName} className="list-group-item">{propName}: {props[propName]}</li>
-				))}
-			</ul>
+			<div className="card-header">{passwordObject.name}</div>
+			<div className="card-body">
+				<p className="card-text">
+					Username: {passwordObject.username}<br/>
+					Password: {passwordObject.password}<br/>
+					Info: {passwordObject.info}<br/>
+					Private Info: {passwordObject.pinfo}
+				</p>
+			</div>
 		</div>
 	);
 };
