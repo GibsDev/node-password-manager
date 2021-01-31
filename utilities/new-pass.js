@@ -2,7 +2,7 @@
  * Command line utitlity to create an account
  */
 const prompt = require('prompt');
-const passwords = require('../passwords.js');
+const passwords = require('../core/passwords.js');
 
 prompt.message = '';
 prompt.start();
