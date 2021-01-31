@@ -2,15 +2,9 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 const $ = require('jquery');
 
-const Password = ({ name, username, password, info, pinfo }) => {
+const Password = ({ password }) => {
 
-	const [passwordObject, setPasswordObject] = useState({
-		name: name,
-		username: username,
-		password: password,
-		info: info,
-		pinfo: pinfo
-	});
+	const [passwordObject, setPasswordObject] = useState(password);
 
 	return (
 		<div className="card">
@@ -28,11 +22,7 @@ const Password = ({ name, username, password, info, pinfo }) => {
 };
 
 Password.propTypes = {
-	name: PropTypes.string,
-	username: PropTypes.string,
-	password: PropTypes.string,
-	info: PropTypes.string,
-	pinfo: PropTypes.string
+	password: PropTypes.object
 };
 
 export default Password;

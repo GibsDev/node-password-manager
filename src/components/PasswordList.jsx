@@ -1,32 +1,44 @@
 import Password from './Password.jsx';
+import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 const $ = require('jquery');
 
-class PasswordList extends React.Component {
+const PasswordList = ({ query }) => {
 
-	constructor() {
-		super();
-		this.state = {
-			error: null,
-			isLoaded: true,
-			passwords: [new Password(), new Password]
-		};
-	}
+	const [passwords, setPasswords] = useState([]);
 
-	render() {
-		const { error, isLoaded, passwords } = this.state;
-		if (error) {
-			return <div>Error: error.message</div>;
-		} else if (!isLoaded) {
-			return <div>Loading...</div>;
-		}
-		return (
-			<div>
-				<h2>Passwords...:</h2>
-				<p>How do I make a list...?</p>
-			</div>
-		);
-	}
+	// Anytime the query changes
+	useEffect(() => {
+		$.get('/api/passwords', data => {
+			const paddids = data.passwords;
+			const promises = [];
+			const passes = [];
+			paddids.forEach(id => {
+				const get = $.get(`/api/passwords/${id}`, password => {
+					passes.push(password);
+				});
+				promises.push(get);
+			});
+			Promise.all(promises).then(() => {
+				setPasswords(passes);
+			});
+		});
+	}, [query]);
 
-}
+	const passwordComps = passwords.map((password, index) => {
+		return <Password key={index} password={password}/>;
+	});
+
+	return (
+		<div>
+			{passwordComps}
+		</div>
+	);
+
+};
+
+PasswordList.propTypes = {
+	query: PropTypes.string
+};
 
 export default PasswordList;

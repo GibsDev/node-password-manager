@@ -37,6 +37,13 @@ api.get('/passwords', (req, res) => {
 	});
 });
 
+api.get('/passwords/:id', (req, res) => {
+	res.setHeader('Content-Type', 'application/json');
+	passwords.get(req.user, req.params.id).then(password => {
+		return res.send(JSON.stringify(password, null, 4));
+	});
+});
+
 /**
  * Inserts a password into the manager
  */

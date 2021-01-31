@@ -67,10 +67,18 @@ passwords.put = (username, name, user, pass, info, pinfo, key) => {
  * @returns {Promise} that resolves to the decrypted password
  */
 passwords.get = (username, passwordname, key) => {
+	console.log(`Getting password '${passwordname}' for '${username}'`);
 	return new Promise((resolve, reject) => {
 		database.get(passwords_db + '/' + username, passwordname).then(p => {
 			const password = new Password(p.name, p.username, p.password, p.info, p.pinfo, p.iv);
-			password.decrypt(key);
+			if (key) {
+				try {
+					password.decrypt(key);
+				} catch (e) {
+					console.log(e);
+					reject(e);
+				}
+			}
 			resolve(password);
 		}).catch(err => reject(err));
 	});
