@@ -9,6 +9,7 @@ const IS_PRODUCTION = MODE === PRODUCTION;
 const IS_DEVELOPMENT = MODE === DEVELOPMENT;
 
 module.exports = {
+	devtool : (IS_DEVELOPMENT) ? 'inline-source-map' : undefined,
 	mode: MODE,
 	watch: IS_DEVELOPMENT,
 	entry: {
