@@ -28,12 +28,12 @@ api.get('/ping', (req, res) => {
  * Gets a list of all password names (ids)
  */
 api.get('/passwords', (req, res) => {
-	res.setHeader('Content-Type', 'application/json');
 	passwords.getNames(req.user).then(names => {
 		const obj = {
 			passwords: names
 		};
-		res.send(JSON.stringify(obj, null, 4));
+		res.setHeader('Content-Type', 'application/json');
+		return res.send(JSON.stringify(obj, null, 4));
 	});
 });
 
@@ -43,7 +43,7 @@ api.get('/passwords', (req, res) => {
 api.get('/passwords/:id', (req, res) => {
 	const key = req.get('X-API-Key');
 	if (key) {
-		console.log(`POST key '${key}' to /passwords/${req.params.id}`);
+		console.log(`GET key '${key}' from /passwords/${req.params.id}`);
 		passwords.get(req.user, req.params.id, key).then(password => {
 			res.setHeader('Content-Type', 'application/json');
 			return res.send(JSON.stringify(password));
@@ -51,11 +51,20 @@ api.get('/passwords/:id', (req, res) => {
 			console.log('Invalid key');
 			return res.status(403).send('Invalid key');
 		});
+	} else {
+		passwords.get(req.user, req.params.id).then(password => {
+			// Remove encrypted info
+			delete password.user;
+			delete password.password;
+			delete password.pinfo;
+			res.setHeader('Content-Type', 'application/json');
+			return res.send(JSON.stringify(password, null, 4));
+		}).catch(err => {
+			console.log('Could not get password');
+			console.log(err);
+			return res.status(404).send('Invalid key');
+		});
 	}
-	passwords.get(req.user, req.params.id).then(password => {
-		res.setHeader('Content-Type', 'application/json');
-		return res.send(JSON.stringify(password, null, 4));
-	});
 });
 
 /**
