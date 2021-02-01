@@ -1,48 +1,58 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useForm } from '../utils/useForm';
-const $ = require('jquery');
 
-const LoginForm = ({ onToken }) => {
+/**
+ * Gets a username and password
+ */
+const LoginForm = ({ className, onLogin }) => {
 
 	const [fields, formChanged] = useForm({
 		username: '',
 		password: ''
 	});
 
-	const submit = (event) => {
-		// DO NOT POST PARAMS
-		event.preventDefault();
-		// AJAX username and password
-		const options = {
-			url: 'api/login',
-			type: 'POST',
-			contentType: 'application/json; charset=utf-8',
-			dataType: 'json',
-			data: JSON.stringify(fields)
-		};
+	const submit = (e) => {
+		// Do not POST
+		e.preventDefault();
+		// Forward login info
+		if (onLogin) onLogin(fields);
+	};
 
-		$.ajax(options).then(data => {
-			console.log(data);
-			onToken(data.token);
-		});
-
-		console.log('Submitted!');
+	const getRootClassName = () => {
+		const base = "card";
+		if (className){
+			return `${base} ${className}`;
+		}
+		return base;
 	};
 
 	return (
-		<form onSubmit={submit}>
-			<label htmlFor="username">Username:</label><br/>
-			<input value={fields.username} onChange={formChanged} type="text" id="username" name="username"/><br/>
-			<label htmlFor="password">Password:</label><br/>
-			<input value={fields.password} onChange={formChanged} type="password" id="password" name="password"/><br/>
-			<input type="submit" value="Login"/>
+		<form className={getRootClassName()} onSubmit={submit} style={{ width: '20rem' }}>
+			<div className="card-header">
+				<span>Login required</span>
+			</div>
+			<div className="card-body">
+				<div className="input-group mb-1">
+					<div className="input-group-prepend">
+						<span className="input-group-text">Username</span>
+					</div>
+					<input className="form-control" value={fields.username} onChange={formChanged} type="text" id="username" name="username" />
+				</div>
+				<div className="input-group">
+					<div className="input-group-prepend">
+						<span className="input-group-text">Password</span>
+					</div>
+					<input className="form-control" value={fields.password} onChange={formChanged} type="password" id="password" name="password" />
+				</div>
+				<button className="btn btn-primary btn-block mt-2" type="submit">Login</button>
+			</div>
 		</form>
 	);
 };
 
 LoginForm.propTypes = {
-	onToken: PropTypes.func
+	className: PropTypes.string,
+	onLogin: PropTypes.func
 };
 
 export default LoginForm;
