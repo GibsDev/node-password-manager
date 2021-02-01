@@ -33,26 +33,35 @@ const Password = (props) => {
 			console.log(res);
 			setPasswordObject(res);
 			setShowDecrypt(false);
+			setEncrypted(false);
 		}).catch(err => {
 			console.log(err);
 		});
+	};
+
+	const reset = () => {
+		setShowDecrypt(false);
+		setEncrypted(true);
+		const pass = passwordObject;
+		delete pass.username;
+		delete pass.password;
+		delete pass.pinfo;
+		setPasswordObject(pass);
 	};
 
 	const credentials = () => {
 		if (passwordObject.password) {
 			return (
 				<>
-					<PasswordField label="Username" value={passwordObject.username} />
-					<PasswordField label="Password" value={passwordObject.password} />
-					<PasswordField label="Info" value={passwordObject.info} />
-					<PasswordField className="mb-0" label="Private Info" value={passwordObject.pinfo} />
+					<PasswordField className="mb-1" peekable={true} label="Username" value={passwordObject.username} />
+					<PasswordField className="mb-1" peekable={true} label="Password" value={passwordObject.password} />
+					<PasswordField className="mb-1" peekable={true} label="Info" value={passwordObject.info} />
+					<PasswordField className="mb-0" peekable={true} label="Private Info" value={passwordObject.pinfo} />
 				</>
 			);
 		} else {
 			return (
-				<p className="card-text">
-					{passwordObject.info}
-				</p>
+				<PasswordField label="Info" hidden={false} value={passwordObject.info} />
 			);
 		}
 		
@@ -61,7 +70,7 @@ const Password = (props) => {
 	const decryptForm = () => {
 		if (showDecrypt) {
 			return (
-				<form onSubmit={decrypt} className="input-group input-group-sm float-right mt-2">
+				<form onSubmit={decrypt} className="input-group input-group-sm float-right mt-3">
 					<input className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
 					<div className="input-group-append">
 						<button type="submit" className="btn btn-sm btn-primary">Decrypt</button>
@@ -71,11 +80,24 @@ const Password = (props) => {
 		}
 	};
 
+	const unlockButton = () => {
+		const unlockOrCancel = (showDecrypt) ? 'Cancel' : 'Unlock';
+		if (encrypted) {
+			return (
+				<button type="button" className="btn btn-sm btn-primary" onClick={toggleDecrypt}>{unlockOrCancel}</button>
+			);
+		} else {
+			return (
+				<button type="button" className="btn btn-sm btn-primary" onClick={reset}>Lock</button>
+			);
+		}
+	};
+
 	return (
 		<div className={props.className + ' card'}>
 			<div className="card-header d-flex flex-row align-items-center justify-content-end">
-				<p className="mr-auto">{passwordObject.name}</p>
-				<button type="button" className="btn btn-sm btn-outline-light" onClick={toggleDecrypt}>Unlock</button>
+				<p className="mr-auto mb-0">{passwordObject.name}</p>
+				{unlockButton()}
 			</div>
 			<div className="card-body">
 				{credentials()}
