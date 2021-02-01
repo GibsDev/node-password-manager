@@ -19,14 +19,13 @@ const LoginForm = ({ onToken }) => {
 			type: 'POST',
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
-			data: JSON.stringify(fields),
-			success: (data) => {
-				console.log(data);
-				onToken(data.token);
-			}
+			data: JSON.stringify(fields)
 		};
 
-		$.ajax(options);
+		$.ajax(options).then(data => {
+			console.log(data);
+			onToken(data.token);
+		});
 
 		console.log('Submitted!');
 	};
