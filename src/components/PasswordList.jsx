@@ -26,11 +26,11 @@ const PasswordList = ({ query }) => {
 	}, [query]);
 
 	const passwordComps = passwords.map((password, index) => {
-		return <Password key={index} password={password}/>;
+		return <Password className="mb-2" key={index} password={password}/>;
 	});
 
 	return (
-		<div className="d-flex justify-content-between flex-row flex-wrap">
+		<div className="d-flex flex-column">
 			{passwordComps}
 		</div>
 	);
