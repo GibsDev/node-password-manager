@@ -5,8 +5,6 @@ const $ = require('jquery');
 
 const Password = (props) => {
 
-	// TODO make each field peekable and copyable
-
 	const [passwordObject, setPasswordObject] = useState(props.password);
 	const [key, setKey] = useState('');
 	const [showBody, setShowBody] = useState(false);
@@ -73,7 +71,7 @@ const Password = (props) => {
 		if (showDecrypt) {
 			return (
 				<form onSubmit={decrypt} className="input-group input-group-sm float-right mt-3">
-					<input className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
+					<input autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
 					<div className="input-group-append">
 						<button type="submit" className="btn btn-sm btn-primary">Decrypt</button>
 					</div>

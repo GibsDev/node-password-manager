@@ -36,7 +36,7 @@ const LoginForm = ({ className, onLogin }) => {
 					<div className="input-group-prepend">
 						<span className="input-group-text">Username</span>
 					</div>
-					<input className="form-control" value={fields.username} onChange={formChanged} type="text" id="username" name="username" />
+					<input autoCapitalize="off" className="form-control" value={fields.username} onChange={formChanged} type="text" id="username" name="username" />
 				</div>
 				<div className="input-group">
 					<div className="input-group-prepend">
