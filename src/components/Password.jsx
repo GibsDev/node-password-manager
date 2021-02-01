@@ -9,11 +9,13 @@ const Password = (props) => {
 
 	const [passwordObject, setPasswordObject] = useState(props.password);
 	const [key, setKey] = useState('');
+	const [showBody, setShowBody] = useState(false);
 	const [showDecrypt, setShowDecrypt] = useState(false);
 	const [encrypted, setEncrypted] = useState(true);
 
-	const toggleDecrypt = (e) => {
-		setShowDecrypt(!showDecrypt);
+	const unlock = () => {
+		setShowBody(true);
+		setShowDecrypt(true);
 	};
 
 	const decrypt = (e) => {
@@ -39,7 +41,8 @@ const Password = (props) => {
 		});
 	};
 
-	const reset = () => {
+	const lock = () => {
+		setShowBody(false);
 		setShowDecrypt(false);
 		setEncrypted(true);
 		const pass = passwordObject;
@@ -64,7 +67,6 @@ const Password = (props) => {
 				<PasswordField label="Info" hidden={false} value={passwordObject.info} />
 			);
 		}
-		
 	};
 
 	const decryptForm = () => {
@@ -83,14 +85,30 @@ const Password = (props) => {
 	const unlockButton = () => {
 		const unlockOrCancel = (showDecrypt) ? 'Cancel' : 'Unlock';
 		if (encrypted) {
+			if (showDecrypt) {
+				return (
+					<button type="button" className="btn btn-sm btn-primary" onClick={lock}>Cancel</button>
+				);
+			}
 			return (
-				<button type="button" className="btn btn-sm btn-primary" onClick={toggleDecrypt}>{unlockOrCancel}</button>
-			);
-		} else {
-			return (
-				<button type="button" className="btn btn-sm btn-primary" onClick={reset}>Lock</button>
+				<button type="button" className="btn btn-sm btn-primary" onClick={unlock}>Unlock</button>
 			);
 		}
+		return (
+			<button type="button" className="btn btn-sm btn-primary" onClick={lock}>Lock</button>
+		);
+	};
+
+	const cardBody = () => {
+		if (!showBody) {
+			return;
+		}
+		return (
+			<div className="card-body">
+				{credentials()}
+				{decryptForm()}
+			</div>
+		);
 	};
 
 	return (
@@ -99,10 +117,7 @@ const Password = (props) => {
 				<p className="mr-auto mb-0">{passwordObject.name}</p>
 				{unlockButton()}
 			</div>
-			<div className="card-body">
-				{credentials()}
-				{decryptForm()}
-			</div>
+			{cardBody()}
 		</div>
 	);
 };
