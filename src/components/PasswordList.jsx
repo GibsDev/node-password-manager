@@ -1,6 +1,6 @@
 import Password from './Password.jsx';
 import PropTypes from 'prop-types';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 const $ = require('jquery');
 
 const PasswordList = ({ passwords, query }) => {
@@ -16,24 +16,6 @@ const PasswordList = ({ passwords, query }) => {
 			return <Password className="mb-2" key={password.name} password={password} />;
 		});
 	};
-
-	// On load get all passwords
-	useEffect(() => {
-		$.get('/api/passwords', data => {
-			const paddids = data.passwords;
-			const promises = [];
-			const passes = [];
-			paddids.forEach(id => {
-				const get = $.get(`/api/passwords/${id}`, password => {
-					passes.push(password);
-				});
-				promises.push(get);
-			});
-			Promise.all(promises).then(() => {
-				setPasswords(passes);
-			});
-		});
-	}, []);
 
 	return (
 		<>

@@ -5,7 +5,20 @@ const $ = require('jquery');
 
 const domContainer = document.querySelector('#react_root');
 
-// TODO list passwords
+// Get all passwords
+$.get('/api/passwords', data => {
+	const paddids = data.passwords;
+	const promises = [];
+	const passes = [];
+	paddids.forEach(id => {
+		const get = $.get(`/api/passwords/${id}`, password => {
+			passes.push(password);
+		});
+		promises.push(get);
+	});
+	Promise.all(promises).then(() => {
+		let password = <PasswordList query="" passwords={passes}/>;
+		ReactDOM.render(password, domContainer);
+	});
+});
 
-let password = <PasswordList query=""/>;
-ReactDOM.render(password, domContainer);
