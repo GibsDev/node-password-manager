@@ -68,11 +68,17 @@ In order to have test data while developing, you will need to create a user usin
 
 ## TODO
 
-- Frontend
-- Password insert page (and api access)
-- Does auth.js make sense?
-- Token expiration renewal on successful request?
+- Bootstrapify login
+- Logout button for home page
+- Search function for PasswordList (add this within the component?)
+- Play around with password flex display
+- Token renewal on good request
 - Write file sctructure section in README
+- Create another root component to hold password list (add logout button)
+- Create a page for inserting passwords
+
+- Documentation
+- More promise error checking/handling?
 
 ## JWT schema
 
