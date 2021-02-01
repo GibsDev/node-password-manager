@@ -6,7 +6,7 @@ const passwords = require('./passwords.js');
 /**
  * Middleare function to intercept every request made to the API node
  */
-function apiRequest (req, res, next) {
+function apiRequest(req, res, next) {
 	console.log(`API request: ${req.method} ${req.url}`);
 	next();
 }
@@ -37,10 +37,29 @@ api.get('/passwords', (req, res) => {
 	});
 });
 
+/**
+ * Gets a raw password
+ */
 api.get('/passwords/:id', (req, res) => {
-	res.setHeader('Content-Type', 'application/json');
 	passwords.get(req.user, req.params.id).then(password => {
+		res.setHeader('Content-Type', 'application/json');
 		return res.send(JSON.stringify(password, null, 4));
+	});
+});
+
+/**
+ * Posts a key to a password (gets an unencrypted password)
+ */
+api.post('/passwords/:id', express.json(), (req, res) => {
+	console.log(req.body);
+	const key = req.body.key;
+	console.log(`POST key '${key}' to /passwords/${req.params.id}`);
+	passwords.get(req.user, req.params.id, key).then(password => {
+		res.setHeader('Content-Type', 'application/json');
+		return res.send(JSON.stringify(password));
+	}).catch(err => {
+		console.log('Invalid key');
+		return res.status(401).send('Invalid key');
 	});
 });
 
@@ -49,6 +68,7 @@ api.get('/passwords/:id', (req, res) => {
  */
 api.post('/passwords', (req, res) => {
 	// TODO insert password
+	// Let the id be specified by the url? /:id ?
 });
 
 module.exports = api;

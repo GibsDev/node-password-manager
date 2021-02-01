@@ -75,7 +75,7 @@ passwords.get = (username, passwordname, key) => {
 				try {
 					password.decrypt(key);
 				} catch (e) {
-					console.log(e);
+					console.log('Could not decrypt key');
 					reject(e);
 				}
 			}
