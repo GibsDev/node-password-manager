@@ -8,6 +8,10 @@ const MODE = process.env.NODE_ENV || PRODUCTION;
 const IS_PRODUCTION = MODE === PRODUCTION;
 const IS_DEVELOPMENT = MODE === DEVELOPMENT;
 
+
+const distFolderName = 'dist' + ((IS_DEVELOPMENT) ? '-dev' : '') + '/';
+const outputPath = path.resolve(__dirname, 'public/' + distFolderName);
+
 module.exports = {
 	devtool: (IS_DEVELOPMENT) ? 'inline-source-map' : undefined,
 	mode: MODE,
@@ -17,7 +21,8 @@ module.exports = {
 		login: './src/login.jsx'
 	},
 	output: {
-		path: path.resolve(__dirname, 'public/dist' + ((IS_DEVELOPMENT) ? '-dev' : '') )
+		path: outputPath,
+		publicPath: '../' + distFolderName
 	},
 	module: {
 		rules: [
@@ -43,9 +48,20 @@ module.exports = {
 					// Translates CSS into CommonJS
 					{ loader: 'css-loader', options: { sourceMap: true, import: false } },
 					// Compiles Sass to CSS
+					'resolve-url-loader',
 					{ loader: 'sass-loader', options: { sourceMap: true } }
 				]
-			}
+			},
+			{
+				test: /\.(ttf|eot|woff|woff2|svg)$/,
+				use: {
+					loader: 'file-loader',
+					options: {
+						name: '[name].[ext]'
+					},
+				},
+			},
+			
 		]
 	},
 	plugins: [

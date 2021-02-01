@@ -1,3 +1,12 @@
 @import "variables";
 @import "~bootstrap";
 @import "bootswatch";
+
+@font-face {
+	font-family: 'password';
+	src: url('./password.ttf');
+}
+
+input[type="text"].password {
+	font-family: 'password', monospace;
+}
