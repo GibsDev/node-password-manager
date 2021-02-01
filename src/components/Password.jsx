@@ -25,10 +25,12 @@ const Password = ({ password }) => {
 		e.preventDefault();
 		const options = {
 			url: 'api/passwords/' + passwordObject.name,
-			type: 'POST',
+			type: 'GET',
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
-			data: JSON.stringify({key: k})
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader ("X-API-Key", key);
+			}
 		};
 		$.ajax(options).then(res => {
 			console.log(res);

@@ -41,25 +41,20 @@ api.get('/passwords', (req, res) => {
  * Gets a raw password
  */
 api.get('/passwords/:id', (req, res) => {
+	const key = req.get('X-API-Key');
+	if (key) {
+		console.log(`POST key '${key}' to /passwords/${req.params.id}`);
+		passwords.get(req.user, req.params.id, key).then(password => {
+			res.setHeader('Content-Type', 'application/json');
+			return res.send(JSON.stringify(password));
+		}).catch(err => {
+			console.log('Invalid key');
+			return res.status(403).send('Invalid key');
+		});
+	}
 	passwords.get(req.user, req.params.id).then(password => {
 		res.setHeader('Content-Type', 'application/json');
 		return res.send(JSON.stringify(password, null, 4));
-	});
-});
-
-/**
- * Posts a key to a password (gets an unencrypted password)
- */
-api.post('/passwords/:id', express.json(), (req, res) => {
-	console.log(req.body);
-	const key = req.body.key;
-	console.log(`POST key '${key}' to /passwords/${req.params.id}`);
-	passwords.get(req.user, req.params.id, key).then(password => {
-		res.setHeader('Content-Type', 'application/json');
-		return res.send(JSON.stringify(password));
-	}).catch(err => {
-		console.log('Invalid key');
-		return res.status(401).send('Invalid key');
 	});
 });
 
