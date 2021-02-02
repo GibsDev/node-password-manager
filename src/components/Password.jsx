@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PasswordField from './PasswordField.jsx';
 const $ = require('jquery');
@@ -11,10 +11,18 @@ const Password = (props) => {
 	const [showDecrypt, setShowDecrypt] = useState(false);
 	const [encrypted, setEncrypted] = useState(true);
 
+	const decryptField = useRef(null);
+
 	const unlock = () => {
 		setShowBody(true);
 		setShowDecrypt(true);
 	};
+	
+	useEffect(() => {
+		if (showDecrypt) {
+			decryptField.current.focus();
+		}
+	}, [showDecrypt]);
 
 	const decrypt = (e) => {
 		const k = key;
@@ -71,7 +79,7 @@ const Password = (props) => {
 		if (showDecrypt) {
 			return (
 				<form onSubmit={decrypt} className="input-group input-group-sm float-right mt-3">
-					<input autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
+					<input ref={decryptField} autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
 					<div className="input-group-append">
 						<button type="submit" className="btn btn-sm btn-primary">Decrypt</button>
 					</div>
