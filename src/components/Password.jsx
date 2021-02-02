@@ -90,18 +90,18 @@ const Password = (props) => {
 
 	const unlockButton = () => {
 		const unlockOrCancel = (showDecrypt) ? 'Cancel' : 'Unlock';
+		let text = 'Lock';
+		let clickHandler = lock;
 		if (encrypted) {
 			if (showDecrypt) {
-				return (
-					<button type="button" className="btn btn btn-primary" onClick={lock}>Cancel</button>
-				);
+				text = 'Cancel';
+			} else {
+				text = 'Unlock';
+				clickHandler = unlock;
 			}
-			return (
-				<button type="button" className="btn btn btn-primary" onClick={unlock}>Unlock</button>
-			);
 		}
 		return (
-			<button type="button" className="btn btn btn-primary" onClick={lock}>Lock</button>
+			<button type="button" className="btn btn btn-primary ml-4" onClick={clickHandler}>{text}</button>
 		);
 	};
 
