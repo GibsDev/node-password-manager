@@ -68,13 +68,9 @@ In order to have test data while developing, you will need to create a user usin
 
 ## TODO
 
-- Bootstrapify login
 - Logout button for home page
-- Migrate ajax password build out of component?
-- Play around with password flex display
 - Token renewal on good request
 - Write file sctructure section in README
-- Create another root component to hold password list (add logout button)
 - Create a page for inserting passwords
 
 - Documentation
