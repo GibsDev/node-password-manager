@@ -1,5 +1,4 @@
 const path = require('path');
-const fs = require('fs');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const PRODUCTION = 'production';
@@ -18,7 +17,8 @@ module.exports = {
 	watch: IS_DEVELOPMENT,
 	entry: {
 		index: './src/index.jsx',
-		login: './src/login.jsx'
+		login: './src/login.jsx',
+		insert: './src/insert.jsx'
 	},
 	output: {
 		path: outputPath,

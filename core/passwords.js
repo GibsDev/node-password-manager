@@ -54,6 +54,7 @@ const passwords = {};
  * @returns {Promise<void>} when the password is stored
  */
 passwords.put = (username, name, user, pass, info, pinfo, key) => {
+	console.log(`KEY!!! '${key}'.length = ${key.length}`);
 	const password = new Password(name, user, pass, info, pinfo);
 	password.encrypt(key);
 	return database.put(passwords_db + '/' + username, password.name, password);
@@ -67,7 +68,7 @@ passwords.put = (username, name, user, pass, info, pinfo, key) => {
  * @returns {Promise} that resolves to the decrypted password
  */
 passwords.get = (username, passwordname, key) => {
-	console.log(`Getting password '${passwordname}' for '${username}'`);
+	console.log(`Getting password '${passwordname}' for '${username}' with '${key}'`);
 	return new Promise((resolve, reject) => {
 		database.get(passwords_db + '/' + username, passwordname).then(p => {
 			const password = new Password(p.name, p.username, p.password, p.info, p.pinfo, p.iv);

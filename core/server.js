@@ -67,6 +67,19 @@ app.get('/login', async (req, res) => {
 /**
  * Alias for /api/logout (defined in auth.js)
  */
+app.get('/insert', async (req, res) => {
+	if (req.accepts('html')) {
+		const file = path.resolve(__dirname, '../pages/insert.html');
+		if (IS_DEVELOPMENT) {
+			return res.send(await getDevHTML(file));
+		}
+		return res.sendFile(file);
+	}
+});
+
+/**
+ * Alias for /api/logout (defined in auth.js)
+ */
 app.get('/logout', (req, res) => {
 	res.redirect('/api/logout');
 });

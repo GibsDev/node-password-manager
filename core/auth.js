@@ -31,7 +31,7 @@ auth.use(cookieParser);
 /**
  * Node for handing out JWT tokens
  */
-auth.login = auth.post('/login', express.json(), (req, res) => {
+auth.post('/login', express.json(), (req, res) => {
 	console.log(`'${req.body.username}' is attempting to login`);
 	users.verify(req.body.username, req.body.password).then(() => {
 		const token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: TOKEN_TIME });
@@ -47,7 +47,7 @@ auth.login = auth.post('/login', express.json(), (req, res) => {
 /**
  * Used to logout a user
  */
-auth.logout = auth.get('/logout', (req, res) => {
+auth.get('/logout', (req, res) => {
 	try {
 		const username = validateToken(req.cookies[jwtCookieName]);
 		console.log(`'${username}' is logging out`);

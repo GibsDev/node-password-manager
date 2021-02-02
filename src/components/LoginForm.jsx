@@ -29,7 +29,7 @@ const LoginForm = ({ className, onLogin }) => {
 	return (
 		<form className={getRootClassName()} onSubmit={submit} style={{ width: '20rem' }}>
 			<div className="card-header">
-				<span>Login required</span>
+				<strong>Login required</strong>
 			</div>
 			<div className="card-body">
 				<div className="input-group mb-1">

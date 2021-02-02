@@ -48,6 +48,7 @@ api.get('/passwords/:id', (req, res) => {
 			res.setHeader('Content-Type', 'application/json');
 			return res.send(JSON.stringify(password));
 		}).catch(err => {
+			console.log(err);
 			console.log('Invalid key');
 			return res.status(403).send('Invalid key');
 		});
@@ -70,9 +71,19 @@ api.get('/passwords/:id', (req, res) => {
 /**
  * Inserts a password into the manager
  */
-api.post('/passwords', (req, res) => {
-	// TODO insert password
-	// Let the id be specified by the url? /:id ?
+api.post('/passwords', express.json(), (req, res) => {
+	console.log(`'${req.user}' is attempting to insert a password`);
+	const pw = req.body;
+	// In the case the incoming password uses 'username' instead of 'user'
+	if (pw['username']) pw.user = pw['username'];
+	// In the case the incoming password uses 'password' instead of 'pass'
+	if (pw['password']) pw.pass = pw['password'];
+	pw.username = req.user;
+	passwords.put(pw.username, pw.name, pw.user, pw.pass, pw.info, pw.pinfo, pw.key).then(() => {
+		return req.send('Password inserted');
+	}).catch(err => {
+		return res.send(err);
+	});
 });
 
 module.exports = api;
