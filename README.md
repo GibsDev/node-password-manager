@@ -68,10 +68,10 @@ In order to have test data while developing, you will need to create a user usin
 
 ## TODO
 
-- Logout button for home page
 - Token renewal on good request
 - Write file sctructure section in README
 - Create a page for inserting passwords
+- Password component monolith? Should we break it up more? How?
 
 - Documentation
 - More promise error checking/handling?
