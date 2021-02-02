@@ -17,7 +17,7 @@ $.get('/api/passwords', data => {
 		promises.push(get);
 	});
 	Promise.all(promises).then(() => {
-		let password = <PasswordList query="" passwords={passes}/>;
+		let password = <PasswordList query="" passwords={passes} />;
 		ReactDOM.render(password, domContainer);
 	});
 });

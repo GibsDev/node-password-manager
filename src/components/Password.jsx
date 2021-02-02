@@ -26,7 +26,7 @@ const Password = (props) => {
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
 			beforeSend: function (xhr) {
-				xhr.setRequestHeader ("X-API-Key", key);
+				xhr.setRequestHeader("X-API-Key", key);
 			}
 		};
 		$.ajax(options).then(res => {

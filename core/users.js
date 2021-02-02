@@ -4,7 +4,7 @@ const database = require('./database.js');
 const users_db = 'users'; // End node
 
 class User {
-	constructor (username, password) {
+	constructor(username, password) {
 		this.username = username;
 		this.password = cryptography.hash(password);
 	}

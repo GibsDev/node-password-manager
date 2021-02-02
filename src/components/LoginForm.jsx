@@ -20,7 +20,7 @@ const LoginForm = ({ className, onLogin }) => {
 
 	const getRootClassName = () => {
 		const base = "card";
-		if (className){
+		if (className) {
 			return `${base} ${className}`;
 		}
 		return base;

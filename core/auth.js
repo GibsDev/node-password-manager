@@ -51,7 +51,7 @@ auth.post('/login', express.json(), (req, res) => {
  * It also attatches a ['user'] (.user) property to the req object upon successful
  * authorization for downstream request interpretters.
  */
-function authorize (req, res, next) {
+function authorize(req, res, next) {
 	console.log(`Authorizing: ${req.url}`);
 
 	if (NO_AUTH) {
@@ -114,7 +114,7 @@ auth.use(authorize);
  * @throws Will throw an error if the token is invalid
  * @returns The username from the auth token. The user will always be 'noauth' if --noauth enabled
  */
-function validateToken (token) {
+function validateToken(token) {
 	if (NO_AUTH) return AUTH_USERNAME;
 
 	try {

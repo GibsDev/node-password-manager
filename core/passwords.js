@@ -5,7 +5,7 @@ const users = require('./users.js');
 const passwords_db = 'passwords'; // Directory node
 
 class Password {
-	constructor (name, user, pass, info, pinfo, iv) {
+	constructor(name, user, pass, info, pinfo, iv) {
 		this.name = name;
 		this.username = user;
 		this.password = pass;
@@ -16,11 +16,11 @@ class Password {
 		}
 	}
 
-	isEncrypted () {
+	isEncrypted() {
 		return this.iv != undefined;
 	}
 
-	encrypt (key) {
+	encrypt(key) {
 		if (!this.isEncrypted()) {
 			const e_username = cryptography.encrypt(this.username, key);
 			this.iv = e_username.iv;
@@ -30,7 +30,7 @@ class Password {
 		}
 	}
 
-	decrypt (key) {
+	decrypt(key) {
 		if (this.isEncrypted()) {
 			this.username = cryptography.decrypt(this.username, key, this.iv);
 			this.password = cryptography.decrypt(this.password, key, this.iv);

@@ -5,17 +5,17 @@ const COPY_MESSAGE = 'Copied';
 const COPY_FAIL_MESSAGE = 'Copied';
 const HIDDEN_MESSAGE = '<hidden>';
 
-const PasswordField = ({className, label, value, hidden, peekable}) => {
+const PasswordField = ({ className, label, value, hidden, peekable }) => {
 
 	const [isHidden, setHidden] = useState(!(hidden === false));
 	const [isPeekable, setPeekable] = useState(peekable === true);
-	const [inputValue, setValue] = useState((isHidden) ? HIDDEN_MESSAGE : value );
+	const [inputValue, setValue] = useState((isHidden) ? HIDDEN_MESSAGE : value);
 
 	const hide = () => {
 		setHidden(true);
 		setValue(HIDDEN_MESSAGE);
 	};
-	
+
 	const show = () => {
 		setHidden(false);
 		setValue(value);
@@ -41,7 +41,7 @@ const PasswordField = ({className, label, value, hidden, peekable}) => {
 			setTimeout(() => {
 				(isHidden) ? hide() : show();
 			}, 1000);
-		}		
+		}
 	};
 
 	const peekButton = () => {

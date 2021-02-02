@@ -11,7 +11,7 @@ const PasswordList = ({ passwords, query }) => {
 	const getPasswordComponents = () => {
 		return allPasswords.filter(pass => {
 			return pass.name.toLowerCase().includes(filter.toLowerCase())
-			|| pass.info.toLowerCase().includes(filter.toLowerCase());
+				|| pass.info.toLowerCase().includes(filter.toLowerCase());
 		}).map((password) => {
 			return <Password className="mb-2" key={password.name} password={password} />;
 		});
