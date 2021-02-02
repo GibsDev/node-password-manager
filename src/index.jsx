@@ -1,24 +1,40 @@
 import './scss/style.scss';
+import { useEffect, useState } from 'react';
 import ReactDOM from 'react-dom';
 import PasswordList from './components/PasswordList.jsx';
-const $ = require('jquery');
+import $ from 'jquery';
 
 const domContainer = document.querySelector('#react_root');
 
-// Get all passwords
-$.get('/api/passwords', data => {
-	const paddids = data.passwords;
-	const promises = [];
-	const passes = [];
-	paddids.forEach(id => {
-		const get = $.get(`/api/passwords/${id}`, password => {
-			passes.push(password);
+const Index = () => {
+
+	const [passwords, setPasswords] = useState([]);
+
+	useEffect(() => {
+		$.get('/api/passwords', data => {
+			const paddids = data.passwords;
+			const promises = [];
+			const passes = [];
+			paddids.forEach(id => {
+				const get = $.get(`/api/passwords/${id}`, password => {
+					passes.push(password);
+				});
+				promises.push(get);
+			});
+			Promise.all(promises).then(() => {
+				setPasswords(passes);
+			});
 		});
-		promises.push(get);
-	});
-	Promise.all(promises).then(() => {
-		let password = <PasswordList query="" passwords={passes} />;
-		ReactDOM.render(password, domContainer);
-	});
-});
+	}, []);
+
+	return (
+		<>
+			<h1>Passwords</h1>
+			<PasswordList query="" passwords={passwords} />
+		</>
+	);
+};
+
+ReactDOM.render(<Index />, domContainer);
+
 

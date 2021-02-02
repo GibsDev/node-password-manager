@@ -1,7 +1,6 @@
 import Password from './Password.jsx';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-const $ = require('jquery');
+import { useEffect, useState } from 'react';
 
 const PasswordList = ({ passwords, query }) => {
 
@@ -16,6 +15,10 @@ const PasswordList = ({ passwords, query }) => {
 			return <Password className="mb-2" key={password.name} password={password} />;
 		});
 	};
+
+	useEffect(() => {
+		setPasswords(passwords || []);
+	}, [passwords]);
 
 	return (
 		<>
