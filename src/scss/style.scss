@@ -23,7 +23,7 @@ input[type="text"].password {
 
 .unselectable {
 	@extend %unselectable;
-	*:not(input) {
+	*:not(input):not(textarea) {
 		@extend %unselectable;
 	}
 }
