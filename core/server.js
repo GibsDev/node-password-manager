@@ -3,17 +3,17 @@ const app = express();
 const api = require('./api.js');
 const auth = require('./auth.js');
 const path = require('path');
-const { readFile } = require('fs');
 const { promisify } = require('util');
-const readFileAsync = promisify(readFile);
+const readFileAsync = promisify(fs.readFile);
 const port = 30000;
 
+const USE_HTTPS = process.argv.includes('--https');
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 /**
  * A middleware function for inspecting every request to the server
  */
-function requestInspector (req, res, next) {
+function requestInspector(req, res, next) {
 	console.log(`\n${req.method} ${req.url}`);
 	next();
 }
@@ -71,6 +71,21 @@ app.use(express.static(path.resolve(__dirname, '../public')));
 /**
  * Start the server
  */
-app.listen(port, () => {
-	console.log(`Password Manager Server listening at http://localhost:${port}`);
-});
+if (USE_HTTPS) {
+	const https = require('https');
+	const fs = require('fs');
+
+	const options = {
+		key: fs.readFileSync('./server.key'),
+		cert: fs.readFileSync('./server.cert')
+	};
+	https.createServer(options, app).listen(port, () => {
+		console.log(`Password Manager Server listening at https://localhost:${port}`);
+	});
+
+} else {
+	app.listen(port, () => {
+		console.log(`Password Manager Server listening at http://localhost:${port}`);
+	});
+}
+
