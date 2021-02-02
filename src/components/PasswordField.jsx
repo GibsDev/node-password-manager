@@ -48,7 +48,7 @@ const PasswordField = ({ className, label, value, hidden, peekable }) => {
 		if (isPeekable) {
 			return (
 				<div className="input-group-append">
-					<button className="btn btn-outline-warning" type="button" onTouchStart={show} onTouchEnd={hide} onMouseDown={show} onMouseUp={hide} onMouseLeave={hide}>Peek</button>
+					<button className="btn btn-light" type="button" onTouchStart={show} onTouchEnd={hide} onMouseDown={show} onMouseUp={hide} onMouseLeave={hide}>Peek</button>
 				</div>
 			);
 		}

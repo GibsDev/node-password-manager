@@ -54,9 +54,9 @@ const Password = (props) => {
 		if (passwordObject.password) {
 			return (
 				<>
+					<PasswordField className="mb-1" hidden={false} label="Info" value={passwordObject.info} />
 					<PasswordField className="mb-1" peekable={true} label="Username" value={passwordObject.username} />
 					<PasswordField className="mb-1" peekable={true} label="Password" value={passwordObject.password} />
-					<PasswordField className="mb-1" peekable={true} label="Info" value={passwordObject.info} />
 					<PasswordField className="mb-0" peekable={true} label="Private Info" value={passwordObject.pinfo} />
 				</>
 			);
