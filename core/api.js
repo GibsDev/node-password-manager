@@ -33,6 +33,7 @@ api.get('/passwords', (req, res) => {
 			passwords: names
 		};
 		res.setHeader('Content-Type', 'application/json');
+		res.setHeader('Cache-Control', 'no-store');
 		return res.send(JSON.stringify(obj, null, 4));
 	});
 });
@@ -46,6 +47,7 @@ api.get('/passwords/:id', (req, res) => {
 		console.log(`GET key '${key}' from /passwords/${req.params.id}`);
 		passwords.get(req.user, req.params.id, key).then(password => {
 			res.setHeader('Content-Type', 'application/json');
+			res.setHeader('Cache-Control', 'no-store');
 			return res.send(JSON.stringify(password));
 		}).catch(err => {
 			console.log(err);
@@ -55,10 +57,12 @@ api.get('/passwords/:id', (req, res) => {
 	} else {
 		passwords.get(req.user, req.params.id).then(password => {
 			// Remove encrypted info
-			delete password.user;
+			delete password.username;
 			delete password.password;
 			delete password.pinfo;
+			delete password.iv;
 			res.setHeader('Content-Type', 'application/json');
+			res.setHeader('Cache-Control', 'no-store');
 			return res.send(JSON.stringify(password, null, 4));
 		}).catch(err => {
 			console.log('Could not get password');
