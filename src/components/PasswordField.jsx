@@ -65,7 +65,7 @@ const PasswordField = ({ className, label, value, hidden, peekable }) => {
 		}
 	};
 
-	let rootClassname = "input-group input-group-sm";
+	let rootClassname = "input-group input-group";
 	if (className) {
 		rootClassname = className + ' ' + rootClassname;
 	}

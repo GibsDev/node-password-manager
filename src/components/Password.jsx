@@ -62,9 +62,9 @@ const Password = (props) => {
 		if (passwordObject.password) {
 			return (
 				<>
-					<PasswordField className="mb-1" hidden={false} label="Info" value={passwordObject.info} />
-					<PasswordField className="mb-1" peekable={true} label="Username" value={passwordObject.username} />
-					<PasswordField className="mb-1" peekable={true} label="Password" value={passwordObject.password} />
+					<PasswordField className="mb-2" hidden={false} label="Info" value={passwordObject.info} />
+					<PasswordField className="mb-2" peekable={true} label="Username" value={passwordObject.username} />
+					<PasswordField className="mb-2" peekable={true} label="Password" value={passwordObject.password} />
 					<PasswordField className="mb-0" peekable={true} label="Private Info" value={passwordObject.pinfo} />
 				</>
 			);
@@ -78,10 +78,10 @@ const Password = (props) => {
 	const decryptForm = () => {
 		if (showDecrypt) {
 			return (
-				<form onSubmit={decrypt} className="input-group input-group-sm float-right mt-3">
-					<input ref={decryptField} autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
+				<form onSubmit={decrypt} className="input-group input-group float-right mt-3">
+					<input ref={decryptField} autoFocus={true} autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
 					<div className="input-group-append">
-						<button type="submit" className="btn btn-sm btn-primary">Decrypt</button>
+						<button type="submit" className="btn btn btn-primary">Decrypt</button>
 					</div>
 				</form>
 			);
@@ -93,15 +93,15 @@ const Password = (props) => {
 		if (encrypted) {
 			if (showDecrypt) {
 				return (
-					<button type="button" className="btn btn-sm btn-primary" onClick={lock}>Cancel</button>
+					<button type="button" className="btn btn btn-primary" onClick={lock}>Cancel</button>
 				);
 			}
 			return (
-				<button type="button" className="btn btn-sm btn-primary" onClick={unlock}>Unlock</button>
+				<button type="button" className="btn btn btn-primary" onClick={unlock}>Unlock</button>
 			);
 		}
 		return (
-			<button type="button" className="btn btn-sm btn-primary" onClick={lock}>Lock</button>
+			<button type="button" className="btn btn btn-primary" onClick={lock}>Lock</button>
 		);
 	};
 
