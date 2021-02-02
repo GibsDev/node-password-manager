@@ -16,8 +16,10 @@ const Index = () => {
 			const promises = [];
 			const passes = [];
 			paddids.forEach(id => {
-				const get = $.get(`/api/passwords/${id}`, password => {
+				const get = $.get(`/api/passwords/${id}`).then(password => {
 					passes.push(password);
+				}).catch(err => {
+					console.log(err);
 				});
 				promises.push(get);
 			});
@@ -36,7 +38,7 @@ const Index = () => {
 				<a className="btn btn-outline-info ml-2" href="/insert">Insert</a>
 				<a className="btn btn-outline-danger ml-2" href="/logout">Logout</a>
 			</div>
-			<PasswordList query="" passwords={passwords} />
+			<PasswordList passwords={passwords} />
 		</>
 	);
 };
