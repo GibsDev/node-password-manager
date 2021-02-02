@@ -14,7 +14,7 @@ const Index = () => {
 		$.get('/api/passwords').then(data => {
 			const paddids = data.passwords;
 			const promises = [];
-			const passes = [];
+			let passes = [];
 			paddids.forEach(id => {
 				const get = $.get(`/api/passwords/${id}`).then(password => {
 					passes.push(password);
@@ -24,6 +24,7 @@ const Index = () => {
 				promises.push(get);
 			});
 			Promise.all(promises).then(() => {
+				passes = passes.sort((pass1, pass2) => pass1.name.localeCompare(pass2.name));
 				setPasswords(passes);
 			});
 		}).catch(err => {
