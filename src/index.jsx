@@ -33,7 +33,7 @@ const Index = () => {
 		<>
 			<div className="d-flex flex-row align-items-center my-2">
 				<h1>Passwords</h1>
-				<a className="btn btn-primary ml-auto" href="/logout">Logout</a>
+				<a className="btn btn-outline-danger ml-auto" href="/logout">Logout</a>
 			</div>
 			<PasswordList query="" passwords={passwords} />
 		</>

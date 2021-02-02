@@ -10,6 +10,8 @@ const Password = (props) => {
 	const [showBody, setShowBody] = useState(false);
 	const [showDecrypt, setShowDecrypt] = useState(false);
 	const [encrypted, setEncrypted] = useState(true);
+	const [loading, setLoading] = useState(false);
+	const [decryptError, setDecryptError] = useState(false);
 
 	const decryptField = useRef(null);
 
@@ -17,7 +19,7 @@ const Password = (props) => {
 		setShowBody(true);
 		setShowDecrypt(true);
 	};
-	
+
 	useEffect(() => {
 		if (showDecrypt) {
 			decryptField.current.focus();
@@ -37,13 +39,19 @@ const Password = (props) => {
 				xhr.setRequestHeader("X-API-Key", key);
 			}
 		};
+		setLoading(true);
 		$.ajax(options).then(res => {
-			console.log(res);
 			setPasswordObject(res);
 			setShowDecrypt(false);
 			setEncrypted(false);
+			setLoading(false);
 		}).catch(err => {
 			console.log(err);
+			setDecryptError(true);
+			setTimeout(() => {
+				setDecryptError(false);
+			}, 5000);
+			setLoading(false);
 		});
 	};
 
@@ -76,14 +84,29 @@ const Password = (props) => {
 	};
 
 	const decryptForm = () => {
+		let buttonStyle = 'btn-primary';
+		let buttonText = 'Decrypt';
+		if (loading) {
+			buttonStyle = 'btn-warning';
+			buttonText = 'Decrypting';
+		}
+		let alert = <ul className="list-group mt-2">
+			<li className="list-group-item list-group-item-danger">Failed to decrypt password</li>
+		</ul>;
+		if (!decryptError) {
+			alert = null;
+		}
 		if (showDecrypt) {
 			return (
-				<form onSubmit={decrypt} className="input-group input-group float-right mt-3">
-					<input ref={decryptField} autoFocus={true} autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
-					<div className="input-group-append">
-						<button type="submit" className="btn btn btn-primary">Decrypt</button>
-					</div>
-				</form>
+				<>
+					<form onSubmit={decrypt} className="input-group input-group float-right mt-3">
+						<input ref={decryptField} autoFocus={true} autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
+						<div className="input-group-append">
+							<button type="submit" className={`btn btn ${buttonStyle}`} disabled={loading}>{buttonText}</button>
+						</div>
+					</form>
+					{alert}
+				</>
 			);
 		}
 	};
@@ -91,17 +114,20 @@ const Password = (props) => {
 	const unlockButton = () => {
 		const unlockOrCancel = (showDecrypt) ? 'Cancel' : 'Unlock';
 		let text = 'Lock';
+		let buttonStyle = 'btn-outline-danger';
 		let clickHandler = lock;
 		if (encrypted) {
 			if (showDecrypt) {
 				text = 'Cancel';
+				buttonStyle = 'btn-outline-warning';
 			} else {
 				text = 'Unlock';
 				clickHandler = unlock;
+				buttonStyle = 'btn-success';
 			}
 		}
 		return (
-			<button type="button" className="btn btn btn-primary ml-4" onClick={clickHandler}>{text}</button>
+			<button type="button" className={`btn ${buttonStyle} ml-4`} onClick={clickHandler}>{text}</button>
 		);
 	};
 
@@ -110,7 +136,7 @@ const Password = (props) => {
 			return;
 		}
 		return (
-			<div className="card-body">
+			<div className="card-body d-flex flex-column">
 				{credentials()}
 				{decryptForm()}
 			</div>
