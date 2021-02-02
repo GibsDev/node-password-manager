@@ -3,8 +3,6 @@ const app = express();
 const api = require('./api.js');
 const auth = require('./auth.js');
 const path = require('path');
-const { promisify } = require('util');
-const readFileAsync = promisify(fs.readFile);
 const port = 30000;
 
 const USE_HTTPS = process.argv.includes('--https');
@@ -72,8 +70,10 @@ app.use(express.static(path.resolve(__dirname, '../public')));
  * Start the server
  */
 if (USE_HTTPS) {
-	const https = require('https');
 	const fs = require('fs');
+	const https = require('https');
+	const { promisify } = require('util');
+	const readFileAsync = promisify(fs.readFile);
 
 	const options = {
 		key: fs.readFileSync('./server.key'),
