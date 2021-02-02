@@ -120,7 +120,7 @@ const Password = (props) => {
 	return (
 		<div className={props.className + ' card'}>
 			<div className="card-header d-flex flex-row align-items-center justify-content-end">
-				<p className="mr-auto mb-0">{passwordObject.name}</p>
+				<strong className="mr-auto mb-0 selectable">{passwordObject.name}</strong>
 				{unlockButton()}
 			</div>
 			{cardBody()}
