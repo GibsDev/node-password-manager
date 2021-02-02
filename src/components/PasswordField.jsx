@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 
 const COPY_MESSAGE = 'Copied';
+const COPY_FAIL_MESSAGE = 'Copied';
 const HIDDEN_MESSAGE = '<hidden>';
 
 const PasswordField = ({className, label, value, hidden, peekable}) => {
@@ -21,22 +22,33 @@ const PasswordField = ({className, label, value, hidden, peekable}) => {
 	};
 
 	const copy = () => {
-		navigator.clipboard.writeText(value).then(() => {
-			console.log('Copied ' + label);
-			setValue(COPY_MESSAGE);
+		if (navigator.clipboard.writeText) {
+			navigator.clipboard.writeText(value).then(() => {
+				console.log('Copied ' + label);
+				setValue(COPY_MESSAGE);
+				setTimeout(() => {
+					(isHidden) ? hide() : show();
+				}, 1000);
+			}).catch(err => {
+				console.log(err);
+				setValue(COPY_FAIL_MESSAGE);
+				setTimeout(() => {
+					(isHidden) ? hide() : show();
+				}, 1000);
+			});
+		} else {
+			setValue(COPY_FAIL_MESSAGE);
 			setTimeout(() => {
 				(isHidden) ? hide() : show();
 			}, 1000);
-		}).catch(err => {
-			console.log(err);
-		});
+		}		
 	};
 
 	const peekButton = () => {
 		if (isPeekable) {
 			return (
 				<div className="input-group-append">
-					<button className="btn btn-outline-warning" type="button" onMouseDown={show} onMouseUp={hide} onMouseLeave={hide}>Peek</button>
+					<button className="btn btn-outline-warning" type="button" onTouchStart={show} onTouchEnd={hide} onMouseDown={show} onMouseUp={hide} onMouseLeave={hide}>Peek</button>
 				</div>
 			);
 		}
@@ -49,7 +61,7 @@ const PasswordField = ({className, label, value, hidden, peekable}) => {
 	return (
 		<div className={rootClassname}>
 			<div className="input-group-prepend">
-				<button onClick={copy} title="Copy" className="btn btn-secondary">{label}</button>
+				<button onTouchStart={copy} onClick={copy} title="Copy" className="btn btn-secondary">{label}</button>
 			</div>
 			<input type="text" className="form-control" readOnly value={inputValue}></input>
 			{peekButton()}

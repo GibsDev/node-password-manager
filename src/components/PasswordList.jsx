@@ -25,7 +25,7 @@ const PasswordList = ({ passwords, query }) => {
 				</div>
 				<input onChange={e => { setFilter(e.target.value); }} type="text" className="form-control" id="filter" />
 			</div>
-			<div className="d-flex flex-column">
+			<div className="d-flex flex-column unselectable">
 				{getPasswordComponents()}
 			</div>
 		</>
