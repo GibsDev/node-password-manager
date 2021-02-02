@@ -65,6 +65,13 @@ app.get('/login', async (req, res) => {
 });
 
 /**
+ * Alias for /api/logout (defined in auth.js)
+ */
+app.get('/logout', (req, res) => {
+	res.redirect('/api/logout');
+});
+
+/**
  * Servers static content at the root node (/)
  */
 app.use(express.static(path.resolve(__dirname, '../public')));

@@ -11,7 +11,7 @@ const Index = () => {
 	const [passwords, setPasswords] = useState([]);
 
 	useEffect(() => {
-		$.get('/api/passwords', data => {
+		$.get('/api/passwords').then(data => {
 			const paddids = data.passwords;
 			const promises = [];
 			const passes = [];
@@ -24,12 +24,17 @@ const Index = () => {
 			Promise.all(promises).then(() => {
 				setPasswords(passes);
 			});
+		}).catch(err => {
+			console.log(err);
 		});
 	}, []);
 
 	return (
 		<>
-			<h1>Passwords</h1>
+			<div className="d-flex flex-row align-items-center my-2">
+				<h1>Passwords</h1>
+				<a className="btn btn-primary ml-auto" href="/logout">Logout</a>
+			</div>
 			<PasswordList query="" passwords={passwords} />
 		</>
 	);

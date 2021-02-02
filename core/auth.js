@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const express = require('express');
 const { JsonWebTokenError, TokenExpiredError } = require('jsonwebtoken');
-const cookieParser = require('cookie-parser');
+const cookieParser = require('cookie-parser')();
 const users = require('./users.js');
 
 const NO_AUTH = process.argv.includes('--noauth');
@@ -26,23 +26,36 @@ const jwtCookieName = 'jwt';
 /**
  * Enable cookie parsing
  */
-auth.use(cookieParser());
+auth.use(cookieParser);
 
 /**
  * Node for handing out JWT tokens
  */
-auth.post('/login', express.json(), (req, res) => {
-	console.log('Logging someone in...');
-	console.log(req.body.username);
+auth.login = auth.post('/login', express.json(), (req, res) => {
+	console.log(`'${req.body.username}' is attempting to login`);
 	users.verify(req.body.username, req.body.password).then(() => {
 		const token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: TOKEN_TIME });
 		res.cookie(jwtCookieName, token, { maxAge: TOKEN_TIME });
 		res.type('application/json');
-		res.send(JSON.stringify({ token: token }));
+		return res.send(JSON.stringify({ token: token }));
 	}).catch((err) => {
 		console.log(err);
-		res.status(401).send('Invalid login');
+		return res.status(401).send('Invalid login');
 	});
+});
+
+/**
+ * Used to logout a user
+ */
+auth.logout = auth.get('/logout', (req, res) => {
+	try {
+		const username = validateToken(req.cookies[jwtCookieName]);
+		console.log(`'${username}' is logging out`);
+	} catch (err) {
+		console.log(err);
+	}
+	res.clearCookie(jwtCookieName);
+	return res.redirect('/');
 });
 
 /**
@@ -100,10 +113,10 @@ function authorize(req, res, next) {
 		// req.originalUrl is the full path
 		// Set redirect for after login
 		let redirect = '?returnurl=' + encodeURIComponent(req.originalUrl);
-		res.redirect('/login' + redirect);
+		return res.redirect('/login' + redirect);
 	} else {
 		res.status(401);
-		res.send(errorMessage);
+		return res.send(errorMessage);
 	}
 }
 auth.use(authorize);
