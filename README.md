@@ -1,5 +1,7 @@
 ## TODO
 
+- SIMPLIFY Components using BootstrapField and Pressable
+
 - Token renewal on good request
 - Write file sctructure section in README
 - Create a page for inserting passwords
