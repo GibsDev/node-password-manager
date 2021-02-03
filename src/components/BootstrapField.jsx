@@ -53,7 +53,7 @@ const Input = (props) => {
 			setValue(props.value);
 		}
 	};
-	
+
 	const onFieldRelease = () => {
 		if (props.hideText) {
 			setValue(props.hideText);
@@ -61,7 +61,7 @@ const Input = (props) => {
 	};
 
 	const field = () => {
-		const input = <input readOnly={props.readOnly} className="form-control" onChange={e => {setValue(e.target.value)}} value={currentValue} />;
+		const input = <input readOnly={props.readOnly} className="form-control" onChange={e => { setValue(e.target.value); }} value={currentValue} />;
 		return <Pressable onPress={onFieldPress} onRelease={onFieldRelease} component={input} />;
 	};
 
