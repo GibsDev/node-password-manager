@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import BootstrapField from './BootstrapField.jsx';
+import BootField from './BootstrapField.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
 
@@ -67,7 +67,7 @@ const Form = (props) => {
 				first = false;
 			}
 			fieldElems.push(
-				<BootstrapField
+				<BootField
 					className={marginTop}
 					key={`${titleId}_${id}`}
 					inputId={`${titleId}_${id}`}
