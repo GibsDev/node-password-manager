@@ -13,6 +13,7 @@
 - Create a generic form component?
 - Delete (with confirm) key
 - Confirm overwrite existing key
+- Create exported constants for BootstrapField Buttons?
 
 ## Things learned
 How to make use of the Set-Cookie and Cookie headers for more secure JWT storage.
