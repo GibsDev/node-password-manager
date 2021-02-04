@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
 import Pressable from './Pressable.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
+import TextField from './TextField.jsx';
 
 /**
  * Creates a bootstrap input group with the option to add button/labels on either side of the input field.
@@ -24,34 +24,11 @@ import { htmlId, nextId } from '../utils/id';
  */
 const Input = (props) => {
 
-	const [currentValue, setValue] = useState((props.hideText === true) ? props.hideText : props.value);
-	const readOnly = props.hideText || props.readOnly;
 	const fieldId = (props.inputId) ? htmlId(props.inputId) : nextId();
 
-	// TODO figure out why the hidden message will not update without this:
-	// For some reason the hideText does not get updated without this:
-	useEffect(() => {
-		if (props.hideText) {
-			setValue(props.hideText);
-		}
-	}, [props.hideText]);
-
-	const onFieldPress = () => {
-		if (props.hideText) {
-			setValue(props.value);
-		}
-	};
-
-	const onFieldRelease = () => {
-		if (props.hideText) {
-			setValue(props.hideText);
-		}
-	};
-
-	const onChange = e => {
-		setValue(e.target.value);
+	const _onChange = value => {
 		if (props.onChange) {
-			props.onChange(e);
+			props.onChange(value);
 		}
 	};
 
@@ -75,23 +52,15 @@ const Input = (props) => {
 	};
 
 	const field = () => {
-		const type = (props.isPassword) ? 'password' : 'text';
-		let cn = 'form-control';
-		if (props.isSecret) cn += ' secret';
-		const input = <input
-			type={type}
-			id={fieldId}
-			name={fieldId}
-			readOnly={readOnly}
-			className={cn}
-			onChange={onChange}
-			value={currentValue}
-		/>;
-		return <Pressable
-			onPress={onFieldPress}
-			onRelease={onFieldRelease}
-			component={input}
-		/>;
+		return <TextField
+			className='form-control'
+			value={props.value}
+			hideText={props.hideText}
+			readOnly={props.readOnly}
+			isPassword={props.isPassword}
+			isSecret={props.isSecret}
+			onChange={_onChange}
+			id={props.inputId}/>;
 	};
 
 	const after = () => {

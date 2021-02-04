@@ -18,10 +18,10 @@ const PasswordField = ({ className, label, value, hidden }) => {
 
 	const [hiddenValue, setHiddenValue] = useState(HIDDEN_TEXT);
 	const [currentLabel, setLabel] = useState(label);
-	const [copyButtonStyle, setCopyButtonStyle] = useState('btn-secondary');
+	const deafultButtonStyle = 'btn-secondary';
+	const [copyButtonStyle, setCopyButtonStyle] = useState(deafultButtonStyle);
 
 	const copy = () => {
-		const currentStyle = copyButtonStyle;
 		browser.copy(value).then(() => {
 			setHiddenValue(COPY_MESSAGE);
 			setCopyButtonStyle('btn-success');
@@ -35,7 +35,7 @@ const PasswordField = ({ className, label, value, hidden }) => {
 			// Reset
 			const msgTime = 1000;
 			setTimeout(() => {
-				setCopyButtonStyle(currentStyle);
+				setCopyButtonStyle(deafultButtonStyle);
 				setHiddenValue(HIDDEN_TEXT);
 				setLabel(label);
 			}, msgTime);
@@ -46,6 +46,7 @@ const PasswordField = ({ className, label, value, hidden }) => {
 	if (hidden) {
 		return (
 			<BootstrapField
+				readOnly
 				className={className}
 				hideText={hiddenValue}
 				beforeLabel={label}
@@ -57,6 +58,7 @@ const PasswordField = ({ className, label, value, hidden }) => {
 	} else {
 		return (
 			<BootstrapField
+				readOnly
 				className={className}
 				beforeLabel={currentLabel}
 				beforeStyle={copyButtonStyle}
