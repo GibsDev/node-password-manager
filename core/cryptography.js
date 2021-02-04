@@ -25,6 +25,8 @@ cryptography.hash = (plaintext, salt) => {
 	};
 };
 
+// TODO our ouput seems way too short to be storing all information, and causing decrypts to fail
+
 /**
  * @param {string} plaintext plaintext
  * @param {string} key the cipher key
@@ -38,11 +40,11 @@ cryptography.encrypt = (plaintext, key, iv) => {
 	}
 	// Hash key to 256 bit
 	const hashedkey = crypto.createHash('sha256').update(key).digest();
-	const cipher = crypto.createCipheriv('aes256', hashedkey, iv);
-	cipher.update(plaintext);
-	const ciphertext = cipher.final('hex');
+	let cipher = crypto.createCipheriv('aes-256-cbc', hashedkey, iv);
+	let encrypted = cipher.update(plaintext);
+	encrypted = Buffer.concat([encrypted, cipher.final()]);
 	return {
-		ciphertext: ciphertext,
+		ciphertext: encrypted.toString('hex'),
 		iv: iv.toString('hex')
 	};
 };
@@ -55,9 +57,12 @@ cryptography.encrypt = (plaintext, key, iv) => {
 cryptography.decrypt = (ciphertext, key, iv) => {
 	// Hash key to 256 bit
 	const hashedkey = crypto.createHash('sha256').update(key).digest();
-	const decipher = crypto.createDecipheriv('aes256', hashedkey, Buffer.from(iv, 'hex'));
-	decipher.update(ciphertext, 'hex');
-	return decipher.final('utf8');
+	let ivBuffer = Buffer.from(iv, 'hex');
+	let encryptedText = Buffer.from(ciphertext, 'hex');
+	let decipher = crypto.createDecipheriv('aes-256-cbc', hashedkey, ivBuffer);
+	let decrypted = decipher.update(encryptedText);
+	decrypted = Buffer.concat([decrypted, decipher.final()]);
+	return decrypted.toString();
 };
 
 module.exports = cryptography;
