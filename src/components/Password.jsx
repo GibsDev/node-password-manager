@@ -70,15 +70,15 @@ const Password = (props) => {
 		if (passwordObject.password) {
 			return (
 				<>
-					<PasswordField className="mb-2" hidden={false} label="Info" value={passwordObject.info} />
-					<PasswordField className="mb-2" peekable={true} label="Username" value={passwordObject.username} />
-					<PasswordField className="mb-2" peekable={true} label="Password" value={passwordObject.password} />
-					<PasswordField className="mb-0" peekable={true} label="Private Info" value={passwordObject.pinfo} />
+					<PasswordField className="mb-2" label="Info" value={passwordObject.info} />
+					<PasswordField className="mb-2" hidden label="Username" value={passwordObject.username} />
+					<PasswordField className="mb-2" hidden label="Password" value={passwordObject.password} />
+					<PasswordField className="mb-0" hidden label="Private Info" value={passwordObject.pinfo} />
 				</>
 			);
 		} else {
 			return (
-				<PasswordField label="Info" hidden={false} value={passwordObject.info} />
+				<PasswordField label="Info" value={passwordObject.info} />
 			);
 		}
 	};
