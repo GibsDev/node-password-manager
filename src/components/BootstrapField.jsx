@@ -21,6 +21,7 @@ import TextField from './TextField.jsx';
  * @param {string} className The className to be added to the root element
  * @param {string} isPassword if the input is a password
  * @param {string} isSecret if the input should be hidden, but you do not want a browser to attempt to save it as a password
+ * @param {string} hiddenHover the message while hidden and hovering
  */
 const Input = (props) => {
 
@@ -60,7 +61,8 @@ const Input = (props) => {
 			isPassword={props.isPassword}
 			isSecret={props.isSecret}
 			onChange={_onChange}
-			id={props.inputId}/>;
+			id={props.inputId}
+			hiddenHover={props.hiddenHover} />;
 	};
 
 	const after = () => {
@@ -124,7 +126,8 @@ Input.propTypes = {
 		}
 	},
 	isPassword: PropTypes.bool,
-	isSecret: PropTypes.bool
+	isSecret: PropTypes.bool,
+	hiddenHover: PropTypes.string
 };
 
 export default Input;

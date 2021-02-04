@@ -13,38 +13,57 @@ import { htmlId, nextId } from '../utils/id';
  * @param {bool} props.isSecret Obscure text without setting type="password" (so browsers no not ask to save)
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
+ * @param {string} props.hiddenHover the hidden message while hovering
  */
-const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id }) => {
-	
+const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHover }) => {
+
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
-	const [shownValue, setShownValue] = useState((hideText) ? hideText : currentValue);
+	const [currentHide, setHide] = useState(hideText);
+	const [view, setView] = useState((currentHide) ? currentHide : currentValue);
+
+	const [isPressed, setPressed] = useState(false);
+	const [isHovered, setHovered] = useState(false);
+
 	const computedId = (id) ? htmlId(id) : nextId();
 	const isReadOnly = hideText || readOnly;
 
+	useEffect(() => {
+		if (currentHide) {
+			setView((isPressed) ? currentValue : currentHide);
+		} else {
+			setView(currentValue);
+		}
+	}, [isPressed, currentValue, currentHide]);
+	
+	useEffect(() => {
+		if (hiddenHover && hideText) {
+			setHide((isHovered) ? hiddenHover : hideText);
+		} else if (hideText && !hiddenHover) {
+			setHide(hideText);
+		}
+	}, [isHovered, hideText, hiddenHover]);
+
+	useEffect(() => {
+		if (onChange) onChange(currentValue);
+	}, [currentValue, onChange]);
+
 	// Update shown value when inputs change
 	useEffect(() => {
-		setShownValue((hideText) ? hideText : currentValue);
-	}, [hideText, currentValue]);
+		setView((currentHide) ? currentHide : currentValue);
+	}, [currentHide, currentValue]);
 
-	const onFieldPress = () => {
-		if (hideText) {
-			showValue(currentValue);
-		}
-	};
-
-	const onFieldRelease = () => {
-		if (hideText) {
-			showValue(hideText);
-		}
-	};
+	const _onMouseOver = () => setHovered(true);
+	const _onMouseOut = () => setHovered(false);
+	const onFieldPress = () => setPressed(true);
+	const onFieldRelease = () => setPressed(false);
 
 	const _onChange = e => {
 		const inputVal = e.target.value;
 		if (!hideText) {
 			if (isSecret) {
 				// Otherwise space is visible with the secret font
-				showValue(inputVal.replaceAll(' ','\u00A4'));
+				showValue(inputVal.replaceAll(' ', '\u00A4'));
 				setValue(inputVal.replaceAll('\u00A4', ' '));
 			} else {
 				showValue(inputVal);
@@ -59,19 +78,28 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 		const type = (isPassword) ? 'password' : 'text';
 		let cn = className;
 		if (isSecret) cn += ' secret';
-		const input = <input
-			type={type}
-			id={computedId}
-			name={computedId}
-			readOnly={isReadOnly}
-			className={cn}
-			onChange={_onChange}
-			value={shownValue}
-		/>;
+		const props = {
+			type: type,
+			id: computedId,
+			name: computedId,
+			readOnly: isReadOnly,
+			className: cn,
+			onChange: _onChange,
+			value: view,
+			onMouseOver: _onMouseOver,
+			onMouseOut: _onMouseOut
+		};
+		if (isSecret || isPassword) {
+			props.autoComplete = 'off';
+			props.autoCorrect = 'off';
+			props.autoCapitalize = 'off';
+			props.spellCheck = 'off';
+		}
 		return <Pressable
 			onPress={onFieldPress}
-			onRelease={onFieldRelease}
-			component={input}/>;
+			onRelease={onFieldRelease}>
+			<input {...props} />
+		</Pressable>;
 	};
 
 	return field();
@@ -82,7 +110,8 @@ Input.defaultProps = {
 	readOnly: false,
 	isPassword: false,
 	isSecret: false,
-	className: ''
+	className: '',
+	peekTooltip: false
 };
 
 Input.propTypes = {
@@ -100,7 +129,8 @@ Input.propTypes = {
 				return new Error(`'id' changed from '${id}' to '${html}'! Please change the id if you need to track it.`);
 			}
 		}
-	}
+	},
+	hiddenHover: PropTypes.string
 };
 
 export default Input;

@@ -49,6 +49,7 @@ const PasswordField = ({ className, label, value, hidden }) => {
 				readOnly
 				className={className}
 				hideText={hiddenValue}
+				hiddenHover='<peek>'
 				beforeLabel={label}
 				beforeStyle={copyButtonStyle}
 				value={value}
