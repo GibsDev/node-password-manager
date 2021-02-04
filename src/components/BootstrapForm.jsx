@@ -17,7 +17,8 @@ import { htmlId, nextId } from '../utils/id';
  */
 const Form = (props) => {
 
-	const titleId = (props.title) ? htmlId(props.title) : nextId();
+	// We need to store titleId within state so that it does not generate a new id each time it updates
+	const [titleId, setTitleId] = useState((props.title) ? htmlId(props.title) : nextId());
 
 	// Format { id: { label: "Field Label", ... }, ... }
 	let preFields = Object.assign({}, props.fields);
@@ -51,7 +52,7 @@ const Form = (props) => {
 		// Figure out which fields id changed
 		let fieldsId = '';
 		for (const id in fields) {
-			if(e.target.id === fields[id].labelId) {
+			if(e.target.id == fields[id].labelId) {
 				fieldsId = id;
 				break;
 			}
