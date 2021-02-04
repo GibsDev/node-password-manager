@@ -51,7 +51,7 @@ const Form = (props) => {
 		// Figure out which fields id changed and update them
 		let fieldsId = '';
 		for (const id in fields) {
-			if(e.target.id == fields[id].labelId) {
+			if (e.target.id == fields[id].labelId) {
 				fieldsId = id;
 				break;
 			}
