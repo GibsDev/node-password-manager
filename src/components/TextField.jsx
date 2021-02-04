@@ -28,30 +28,22 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 	const computedId = (id) ? htmlId(id) : nextId();
 	const isReadOnly = hideText || readOnly;
 
+	// Update view
 	useEffect(() => {
-		if (currentHide) {
-			setView((isPressed) ? currentValue : currentHide);
-		} else {
-			setView(currentValue);
-		}
+		setView(((!currentHide || isPressed)) ? currentValue : currentHide);
 	}, [isPressed, currentValue, currentHide]);
-	
+
+	// Update hide message
 	useEffect(() => {
-		if (hiddenHover && hideText) {
-			setHide((isHovered) ? hiddenHover : hideText);
-		} else if (hideText && !hiddenHover) {
-			setHide(hideText);
+		if (hideText) {
+			setHide((hiddenHover && isHovered) ? hiddenHover : hideText);
 		}
 	}, [isHovered, hideText, hiddenHover]);
 
+	// Fire change event
 	useEffect(() => {
 		if (onChange) onChange(currentValue);
 	}, [currentValue, onChange]);
-
-	// Update shown value when inputs change
-	useEffect(() => {
-		setView((currentHide) ? currentHide : currentValue);
-	}, [currentHide, currentValue]);
 
 	const _onMouseOver = () => setHovered(true);
 	const _onMouseOut = () => setHovered(false);
