@@ -48,7 +48,7 @@ const Form = (props) => {
 		if (props.onSubmit) props.onSubmit(values);
 	};
 
-	const onChange = e => {
+	const _onChange = e => {
 		// Figure out which fields id changed
 		let fieldsId = '';
 		for (const id in fields) {
@@ -80,7 +80,7 @@ const Form = (props) => {
 					value={fields[id].value}
 					isPassword={fields[id].isPassword}
 					isSecret={fields[id].isSecret}
-					onChange={onChange}
+					onChange={_onChange}
 				/>
 			);
 		}

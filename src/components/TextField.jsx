@@ -40,30 +40,25 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 		}
 	}, [isHovered, hideText, hiddenHover]);
 
-	// Fire change event
-	useEffect(() => {
-		if (onChange) onChange(currentValue);
-	}, [currentValue, onChange]);
-
 	const _onMouseOver = () => setHovered(true);
 	const _onMouseOut = () => setHovered(false);
 	const onFieldPress = () => setPressed(true);
 	const onFieldRelease = () => setPressed(false);
 
+	// When the input element onChange event occurs
 	const _onChange = e => {
 		const inputVal = e.target.value;
-		if (!hideText) {
-			if (isSecret) {
-				// Otherwise space is visible with the secret font
-				showValue(inputVal.replaceAll(' ', '\u00A4'));
-				setValue(inputVal.replaceAll('\u00A4', ' '));
-			} else {
-				showValue(inputVal);
-				setValue(inputVal);
-			}
+		if (hideText) {
+			setValue(inputVal);
+		} else if (isSecret) {
+			// Otherwise space is visible with the secret font
+			setView(inputVal.replaceAll(' ', '\u00A4'));
+			setValue(inputVal.replaceAll('\u00A4', ' '));
 		} else {
+			setView(inputVal);
 			setValue(inputVal);
 		}
+		if (onChange) onChange(e);
 	};
 
 	const field = () => {
