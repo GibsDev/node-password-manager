@@ -48,7 +48,7 @@ const Form = (props) => {
 	};
 
 	const _onChange = e => {
-		// Figure out which fields id changed
+		// Figure out which fields id changed and update them
 		let fieldsId = '';
 		for (const id in fields) {
 			if(e.target.id == fields[id].labelId) {
@@ -79,8 +79,7 @@ const Form = (props) => {
 					value={fields[id].value}
 					isPassword={fields[id].isPassword}
 					isSecret={fields[id].isSecret}
-					onChange={_onChange}
-				/>
+					onChange={_onChange} />
 			);
 		}
 		return fieldElems;
