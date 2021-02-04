@@ -3,12 +3,12 @@
 @import "bootswatch";
 
 @font-face {
-	font-family: 'password';
+	font-family: 'secret';
 	src: url('./password.ttf');
 }
 
-input[type="text"].password {
-	font-family: 'password', monospace;
+input[type="text"].secret {
+	font-family: 'secret', monospace;
 }
 
 %unselectable {

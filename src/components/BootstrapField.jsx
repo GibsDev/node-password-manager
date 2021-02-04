@@ -20,10 +20,9 @@ import { htmlId, nextId } from '../utils/id';
  * @param {string} inputId The id for the input field. Warning: Will be converted using htmlId! If you need to keep track of it, make sure 'id' === htmlId('id'). See utils/id.js for htmlId
  * @param {string} className The className to be added to the root element
  * @param {string} isPassword if the input is a password
+ * @param {string} isSecret if the input should be hidden, but you do not want a browser to attempt to save it as a password
  */
 const Input = (props) => {
-
-	// TODO setup isSecret
 
 	const [currentValue, setValue] = useState((props.hideText === true) ? props.hideText : props.value);
 	const readOnly = props.hideText || props.readOnly;
@@ -77,12 +76,14 @@ const Input = (props) => {
 
 	const field = () => {
 		const type = (props.isPassword) ? 'password' : 'text';
+		let cn = 'form-control';
+		if (props.isSecret) cn += ' secret';
 		const input = <input
 			type={type}
 			id={fieldId}
 			name={fieldId}
 			readOnly={readOnly}
-			className="form-control"
+			className={cn}
 			onChange={onChange}
 			value={currentValue}
 		/>;
@@ -126,7 +127,8 @@ Input.defaultProps = {
 	readOnly: false,
 	beforeStyle: 'input-group-text',
 	afterStyle: 'btn-primary',
-	isPassword: false
+	isPassword: false,
+	isSecret: false
 };
 
 Input.propTypes = {
@@ -152,7 +154,8 @@ Input.propTypes = {
 			}
 		}
 	},
-	isPassword: PropTypes.bool
+	isPassword: PropTypes.bool,
+	isSecret: PropTypes.bool
 };
 
 export default Input;

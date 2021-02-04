@@ -100,7 +100,7 @@ const Password = (props) => {
 			return (
 				<>
 					<form onSubmit={decrypt} className="input-group input-group float-right mt-3">
-						<input ref={decryptField} autoFocus={true} autoCapitalize="off" className="form-control password" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
+						<input ref={decryptField} autoFocus={true} autoCapitalize="off" className="form-control secret" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
 						<div className="input-group-append">
 							<button type="submit" className={`btn btn ${buttonStyle}`} disabled={loading}>{buttonText}</button>
 						</div>

@@ -28,6 +28,7 @@ const Form = (props) => {
 		if (!orig.label) throw new Error(`Missing 'label' property for field '${id}'`);
 		if (!orig.value) orig.value = '';
 		if (!orig.isPassword) orig.isPassword = false;
+		if (!orig.isSecret) orig.isSecret = false;
 		if (!orig.labelId) orig.labelId = `${titleId}_${id}`;
 		preFields[id] = orig;
 	}
@@ -77,6 +78,7 @@ const Form = (props) => {
 					beforeLabel={fields[id].label}
 					value={fields[id].value}
 					isPassword={fields[id].isPassword}
+					isSecret={fields[id].isSecret}
 					onChange={onChange}
 				/>
 			);
