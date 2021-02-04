@@ -19,8 +19,11 @@ import { htmlId, nextId } from '../utils/id';
  * @param {string} hideText If specified, the text to use to hide the value of the input. This sets the input to readonly
  * @param {string} inputId The id for the input field. Warning: Will be converted using htmlId! If you need to keep track of it, make sure 'id' === htmlId('id'). See utils/id.js for htmlId
  * @param {string} className The className to be added to the root element
+ * @param {string} isPassword if the input is a password
  */
 const Input = (props) => {
+
+	// TODO setup isSecret
 
 	const [currentValue, setValue] = useState((props.hideText === true) ? props.hideText : props.value);
 	const readOnly = props.hideText || props.readOnly;
@@ -73,7 +76,9 @@ const Input = (props) => {
 	};
 
 	const field = () => {
+		const type = (props.isPassword) ? 'password' : 'text';
 		const input = <input
+			type={type}
 			id={fieldId}
 			name={fieldId}
 			readOnly={readOnly}
@@ -120,7 +125,8 @@ Input.defaultProps = {
 	value: '',
 	readOnly: false,
 	beforeStyle: 'input-group-text',
-	afterStyle: 'btn-primary'
+	afterStyle: 'btn-primary',
+	isPassword: false
 };
 
 Input.propTypes = {
@@ -145,7 +151,8 @@ Input.propTypes = {
 				return new Error(`'inputId' changed from '${id}' to '${html}'! Please change the id if you need to track it.`);
 			}
 		}
-	}
+	},
+	isPassword: PropTypes.bool
 };
 
 export default Input;

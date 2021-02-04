@@ -5,28 +5,31 @@ import { htmlId, nextId } from '../utils/id';
 
 /**
  * Creates a form that will callback the contents
- * @param {*} props.fields An object mapping { id: "Field Label" }
- * 	fields: PropTypes.object.isRequired,
+ * @param {object} props the properties object
+ * @param {object} props.fields An object mapping { id: "Field Label" }
+ * TODO explain isSecret and isPassword
  * @param {string} props.title The title of the form. If set the form will be wrapped in a card
  * @param {function} props.onSubmit callback for the content of the form
  * @param {string} props.className className appended root element
  * @param {string} props.submitText The text for the submit button
  * @param {string} props.buttonStyle The bootstrap button class for the submit button
+ * @param {obj} props.style The style to be applied to the root element
  */
 const Form = (props) => {
 
 	const titleId = (props.title) ? htmlId(props.title) : nextId();
 
-	// Format { id: "Field Label" }
-	const preFields = Object.assign({}, props.fields);
+	// Format { id: { label: "Field Label", ... }, ... }
+	let preFields = Object.assign({}, props.fields);
 
-	// Converts { id: "Field Label" } to { id: { label: "Field Label", value: '', labelId: "some_id" } }
+	// Parse fields to { id: { label: "Field Label", value: '', labelId: "some_id", isPassword: false } }
 	for (const id in preFields) {
-		preFields[id] = {
-			label: preFields[id],
-			value: '',
-			labelId: `${titleId}_${id}`
-		};
+		const orig = Object.assign({}, preFields[id]);
+		if (!orig.label) throw new Error(`Missing 'label' property for field '${id}'`);
+		if (!orig.value) orig.value = '';
+		if (!orig.isPassword) orig.isPassword = false;
+		if (!orig.labelId) orig.labelId = `${titleId}_${id}`;
+		preFields[id] = orig;
 	}
 
 	// Format { id: { label: "Field Label", value: '', labelId: "some_id" } }
@@ -73,6 +76,7 @@ const Form = (props) => {
 					inputId={`${titleId}_${id}`}
 					beforeLabel={fields[id].label}
 					value={fields[id].value}
+					isPassword={fields[id].isPassword}
 					onChange={onChange}
 				/>
 			);
@@ -94,7 +98,7 @@ const Form = (props) => {
 	if (props.title) {
 		// Card version
 		return (
-			<form onSubmit={submit} className={`card ${props.className}`}>
+			<form style={props.style} onSubmit={submit} className={`card ${props.className}`}>
 				<div className="card-header">
 					<strong>{props.title}</strong>
 				</div>
@@ -106,7 +110,7 @@ const Form = (props) => {
 	} else {
 		// Naked
 		return (
-			<form onSubmit={submit} className={`${props.className}`}>
+			<form style={props.style} onSubmit={submit} className={`${props.className}`}>
 				{getBody()}
 			</form >
 		);
