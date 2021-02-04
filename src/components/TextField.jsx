@@ -48,18 +48,14 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 
 	// When the input element onChange event occurs
 	const _onChange = e => {
-		const inputVal = e.target.value;
-		if (hideText) {
-			setValue(inputVal);
-		} else if (isSecret) {
+		const value = e.target.value.replaceAll('\u00A4', ' ');
+		if (isSecret) {
 			// Otherwise space is visible with the secret font
-			setView(inputVal.replaceAll(' ', '\u00A4'));
-			setValue(inputVal.replaceAll('\u00A4', ' '));
+			setValue(value.replaceAll(' ', '\u00A4'));
 		} else {
-			setView(inputVal);
-			setValue(inputVal);
+			setValue(value);
 		}
-		if (onChange) onChange(e);
+		if (onChange) onChange(value, e);
 	};
 
 	const field = () => {

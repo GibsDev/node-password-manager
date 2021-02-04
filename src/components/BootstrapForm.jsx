@@ -47,7 +47,7 @@ const Form = (props) => {
 		if (props.onSubmit) props.onSubmit(values);
 	};
 
-	const _onChange = e => {
+	const _onChange = (value, e) => {
 		// Figure out which fields id changed and update them
 		let fieldsId = '';
 		for (const id in fields) {
@@ -57,7 +57,7 @@ const Form = (props) => {
 			}
 		}
 		const newFields = Object.assign({}, fields);
-		newFields[fieldsId].value = e.target.value;
+		newFields[fieldsId].value = value;
 		setFields(newFields);
 	};
 

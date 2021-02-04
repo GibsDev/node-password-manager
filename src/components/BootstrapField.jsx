@@ -27,8 +27,8 @@ const BootstrapField = (props) => {
 
 	const fieldId = (props.inputId) ? htmlId(props.inputId) : nextId();
 
-	const _onChange = e => {
-		if (props.onChange) props.onChange(e);
+	const _onChange = (value, e) => {
+		if (props.onChange) props.onChange(value, e);
 	};
 
 	const before = () => {
