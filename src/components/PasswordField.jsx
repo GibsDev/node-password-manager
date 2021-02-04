@@ -1,91 +1,81 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
+import browser from '../utils/browser';
+import BootstrapField from './BootstrapField.jsx';
 
 const COPY_MESSAGE = 'Copied';
 const COPY_FAIL_MESSAGE = 'Copy failed';
-const HIDDEN_MESSAGE = '<hidden>';
+const HIDDEN_TEXT = '<hidden>';
 
-const copyToClipboardLegacy = (str) => {
-	return new Promise((resolve, reject) => {
-		const el = document.createElement('textarea');
-		el.value = str;
-		document.body.appendChild(el);
-		el.select();
-		const success = document.execCommand('copy');
-		document.body.removeChild(el);
-		if (success) resolve(); else reject();
-	});
-};
+/**
+ * A read only field use for viewing password information that can copy its value to the clipboard
+ * @param {Object} props
+ * @param {string} props.className className appended to root element
+ * @param {string} props.label the label prefix for the field
+ * @param {boolean} props.hidden if the field should be hidden
+ */
+const PasswordField = ({ className, label, value, hidden }) => {
 
-const PasswordField = ({ className, label, value, hidden, peekable }) => {
-
-	const [isHidden, setHidden] = useState(!(hidden === false));
-	const [isPeekable, setPeekable] = useState(peekable === true);
-	const [inputValue, setValue] = useState((isHidden) ? HIDDEN_MESSAGE : value);
-
-	const hide = () => {
-		setHidden(true);
-		setValue(HIDDEN_MESSAGE);
-	};
-
-	const show = () => {
-		setHidden(false);
-		setValue(value);
-	};
-
-	const onSuccess = () => {
-		setValue(COPY_MESSAGE);
-		setTimeout(() => {
-			(isHidden) ? hide() : show();
-		}, 1000);
-	};
-
-	const onFailure = () => {
-		setValue(COPY_FAIL_MESSAGE);
-		setTimeout(() => {
-			(isHidden) ? hide() : show();
-		}, 1000);
-	};
+	const [hiddenValue, setHiddenValue] = useState(HIDDEN_TEXT);
+	const [currentLabel, setLabel] = useState(label);
+	const [copyButtonStyle, setCopyButtonStyle] = useState('btn-secondary');
 
 	const copy = () => {
-		if (navigator && navigator.clipboard && navigator.clipboard.writeText) {
-			navigator.clipboard.writeText(value).then(onSuccess).catch(onFailure);
-		} else {
-			copyToClipboardLegacy(value).then(onSuccess).catch(onFailure);
-		}
+		const currentStyle = copyButtonStyle;
+		browser.copy(value).then(() => {
+			setHiddenValue(COPY_MESSAGE);
+			setCopyButtonStyle('btn-success');
+			setLabel('Copied');
+		}).catch(err => {
+			console.log(err);
+			displayMessage(COPY_FAIL_MESSAGE, msgTime);
+			setCopyButtonStyle('btn-danger');
+			setLabel('Copy failed');
+		}).finally(() => {
+			// Reset
+			const msgTime = 1000;
+			setTimeout(() => {
+				setCopyButtonStyle(currentStyle);
+				setHiddenValue(HIDDEN_TEXT);
+				setLabel(label);
+			}, msgTime);
+		});
+
 	};
 
-	const peekButton = () => {
-		if (isPeekable) {
-			return (
-				<div className="input-group-append">
-					<button className="btn btn-light" type="button" onTouchStart={show} onTouchEnd={hide} onMouseDown={show} onMouseUp={hide} onMouseLeave={hide}>Peek</button>
-				</div>
-			);
-		}
-	};
-
-	let rootClassname = "input-group input-group";
-	if (className) {
-		rootClassname = className + ' ' + rootClassname;
+	if (hidden) {
+		return (
+			<BootstrapField
+				className={className}
+				hideText={hiddenValue}
+				beforeLabel={label}
+				beforeStyle={copyButtonStyle}
+				value={value}
+				onBeforeDown={copy}
+			/>
+		);
+	} else {
+		return (
+			<BootstrapField
+				className={className}
+				beforeLabel={currentLabel}
+				beforeStyle={copyButtonStyle}
+				value={value}
+				onBeforeDown={copy}
+			/>
+		);
 	}
-	return (
-		<div className={rootClassname}>
-			<div className="input-group-prepend">
-				<button onTouchStart={copy} onClick={copy} title="Copy" className="btn btn-secondary">{label}</button>
-			</div>
-			<input type="text" className="form-control" readOnly value={inputValue}></input>
-			{peekButton()}
-		</div>
-	);
+};
+
+PasswordField.defaultProps = {
+	value: ''
 };
 
 PasswordField.propTypes = {
+	label: PropTypes.string.isRequired,
 	className: PropTypes.string,
-	label: PropTypes.string,
 	value: PropTypes.string,
-	hidden: PropTypes.bool,
-	peekable: PropTypes.bool
+	hidden: PropTypes.bool
 };
 
 export default PasswordField;
