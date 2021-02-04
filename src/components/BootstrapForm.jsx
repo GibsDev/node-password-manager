@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import BootField from './BootstrapField.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
@@ -6,14 +6,13 @@ import { htmlId, nextId } from '../utils/id';
 /**
  * Creates a form that will callback the contents
  * @param {object} props the properties object
+ * @param {string} props.className className appended root element
+ * @param {obj} props.style The style to be applied to the root element
  * @param {object} props.fields An object mapping { id: "Field Label" }
- * TODO explain isSecret and isPassword
  * @param {string} props.title The title of the form. If set the form will be wrapped in a card
  * @param {function} props.onSubmit callback for the content of the form
- * @param {string} props.className className appended root element
  * @param {string} props.submitText The text for the submit button
  * @param {string} props.buttonStyle The bootstrap button class for the submit button
- * @param {obj} props.style The style to be applied to the root element
  */
 const Form = (props) => {
 
@@ -122,15 +121,17 @@ const Form = (props) => {
 };
 
 Form.defaultProps = {
-	submitText: 'Submit',
+	className: '',
+	style: {},
 	buttonStyle: 'btn-primary'
 };
 
 Form.propTypes = {
+	className: PropTypes.string,
+	style: PropTypes.object,
 	fields: PropTypes.object.isRequired,
 	title: PropTypes.string,
 	onSubmit: PropTypes.func,
-	className: PropTypes.string,
 	submitText: PropTypes.string.isRequired,
 	buttonStyle: PropTypes.string
 };
