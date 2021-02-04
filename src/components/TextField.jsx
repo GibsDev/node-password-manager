@@ -6,14 +6,15 @@ import { htmlId, nextId } from '../utils/id';
 /**
  * A input component that can be hidden or obscured.
  * @param {object} props The props object for this component
+ * @param {string} props.className className appended to the root component
  * @param {string} props.value The value of the field
- * @param {string} props.hideText The text to show when hidden. The field is hidden by default, and can be peeked by pressing on it. Sets props.readOnly=true.
- * @param {bool} props.readOnly Set readonly
  * @param {bool} props.isPassword Set type="password"
  * @param {bool} props.isSecret Obscure text without setting type="password" (so browsers no not ask to save)
+ * @param {bool} props.readOnly Set readonly
+ * @param {string} props.hideText The text to show when hidden. The field is hidden by default, and can be peeked by pressing on it. Sets props.readOnly=true.
+ * @param {string} props.hiddenHover the hidden message while hovering
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
- * @param {string} props.hiddenHover the hidden message while hovering
  */
 const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHover }) => {
 
@@ -82,9 +83,7 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 			props.autoCapitalize = 'off';
 			props.spellCheck = 'off';
 		}
-		return <Pressable
-			onPress={onFieldPress}
-			onRelease={onFieldRelease}>
+		return <Pressable onPress={onFieldPress} onRelease={onFieldRelease}>
 			<input {...props} />
 		</Pressable>;
 	};
@@ -93,20 +92,23 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 };
 
 Input.defaultProps = {
+	className: '',
 	value: '',
-	readOnly: false,
 	isPassword: false,
 	isSecret: false,
-	className: '',
-	peekTooltip: false
+	readOnly: false,
+	peekTooltip: false,
+	hiddenHover: '<hidden>'
 };
 
 Input.propTypes = {
-	value: PropTypes.string,
 	className: PropTypes.string,
+	value: PropTypes.string,
 	isPassword: PropTypes.bool,
 	isSecret: PropTypes.bool,
+	readOnly: PropTypes.bool,
 	hideText: PropTypes.string,
+	hiddenHover: PropTypes.string,
 	onChange: PropTypes.func,
 	id: (props, propName, componentName) => {
 		if (props[propName]) {
@@ -116,8 +118,7 @@ Input.propTypes = {
 				return new Error(`'id' changed from '${id}' to '${html}'! Please change the id if you need to track it.`);
 			}
 		}
-	},
-	hiddenHover: PropTypes.string
+	}
 };
 
 export default Input;
