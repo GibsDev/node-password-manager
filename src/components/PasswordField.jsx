@@ -12,6 +12,7 @@ const HIDDEN_TEXT = '<hidden>';
  * @param {Object} props
  * @param {string} props.className className appended to root element
  * @param {string} props.label the label prefix for the field
+ * @param {string} props.value initial value for the field
  * @param {boolean} props.hidden if the field should be hidden
  */
 const PasswordField = ({ className, label, value, hidden }) => {
@@ -43,31 +44,21 @@ const PasswordField = ({ className, label, value, hidden }) => {
 
 	};
 
+	const props = {
+		className: className,
+		readOnly: true,
+		beforeStyle: copyButtonStyle,
+		value: value,
+		onBeforeDown: copy
+	};
 	if (hidden) {
-		return (
-			<BootstrapField
-				readOnly
-				className={className}
-				hideText={hiddenValue}
-				hiddenHover='<peek>'
-				beforeLabel={label}
-				beforeStyle={copyButtonStyle}
-				value={value}
-				onBeforeDown={copy}
-			/>
-		);
+		props.beforeLabel = label;
+		props.hideText = hiddenValue;
+		props.hiddenHover = '<peek>';
 	} else {
-		return (
-			<BootstrapField
-				readOnly
-				className={className}
-				beforeLabel={currentLabel}
-				beforeStyle={copyButtonStyle}
-				value={value}
-				onBeforeDown={copy}
-			/>
-		);
+		props.beforeLabel = currentLabel;
 	}
+	return <BootstrapField {...props} />;
 };
 
 PasswordField.defaultProps = {
