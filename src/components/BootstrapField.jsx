@@ -23,7 +23,7 @@ import TextField from './TextField.jsx';
  * @param {string} isSecret if the input should be hidden, but you do not want a browser to attempt to save it as a password
  * @param {string} hiddenHover the message while hidden and hovering
  */
-const Input = (props) => {
+const BootstrapField = (props) => {
 
 	const fieldId = (props.inputId) ? htmlId(props.inputId) : nextId();
 
@@ -91,7 +91,7 @@ const Input = (props) => {
 	);
 };
 
-Input.defaultProps = {
+BootstrapField.defaultProps = {
 	value: '',
 	readOnly: false,
 	beforeStyle: 'input-group-text',
@@ -100,7 +100,7 @@ Input.defaultProps = {
 	isSecret: false
 };
 
-Input.propTypes = {
+BootstrapField.propTypes = {
 	beforeLabel: PropTypes.string,
 	beforeStyle: PropTypes.string,
 	onBeforeDown: PropTypes.func,
@@ -128,4 +128,4 @@ Input.propTypes = {
 	hiddenHover: PropTypes.string
 };
 
-export default Input;
+export default BootstrapField;
