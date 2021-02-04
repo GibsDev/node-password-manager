@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Pressable from './Pressable.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
@@ -22,19 +22,26 @@ import { htmlId, nextId } from '../utils/id';
  */
 const Input = (props) => {
 
-	const [currentValue, setValue] = useState((props.hideText) ? props.hideText : props.value);
-	const [readOnly, setReadOnly] = useState(props.readOnly || props.hideText && !props.readOnly);
-
+	const [currentValue, setValue] = useState((props.hideText === true) ? props.hideText : props.value);
+	const readOnly = props.hideText || props.readOnly;
 	const fieldId = (props.inputId) ? htmlId(props.inputId) : nextId();
 
+	// TODO figure out why the hidden message will not update without this:
+	// For some reason the hideText does not get updated without this:
+	useEffect(() => {
+		if (props.hideText) {
+			setValue(props.hideText);
+		}
+	}, [props.hideText]);
+
 	const onFieldPress = () => {
-		if (props.hideText && readOnly) {
+		if (props.hideText) {
 			setValue(props.value);
 		}
 	};
 
 	const onFieldRelease = () => {
-		if (props.hideText && readOnly) {
+		if (props.hideText) {
 			setValue(props.hideText);
 		}
 	};
