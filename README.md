@@ -1,21 +1,27 @@
 ## TODO
 
-- SIMPLIFY Components using BootstrapField and Pressable
+### Server
 
 - Token renewal on good request
-- Write file sctructure section in README
-- Create a page for inserting passwords
-- Password component monolith? Should we break it up more? How?
-
-- Documentation
 - More promise error checking/handling?
+- Make passwords deletable
 
-- Fix className use on custom components
+### Fronend
 
-- Create a generic form component?
-- Delete (with confirm) key
+- Revamp Password component with new bootstrap subcomponents
 - Confirm overwrite existing key
-- Create exported constants for BootstrapField Buttons?
+- Find a secret font that doesnt show spaces... (and matches the default password font better? maybe)
+- Disable spellcheck highlighting for secret input fields if possible
+- Disable autocapitalization for applicable fields
+- Continue simplifying components using subcomponents
+- Fix className use on custom components
+- Make passwords deletable (with strict confirm)
+
+### Other
+
+- Document document document
+- Write file sctructure section in README
+- Fix documentation of props argument to follow correct format
 
 ## Things learned
 How to make use of the Set-Cookie and Cookie headers for more secure JWT storage.
@@ -24,9 +30,7 @@ When Firefox receives a Set-Cookie header from an XMLHttpRequest, it DOES set th
 
 AES256 requires specific initialization vector (128 bit) and key (256 bit) lengths.
 
-## React reference
-
-[Add React in One Minute](https://reactjs.org/docs/add-react-to-a-website.html#add-react-in-one-minute)
+How to React
 
 ## Hosting
 
