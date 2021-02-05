@@ -6,13 +6,12 @@ import PropTypes from 'prop-types';
  * Single input form with one button and no label
  * @param {object} props the properties object
  */
-const Form = ({ className, style, value, label, id, onSubmit, isSecret }) => {
+const Form = ({ className, style, value, label, id, onSubmit, isSecret, buttonStyle }) => {
 
-	const [currentValue, setValue] = useState('');
+	const [currentValue, setValue] = useState(value);
 
 	const _onSubmit = e => {
 		e.preventDefault();
-		console.log(currentValue);
 		if (onSubmit) onSubmit(currentValue);
 	};
 
@@ -23,10 +22,10 @@ const Form = ({ className, style, value, label, id, onSubmit, isSecret }) => {
 				style={style} id={id}
 				onChange={value => setValue(value)}
 				afterLabel={label}
-				afterStyle='btn-primary'
 				isSecret={isSecret}
 				inputId={id}
-				value={value}
+				value={currentValue}
+				afterStyle={buttonStyle}
 				afterProps={{type: 'submit'}} />
 		</form>
 	);
@@ -36,7 +35,8 @@ Form.defaultProps = {
 	className: '',
 	style: {},
 	value: '',
-	isSecret: false
+	isSecret: false,
+	buttonStyle: 'btn-primary'
 };
 
 Form.propTypes = {
@@ -46,7 +46,8 @@ Form.propTypes = {
 	label: PropTypes.string.isRequired,
 	onSubmit: PropTypes.func,
 	value: PropTypes.string,
-	isSecret: PropTypes.bool
+	isSecret: PropTypes.bool,
+	buttonStyle: PropTypes.string
 };
 
 export default Form;

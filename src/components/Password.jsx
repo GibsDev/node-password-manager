@@ -1,19 +1,21 @@
-import { useRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PasswordField from './PasswordField.jsx';
+import SimpleForm from './SimpleForm.jsx';
+import { nextId } from '../utils/id';
 const $ = require('jquery');
 
 const Password = (props) => {
 
-	const [passwordObject, setPasswordObject] = useState(props.password);
-	const [key, setKey] = useState('');
-	const [showBody, setShowBody] = useState(false);
-	const [showDecrypt, setShowDecrypt] = useState(false);
-	const [encrypted, setEncrypted] = useState(true);
-	const [loading, setLoading] = useState(false);
-	const [decryptError, setDecryptError] = useState(false);
+	const decryptId = 'decrypt_field_' + nextId();
 
-	const decryptField = useRef(null);
+	const [passwordObject, setPasswordObject] = useState(props.password);
+	const [showBody, setShowBody] = useState(false);
+	const [encrypted, setEncrypted] = useState(true);
+	
+	const [showDecrypt, setShowDecrypt] = useState(false);
+	const [decryptButtonStyle, setDecryptButtonStyle] = useState('btn-primary');
+	const [decryptButtonText, setDecryptButtonText] = useState('Decrypt');
 
 	const unlock = () => {
 		setShowBody(true);
@@ -22,14 +24,11 @@ const Password = (props) => {
 
 	useEffect(() => {
 		if (showDecrypt) {
-			decryptField.current.focus();
+			document.getElementById(decryptId).focus();
 		}
-	}, [showDecrypt]);
+	}, [showDecrypt, decryptId]);
 
-	const decrypt = (e) => {
-		const k = key;
-		setKey('');
-		e.preventDefault();
+	const decrypt = key => {
 		const options = {
 			url: 'api/passwords/' + passwordObject.name,
 			type: 'GET',
@@ -39,19 +38,22 @@ const Password = (props) => {
 				xhr.setRequestHeader("X-API-Key", key);
 			}
 		};
-		setLoading(true);
 		$.ajax(options).then(res => {
 			setPasswordObject(res);
 			setShowDecrypt(false);
 			setEncrypted(false);
-			setLoading(false);
+			setDecryptButtonStyle('btn-success');
+			setTimeout(() => {
+				setDecryptButtonStyle('btn-primary');
+			}, 1000);
 		}).catch(err => {
 			console.log(err);
-			setDecryptError(true);
+			setDecryptButtonStyle('btn-danger');
+			setDecryptButtonText('Failed');
 			setTimeout(() => {
-				setDecryptError(false);
-			}, 5000);
-			setLoading(false);
+				setDecryptButtonStyle('btn-primary');
+				setDecryptButtonText('Decrypt');
+			}, 1000);
 		});
 	};
 
@@ -84,35 +86,19 @@ const Password = (props) => {
 	};
 
 	const decryptForm = () => {
-		let buttonStyle = 'btn-primary';
-		let buttonText = 'Decrypt';
-		if (loading) {
-			buttonStyle = 'btn-warning';
-			buttonText = 'Decrypting';
-		}
-		let alert = <ul className="list-group mt-2">
-			<li className="list-group-item list-group-item-danger">Failed to decrypt password</li>
-		</ul>;
-		if (!decryptError) {
-			alert = null;
-		}
 		if (showDecrypt) {
-			return (
-				<>
-					<form onSubmit={decrypt} className="input-group input-group float-right mt-3">
-						<input ref={decryptField} autoFocus={true} autoCapitalize="off" className="form-control secret" type="text" value={key} onChange={e => setKey(e.target.value)}></input>
-						<div className="input-group-append">
-							<button type="submit" className={`btn btn ${buttonStyle}`} disabled={loading}>{buttonText}</button>
-						</div>
-					</form>
-					{alert}
-				</>
-			);
+			return <SimpleForm
+				className='mt-3'
+				label={decryptButtonText}
+				buttonStyle={decryptButtonStyle}
+				isSecret
+				onSubmit={decrypt}
+				id={decryptId}
+			/>;
 		}
 	};
 
 	const unlockButton = () => {
-		const unlockOrCancel = (showDecrypt) ? 'Cancel' : 'Unlock';
 		let text = 'Lock';
 		let buttonStyle = 'btn-outline-danger';
 		let clickHandler = lock;

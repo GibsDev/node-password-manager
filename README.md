@@ -8,6 +8,7 @@
 
 ### Fronend
 
+- Consider removing some props for BootstrapField and use beforeProps and afterProps instead
 - Revamp Password component with new bootstrap subcomponents
 - Confirm overwrite existing key
 - Find a secret font that doesnt show spaces... (and matches the default password font better? maybe)
