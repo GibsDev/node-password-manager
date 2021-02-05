@@ -43,7 +43,7 @@ Form.propTypes = {
 	style: PropTypes.object,
 	id: PropTypes.string.isRequired,
 	label: PropTypes.string.isRequired,
-	onSubmit: PropTypes.string,
+	onSubmit: PropTypes.func,
 	value: PropTypes.string,
 	isSecret: PropTypes.bool
 };
