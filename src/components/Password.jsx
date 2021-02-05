@@ -2,17 +2,16 @@ import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PasswordField from './PasswordField.jsx';
 import SimpleForm from './SimpleForm.jsx';
-import { nextId } from '../utils/id';
+import { htmlId } from '../utils/id';
 const $ = require('jquery');
 
 const Password = (props) => {
-
-	const decryptId = 'decrypt_field_' + nextId();
 
 	const [passwordObject, setPasswordObject] = useState(props.password);
 	const [showBody, setShowBody] = useState(false);
 	const [encrypted, setEncrypted] = useState(true);
 	
+	const decryptId = htmlId(passwordObject.name) + '_decrypt_field';
 	const [showDecrypt, setShowDecrypt] = useState(false);
 	const [decryptButtonStyle, setDecryptButtonStyle] = useState('btn-primary');
 	const [decryptButtonText, setDecryptButtonText] = useState('Decrypt');
@@ -48,6 +47,7 @@ const Password = (props) => {
 			}, 1000);
 		}).catch(err => {
 			console.log(err);
+			document.getElementById(decryptId).value = '';
 			setDecryptButtonStyle('btn-danger');
 			setDecryptButtonText('Failed');
 			setTimeout(() => {
@@ -93,8 +93,7 @@ const Password = (props) => {
 				buttonStyle={decryptButtonStyle}
 				isSecret
 				onSubmit={decrypt}
-				id={decryptId}
-			/>;
+				id={decryptId} />;
 		}
 	};
 
@@ -113,20 +112,24 @@ const Password = (props) => {
 			}
 		}
 		return (
-			<button type="button" className={`btn ${buttonStyle} ml-4`} onClick={clickHandler}>{text}</button>
+			<button
+				type="button"
+				className={`btn ${buttonStyle} ml-4`}
+				onClick={clickHandler} >
+				{text}
+			</button>
 		);
 	};
 
 	const cardBody = () => {
-		if (!showBody) {
-			return;
+		if (showBody) {
+			return (
+				<div className="card-body d-flex flex-column">
+					{credentials()}
+					{decryptForm()}
+				</div>
+			);
 		}
-		return (
-			<div className="card-body d-flex flex-column">
-				{credentials()}
-				{decryptForm()}
-			</div>
-		);
 	};
 
 	return (
