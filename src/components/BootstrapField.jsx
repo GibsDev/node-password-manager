@@ -22,6 +22,8 @@ import TextField from './TextField.jsx';
  * @param {string} isPassword if the input is a password
  * @param {string} isSecret if the input should be hidden, but you do not want a browser to attempt to save it as a password
  * @param {string} hiddenHover the message while hidden and hovering
+ * @param {string} beforeProps extra props to be added to before
+ * @param {string} afterProps extra props to be added to after
  */
 const BootstrapField = (props) => {
 
@@ -35,9 +37,9 @@ const BootstrapField = (props) => {
 		if (!props.beforeLabel) {
 			return;
 		}
-		let label = <label className="input-group-text" htmlFor={fieldId}>{props.beforeLabel}</label>;
+		let label = <label {...props.beforeProps} className="input-group-text" htmlFor={fieldId}>{props.beforeLabel}</label>;
 		if (props.beforeStyle.includes('btn')) {
-			label = <button className={`btn ${props.beforeStyle}`}>{props.beforeLabel}</button>;
+			label = <button {...props.beforeProps} className={`btn ${props.beforeStyle}`}>{props.beforeLabel}</button>;
 		}
 		return (
 			<div className="input-group-prepend">
@@ -67,9 +69,9 @@ const BootstrapField = (props) => {
 		if (!props.afterLabel) {
 			return;
 		}
-		let label = <label className="input-group-text" htmlFor={fieldId}>{props.afterLabel}</label>;
+		let label = <label {...props.afterProps} className="input-group-text" htmlFor={fieldId}>{props.afterLabel}</label>;
 		if (props.afterStyle.includes('btn')) {
-			label = <button className={`btn ${props.afterStyle}`}>{props.afterLabel}</button>;
+			label = <button {...props.afterProps} className={`btn ${props.afterStyle}`}>{props.afterLabel}</button>;
 		}
 		return (
 			<div className="input-group-append">
@@ -97,7 +99,9 @@ BootstrapField.defaultProps = {
 	beforeStyle: 'input-group-text',
 	afterStyle: 'btn-primary',
 	isPassword: false,
-	isSecret: false
+	isSecret: false,
+	beforeProps: {},
+	afterProps: {}
 };
 
 BootstrapField.propTypes = {
@@ -125,7 +129,9 @@ BootstrapField.propTypes = {
 	},
 	isPassword: PropTypes.bool,
 	isSecret: PropTypes.bool,
-	hiddenHover: PropTypes.string
+	hiddenHover: PropTypes.string,
+	beforeProps: PropTypes.object,
+	afterProps: PropTypes.object
 };
 
 export default BootstrapField;
