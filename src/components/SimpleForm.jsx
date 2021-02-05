@@ -25,6 +25,7 @@ const Form = ({ className, style, value, label, id, onSubmit, isSecret }) => {
 				afterLabel={label}
 				afterStyle='btn-primary'
 				isSecret={isSecret}
+				inputId={id}
 				value={value}
 				afterProps={{type: 'submit'}} />
 		</form>
