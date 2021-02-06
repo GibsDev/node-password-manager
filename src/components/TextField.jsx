@@ -16,7 +16,7 @@ import { htmlId, nextId } from '../utils/id';
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
  */
-const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }) => {
+const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }) => {
 
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
@@ -90,7 +90,7 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 	return field();
 };
 
-Input.defaultProps = {
+TextField.defaultProps = {
 	className: '',
 	value: '',
 	isPassword: false,
@@ -99,7 +99,7 @@ Input.defaultProps = {
 	peekTooltip: false
 };
 
-Input.propTypes = {
+TextField.propTypes = {
 	className: PropTypes.string,
 	value: PropTypes.string,
 	isPassword: PropTypes.bool,
@@ -119,4 +119,4 @@ Input.propTypes = {
 	}
 };
 
-export default Input;
+export default TextField;
