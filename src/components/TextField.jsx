@@ -61,7 +61,6 @@ const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret,
 		if (value !== currentValue) {
 			setValue(value);
 		}
-		console.log(value);
 	};
 
 	const _onMouseOver = () => setHovered(true);
