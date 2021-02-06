@@ -76,6 +76,7 @@ const BootstrapForm = (props) => {
 					beforeLabel={fields[id].label}
 					isPassword={fields[id].isPassword}
 					isSecret={fields[id].isSecret}
+					value={fields[id].value}
 					onChange={value => _onChange(value, id)} />
 			);
 		}
