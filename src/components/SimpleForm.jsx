@@ -1,5 +1,5 @@
 import { useState, forwardRef } from 'react';
-import BootstrapField from './BootstrapField.jsx';
+import TextField from './TextField.jsx';
 import PropTypes from 'prop-types';
 
 /**
@@ -16,18 +16,16 @@ const SimpleForm = forwardRef(({ className, style, value, label, id, onSubmit, i
 	};
 
 	return (
-		<form onSubmit={_onSubmit}>
-			<BootstrapField
+		<form onSubmit={_onSubmit} style={style} className={'input-group ' + className}>
+			<TextField
 				ref={ref}
-				className={className}
-				style={style} id={id}
-				onChange={value => setValue(value)}
-				afterLabel={label}
+				className='form-control'
 				isSecret={isSecret}
-				inputId={id}
-				value={currentValue}
-				afterStyle={buttonStyle}
-				afterProps={{type: 'submit'}} />
+				id={id}
+				onChange={v => setValue(v)} />
+			<div className='input-group-append'>
+				<button type='submit' className={'btn ' + buttonStyle}>{label}</button>
+			</div>
 		</form>
 	);
 });
