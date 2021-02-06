@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import BootField from './BootstrapField.jsx';
+import BootstrapField from './BootstrapField.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
 
@@ -14,7 +14,7 @@ import { htmlId, nextId } from '../utils/id';
  * @param {string} props.submitText The text for the submit button
  * @param {string} props.buttonStyle The bootstrap button class for the submit button
  */
-const Form = (props) => {
+const BootstrapForm = (props) => {
 
 	// We need to store titleId within state so that it does not generate a new id each time it updates
 	const [titleId, setTitleId] = useState((props.title) ? htmlId(props.title) : nextId());
@@ -71,7 +71,7 @@ const Form = (props) => {
 				first = false;
 			}
 			fieldElems.push(
-				<BootField
+				<BootstrapField
 					className={marginTop}
 					key={`${titleId}_${id}`}
 					inputId={`${titleId}_${id}`}
@@ -119,13 +119,13 @@ const Form = (props) => {
 
 };
 
-Form.defaultProps = {
+BootstrapForm.defaultProps = {
 	className: '',
 	style: {},
 	buttonStyle: 'btn-primary'
 };
 
-Form.propTypes = {
+BootstrapForm.propTypes = {
 	className: PropTypes.string,
 	style: PropTypes.object,
 	fields: PropTypes.object.isRequired,
@@ -135,4 +135,4 @@ Form.propTypes = {
 	buttonStyle: PropTypes.string
 };
 
-export default Form;
+export default BootstrapForm;
