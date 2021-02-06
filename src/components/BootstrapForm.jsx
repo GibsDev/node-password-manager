@@ -35,6 +35,9 @@ const BootstrapForm = (props) => {
 		return resultFields;
 	};
 
+	// Format { id: { label: "Field Label", value: '', labelId: "some_id" } }
+	const [fields, setFields] = useState(parseState(props.fields));
+
 	const parseValuesFromState = (flds) => {
 		const values = Object.assign({}, flds);
 		// Converts { id: { label: "Field Label", value: '', labelId: "some_id" } } to { id: "Field Label" }
@@ -43,9 +46,6 @@ const BootstrapForm = (props) => {
 		}
 		return values;
 	};
-
-	// Format { id: { label: "Field Label", value: '', labelId: "some_id" } }
-	const [fields, setFields] = useState(parseState(props.fields));
 
 	const submit = e => {
 		// Do not POST
@@ -59,39 +59,32 @@ const BootstrapForm = (props) => {
 		setFields(newFields);
 	};
 
-	const getFields = () => {
-		const fieldElems = [];
-		let first = true;
-		for (const id in fields) {
-			const marginTop = 'mt-1';
-			if (first) {
-				marginTop = '';
-				first = false;
-			}
-			fieldElems.push(
-				<div key={`${titleId}_${id}_label`} className='input-group'>
-					<div className='input-group-prepend'>
-						<label className='input-group-text' htmlFor={`${titleId}_${id}`} >
-							{fields[id].label}
-						</label>
-					</div>
-					<TextField
-						className='form-control'
-						inputId={`${titleId}_${id}`}
-						isPassword={fields[id].isPassword}
-						isSecret={fields[id].isSecret}
-						value={fields[id].value}
-						onChange={value => _onChange(value, id)} />
+	const items = Object.entries(fields).map(([id, field], index) => {
+		const baseClassName = 'input-group';
+		// Add margin top 1 to everything but the top
+		const finalClassName = (index === 0) ? baseClassName : baseClassName + ' mt-1';
+		return (
+			<div key={`${titleId}_${id}_label`} className={finalClassName}>
+				<div className='input-group-prepend'>
+					<label className='input-group-text' htmlFor={`${titleId}_${id}`} >
+						{field.label}
+					</label>
 				</div>
-			);
-		}
-		return fieldElems;
-	};
+				<TextField
+					className='form-control'
+					inputId={`${titleId}_${id}`}
+					isPassword={field.isPassword}
+					isSecret={field.isSecret}
+					value={field.value}
+					onChange={value => _onChange(value, id)} />
+			</div>
+		);
+	});
 
 	const getBody = () => {
 		return (
 			<>
-				{getFields()}
+				{items}
 				<button className={`mt-1 btn ${props.buttonStyle}`} type="submit">
 					{props.submitText}
 				</button>
