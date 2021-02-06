@@ -62,7 +62,7 @@ const BootstrapField = (props) => {
 			isSecret={props.isSecret}
 			onChange={_onChange}
 			id={props.inputId}
-			hiddenHover={props.hiddenHover} />;
+			hiddenHoverText={props.hiddenHoverText} />;
 	};
 
 	const after = () => {
@@ -129,7 +129,7 @@ BootstrapField.propTypes = {
 	},
 	isPassword: PropTypes.bool,
 	isSecret: PropTypes.bool,
-	hiddenHover: PropTypes.string,
+	hiddenHoverText: PropTypes.string,
 	beforeProps: PropTypes.object,
 	afterProps: PropTypes.object
 };

@@ -54,7 +54,7 @@ const PasswordField = ({ className, label, value, hidden }) => {
 	if (hidden) {
 		props.beforeLabel = label;
 		props.hideText = hiddenValue;
-		props.hiddenHover = '<peek>';
+		props.hiddenHoverText = '<peek>';
 	} else {
 		props.beforeLabel = currentLabel;
 	}
