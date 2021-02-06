@@ -10,7 +10,7 @@ import TextField from './TextField.jsx';
  * @param {function} onBeforeDown The function to be called when the user presses on the before element
  * @param {function} onBeforeUp The function to be called when the user releases from the before element
  * @param {string} value The starting value to be shown in the input field
- * @param {string} onChange The starting value to be shown in the input field
+ * @param {string} onChange The function to listen for the value to change
  * @param {function} afterLabel The label of the element after the input field (right)
  * @param {string} afterStyle The style of the element after the input field (right). To make it a button, use a bootstrap button class for the style you want
  * @param {function} onAfterDown The function to be called when the user presses on the after element

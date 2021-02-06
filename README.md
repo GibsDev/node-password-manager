@@ -8,14 +8,12 @@
 
 ### Fronend
 
+- Make forms not need to rely on onChange passing up the element change event
 - Consider removing some props for BootstrapField and use beforeProps and afterProps instead
-- Revamp Password component with new bootstrap subcomponents
 - Confirm overwrite existing key
-- Find a secret font that doesnt show spaces... (and matches the default password font better? maybe)
-- Disable spellcheck highlighting for secret input fields if possible
-- Disable autocapitalization for applicable fields
 - Continue simplifying components using subcomponents
 - Fix className use on custom components
+- Add styles to each custom component
 - Make passwords deletable (with strict confirm)
 
 ### Other
