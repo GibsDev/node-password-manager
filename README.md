@@ -8,14 +8,14 @@
 
 ### Fronend
 
-- Make forms not need to rely on onChange passing up the element change event
 - Consider removing some props for BootstrapField and use beforeProps and afterProps instead
 - Confirm overwrite existing key
+- Make passwords deletable (with strict confirm)
+- Look into code splitting for imports (react, webpack)
+
 - Continue simplifying components using subcomponents
 - Fix className use on custom components
 - Add styles to each custom component
-- Make passwords deletable (with strict confirm)
-- Look into code splitting for imports (react, webpack)
 
 ### Other
 
