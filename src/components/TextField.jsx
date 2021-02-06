@@ -16,10 +16,11 @@ import { htmlId, nextId } from '../utils/id';
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
  */
-const TextField = forwardRef( ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }, ref) => {
+const TextField = forwardRef(({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }, ref) => {
 
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
+	const [prevValue, setPrevValue] = useState(value);
 	const [view, setView] = useState((hideText) ? hideText : currentValue);
 
 	const [isPressed, setPressed] = useState(false);
@@ -50,11 +51,19 @@ const TextField = forwardRef( ({ className, value, hideText, readOnly, isPasswor
 		setValue(value);
 	}, [value]);
 
+	// Let parent know of changes
 	useEffect(() => {
-		// Let parent know of changes
-		if (onChange) onChange(currentValue);
+		// Only update if the value changed
+		if (onChange && currentValue !== prevValue) {
+			onChange(currentValue);
+			setPrevValue(currentValue);
+		}
+	}, [currentValue, onChange, prevValue]);
+
+	// Always show most current view
+	useEffect(() => {
 		setView(calcView());
-	}, [currentValue]);
+	}, [currentValue, calcView]);
 
 	const _onChange = e => {
 		const value = e.target.value;
@@ -91,7 +100,7 @@ const TextField = forwardRef( ({ className, value, hideText, readOnly, isPasswor
 	return <Pressable onPress={onFieldPress} onRelease={onFieldRelease}>
 		<input ref={ref} {...props} />
 	</Pressable>;
-} );
+});
 
 TextField.displayName = 'TextField';
 
