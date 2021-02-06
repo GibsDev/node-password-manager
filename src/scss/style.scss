@@ -7,7 +7,7 @@
 	src: url('./password.ttf');
 }
 
-input[type="text"].secret {
+input[type="text"].secret, input[type="password"] {
 	font-family: 'secret', monospace;
 }
 
