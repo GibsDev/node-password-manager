@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 import browser from '../utils/browser';
-import BootstrapField from './BootstrapField.jsx';
+import Pressable from './Pressable.jsx';
+import TextField from './TextField.jsx';
 
 const COPY_MESSAGE = 'Copied';
 const COPY_FAIL_MESSAGE = 'Copy failed';
 const HIDDEN_TEXT = '<hidden>';
+const HIDDEN_HOVER_TEXT = '<peek>';
 
 /**
  * A read only field use for viewing password information that can copy its value to the clipboard
@@ -15,7 +17,7 @@ const HIDDEN_TEXT = '<hidden>';
  * @param {string} props.value initial value for the field
  * @param {boolean} props.hidden if the field should be hidden
  */
-const PasswordField = ({ className, label, value, hidden }) => {
+const PasswordField = ({ className, style, label, value, hidden }) => {
 
 	const [hiddenValue, setHiddenValue] = useState(HIDDEN_TEXT);
 	const [currentLabel, setLabel] = useState(label);
@@ -44,30 +46,42 @@ const PasswordField = ({ className, label, value, hidden }) => {
 
 	};
 
-	const props = {
-		className: className,
-		readOnly: true,
-		beforeStyle: copyButtonStyle,
-		value: value,
-		onBeforeDown: copy
-	};
+	const fieldProps = {};
 	if (hidden) {
-		props.beforeLabel = label;
-		props.hideText = hiddenValue;
-		props.hiddenHoverText = '<peek>';
+		fieldProps.beforeLabel = label;
+		fieldProps.hideText = hiddenValue;
+		fieldProps.hiddenHoverText = HIDDEN_HOVER_TEXT;
 	} else {
-		props.beforeLabel = currentLabel;
+		fieldProps.beforeLabel = currentLabel;
 	}
-	return <BootstrapField {...props} />;
+	return (
+		<div className={className + ' input-group'} style={style}>
+			<div className='input-group-prepend'>
+				<Pressable onPress={copy}>
+					<button className={'input-group-text btn ' + copyButtonStyle}>
+						{(hidden) ? label : currentLabel}
+					</button>
+				</Pressable>
+			</div>
+			<TextField
+				className={'form-control'}
+				readOnly
+				value={value}
+				{...fieldProps} />
+		</div>
+	);
 };
 
 PasswordField.defaultProps = {
+	className: '',
+	style: {},
 	value: ''
 };
 
 PasswordField.propTypes = {
-	label: PropTypes.string.isRequired,
 	className: PropTypes.string,
+	style: PropTypes.object,
+	label: PropTypes.string.isRequired,
 	value: PropTypes.string,
 	hidden: PropTypes.bool
 };
