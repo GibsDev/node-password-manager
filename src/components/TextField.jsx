@@ -16,7 +16,7 @@ import { htmlId, nextId } from '../utils/id';
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
  */
-const TextField = forwardRef(({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }, ref) => {
+const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }, ref) => {
 
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
@@ -80,25 +80,28 @@ const TextField = forwardRef(({ className, value, hideText, readOnly, isPassword
 	const type = (isPassword) ? 'password' : 'text';
 	let cn = className;
 	if (isSecret) cn += ' secret';
-	const props = {
-		type: type,
-		id: computedId,
-		name: computedId,
-		readOnly: isReadOnly,
-		className: cn,
-		onChange: _onChange,
-		value: view,
-		onMouseOver: _onMouseOver,
-		onMouseOut: _onMouseOut
-	};
+	let extraProps = {};
 	if (isSecret || isPassword) {
-		props.autoComplete = 'off';
-		props.autoCorrect = 'off';
-		props.autoCapitalize = 'off';
-		props.spellCheck = 'off';
+		extraProps.autoComplete = 'off';
+		extraProps.autoCorrect = 'off';
+		extraProps.autoCapitalize = 'off';
+		extraProps.spellCheck = 'off';
 	}
 	return <Pressable onPress={onFieldPress} onRelease={onFieldRelease}>
-		<input ref={ref} {...props} />
+		<input
+			ref={ref}
+			className={cn}
+			style={style}
+			type={type}
+			id={computedId}
+			name={computedId}
+			readOnly={isReadOnly}
+			onChange={_onChange}
+			value={view}
+			onMouseOver={_onMouseOver}
+			onMouseOut={_onMouseOut}
+			{...props}
+			{...extraProps} />
 	</Pressable>;
 });
 
@@ -110,11 +113,15 @@ TextField.defaultProps = {
 	isPassword: false,
 	isSecret: false,
 	readOnly: false,
-	peekTooltip: false
+	peekTooltip: false,
+	props: {},
+	style: {}
 };
 
 TextField.propTypes = {
 	className: PropTypes.string,
+	style: PropTypes.object,
+	props: PropTypes.object,
 	value: PropTypes.string,
 	isPassword: PropTypes.bool,
 	isSecret: PropTypes.bool,
