@@ -47,7 +47,7 @@ const BootstrapForm = (props) => {
 		if (props.onSubmit) props.onSubmit(values);
 	};
 
-	const _onChange = (value, e) => {
+	const _onChange = value => {
 		// Figure out which fields id changed and update them
 		let fieldsId = '';
 		for (const id in fields) {

@@ -30,8 +30,8 @@ const BootstrapField = forwardRef((props, ref) => {
 
 	const fieldId = (props.inputId) ? htmlId(props.inputId) : nextId();
 
-	const _onChange = (value, e) => {
-		if (props.onChange) props.onChange(value, e);
+	const _onChange = value => {
+		if (props.onChange) props.onChange(value);
 	};
 
 	const before = () => {
