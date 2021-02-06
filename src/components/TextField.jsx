@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 import Pressable from './Pressable.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
@@ -16,7 +16,7 @@ import { htmlId, nextId } from '../utils/id';
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
  */
-const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }) => {
+const TextField = forwardRef( ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }, ref) => {
 
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
@@ -68,34 +68,32 @@ const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret,
 	const onFieldPress = () => setPressed(true);
 	const onFieldRelease = () => setPressed(false);
 
-	const field = () => {
-		const type = (isPassword) ? 'password' : 'text';
-		let cn = className;
-		if (isSecret) cn += ' secret';
-		const props = {
-			type: type,
-			id: computedId,
-			name: computedId,
-			readOnly: isReadOnly,
-			className: cn,
-			onChange: _onChange,
-			value: view,
-			onMouseOver: _onMouseOver,
-			onMouseOut: _onMouseOut
-		};
-		if (isSecret || isPassword) {
-			props.autoComplete = 'off';
-			props.autoCorrect = 'off';
-			props.autoCapitalize = 'off';
-			props.spellCheck = 'off';
-		}
-		return <Pressable onPress={onFieldPress} onRelease={onFieldRelease}>
-			<input {...props} />
-		</Pressable>;
+	const type = (isPassword) ? 'password' : 'text';
+	let cn = className;
+	if (isSecret) cn += ' secret';
+	const props = {
+		type: type,
+		id: computedId,
+		name: computedId,
+		readOnly: isReadOnly,
+		className: cn,
+		onChange: _onChange,
+		value: view,
+		onMouseOver: _onMouseOver,
+		onMouseOut: _onMouseOut
 	};
+	if (isSecret || isPassword) {
+		props.autoComplete = 'off';
+		props.autoCorrect = 'off';
+		props.autoCapitalize = 'off';
+		props.spellCheck = 'off';
+	}
+	return <Pressable onPress={onFieldPress} onRelease={onFieldRelease}>
+		<input ref={ref} {...props} />
+	</Pressable>;
+} );
 
-	return field();
-};
+TextField.displayName = 'TextField';
 
 TextField.defaultProps = {
 	className: '',

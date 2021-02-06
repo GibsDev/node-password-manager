@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import PasswordField from './PasswordField.jsx';
 import SimpleForm from './SimpleForm.jsx';
@@ -7,10 +7,12 @@ const $ = require('jquery');
 
 const Password = (props) => {
 
+	const decryptInputElem = useRef(null);
+
 	const [passwordObject, setPasswordObject] = useState(props.password);
 	const [showBody, setShowBody] = useState(false);
 	const [encrypted, setEncrypted] = useState(true);
-	
+
 	const decryptId = htmlId(passwordObject.name) + '_decrypt_field';
 	const [showDecrypt, setShowDecrypt] = useState(false);
 	const [decryptButtonStyle, setDecryptButtonStyle] = useState('btn-primary');
@@ -22,10 +24,8 @@ const Password = (props) => {
 	};
 
 	useEffect(() => {
-		if (showDecrypt) {
-			document.getElementById(decryptId).focus();
-		}
-	}, [showDecrypt, decryptId]);
+		if (showDecrypt) decryptInputElem.current.focus();
+	}, [showDecrypt]);
 
 	const decrypt = key => {
 		const options = {
@@ -88,6 +88,7 @@ const Password = (props) => {
 	const decryptForm = () => {
 		if (showDecrypt) {
 			return <SimpleForm
+				ref={decryptInputElem}
 				className='mt-3'
 				label={decryptButtonText}
 				buttonStyle={decryptButtonStyle}

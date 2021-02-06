@@ -1,5 +1,6 @@
 import Pressable from './Pressable.jsx';
 import PropTypes from 'prop-types';
+import { forwardRef } from 'react';
 import { htmlId, nextId } from '../utils/id';
 import TextField from './TextField.jsx';
 
@@ -25,7 +26,7 @@ import TextField from './TextField.jsx';
  * @param {string} beforeProps extra props to be added to before
  * @param {string} afterProps extra props to be added to after
  */
-const BootstrapField = (props) => {
+const BootstrapField = forwardRef((props, ref) => {
 
 	const fieldId = (props.inputId) ? htmlId(props.inputId) : nextId();
 
@@ -54,6 +55,7 @@ const BootstrapField = (props) => {
 
 	const field = () => {
 		return <TextField
+			ref={ref}
 			className='form-control'
 			value={props.value}
 			hideText={props.hideText}
@@ -91,7 +93,9 @@ const BootstrapField = (props) => {
 			{after()}
 		</div>
 	);
-};
+});
+
+BootstrapField.displayName = 'BootstrapField';
 
 BootstrapField.defaultProps = {
 	value: '',

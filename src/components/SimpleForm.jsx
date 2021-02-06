@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, forwardRef } from 'react';
 import BootstrapField from './BootstrapField.jsx';
 import PropTypes from 'prop-types';
 
@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
  * Single input form with one button and no label
  * @param {object} props the properties object
  */
-const Form = ({ className, style, value, label, id, onSubmit, isSecret, buttonStyle }) => {
+const SimpleForm = forwardRef(({ className, style, value, label, id, onSubmit, isSecret, buttonStyle }, ref) => {
 
 	const [currentValue, setValue] = useState(value);
 
@@ -18,6 +18,7 @@ const Form = ({ className, style, value, label, id, onSubmit, isSecret, buttonSt
 	return (
 		<form onSubmit={_onSubmit}>
 			<BootstrapField
+				ref={ref}
 				className={className}
 				style={style} id={id}
 				onChange={value => setValue(value)}
@@ -29,9 +30,11 @@ const Form = ({ className, style, value, label, id, onSubmit, isSecret, buttonSt
 				afterProps={{type: 'submit'}} />
 		</form>
 	);
-};
+});
 
-Form.defaultProps = {
+SimpleForm.displayName = 'SimpleForm';
+
+SimpleForm.defaultProps = {
 	className: '',
 	style: {},
 	value: '',
@@ -39,7 +42,7 @@ Form.defaultProps = {
 	buttonStyle: 'btn-primary'
 };
 
-Form.propTypes = {
+SimpleForm.propTypes = {
 	className: PropTypes.string,
 	style: PropTypes.object,
 	id: PropTypes.string.isRequired,
@@ -50,4 +53,4 @@ Form.propTypes = {
 	buttonStyle: PropTypes.string
 };
 
-export default Form;
+export default SimpleForm;
