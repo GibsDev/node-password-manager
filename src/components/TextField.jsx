@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Pressable from './Pressable.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
@@ -16,12 +16,11 @@ import { htmlId, nextId } from '../utils/id';
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
  */
-const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHover }) => {
+const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }) => {
 
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
-	const [currentHide, setHide] = useState(hideText);
-	const [view, setView] = useState((currentHide) ? currentHide : currentValue);
+	const [view, setView] = useState((hideText) ? hideText : currentValue);
 
 	const [isPressed, setPressed] = useState(false);
 	const [isHovered, setHovered] = useState(false);
@@ -29,34 +28,38 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 	const computedId = (id) ? htmlId(id) : nextId();
 	const isReadOnly = hideText || readOnly;
 
-	// Update view
-	useEffect(() => {
-		setView(((!currentHide || isPressed)) ? currentValue : currentHide);
-	}, [isPressed, currentValue, currentHide]);
-
-	// Update hide message
-	useEffect(() => {
+	// Calculates what the view should be
+	const calcView = useCallback(() => {
+		// If we are obscuring the real value
 		if (hideText) {
-			setHide((hiddenHover && isHovered) ? hiddenHover : hideText);
+			if (isPressed) {
+				return currentValue;
+			}
+			if (hiddenHoverText) {
+				if (isHovered) {
+					return hiddenHoverText;
+				}
+			}
+			return hideText;
 		}
-	}, [isHovered, hideText, hiddenHover]);
+	}, [currentValue, hiddenHoverText, hideText, isHovered, isPressed]);
+
+	// Get new value from parent
+	useEffect(() => {
+		setValue(value);
+	}, [value]);
+
+	useEffect(() => {
+		// Let parent know of changes
+		if (onChange) onChange(currentValue);
+		setView(calcView());
+	}, [currentValue, onChange, calcView]);
+
 
 	const _onMouseOver = () => setHovered(true);
 	const _onMouseOut = () => setHovered(false);
 	const onFieldPress = () => setPressed(true);
 	const onFieldRelease = () => setPressed(false);
-
-	// When the input element onChange event occurs
-	const _onChange = e => {
-		const value = e.target.value.replaceAll('\u00A4', ' ');
-		if (isSecret) {
-			// Otherwise space is visible with the secret font
-			setValue(value.replaceAll(' ', '\u00A4'));
-		} else {
-			setValue(value);
-		}
-		if (onChange) onChange(value, e);
-	};
 
 	const field = () => {
 		const type = (isPassword) ? 'password' : 'text';
@@ -68,7 +71,7 @@ const Input = ({ className, value, hideText, readOnly, isPassword, isSecret, onC
 			name: computedId,
 			readOnly: isReadOnly,
 			className: cn,
-			onChange: _onChange,
+			onChange: onChange,
 			value: view,
 			onMouseOver: _onMouseOver,
 			onMouseOut: _onMouseOut
@@ -93,8 +96,7 @@ Input.defaultProps = {
 	isPassword: false,
 	isSecret: false,
 	readOnly: false,
-	peekTooltip: false,
-	hiddenHover: '<hidden>'
+	peekTooltip: false
 };
 
 Input.propTypes = {
@@ -104,14 +106,14 @@ Input.propTypes = {
 	isSecret: PropTypes.bool,
 	readOnly: PropTypes.bool,
 	hideText: PropTypes.string,
-	hiddenHover: PropTypes.string,
+	hiddenHoverText: PropTypes.string,
 	onChange: PropTypes.func,
 	id: (props, propName, componentName) => {
 		if (props[propName]) {
 			const id = props[propName];
 			const html = htmlId(props[propName]);
 			if (id !== html) {
-				return new Error(`'id' changed from '${id}' to '${html}'! Please change the id if you need to track it.`);
+				return new Error(`'id' changed from '${id}' to '${html}' in '${componentName}'! Please change the id if you need to track it.`);
 			}
 		}
 	}
