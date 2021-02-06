@@ -8,10 +8,11 @@
 
 ### Fronend
 
-- Consider removing some props for BootstrapField and use beforeProps and afterProps instead
 - Confirm overwrite existing key
 - Make passwords deletable (with strict confirm)
 - Look into code splitting for imports (react, webpack)
+- Redirect to login on any failed AJAX authentication
+- Should we make a client side library for acessing the REST api?
 
 - Continue simplifying components using subcomponents
 - Fix className use on custom components
