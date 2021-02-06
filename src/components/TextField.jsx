@@ -41,6 +41,8 @@ const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret,
 				}
 			}
 			return hideText;
+		} else {
+			return currentValue;
 		}
 	}, [currentValue, hiddenHoverText, hideText, isHovered, isPressed]);
 
@@ -55,6 +57,13 @@ const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret,
 		setView(calcView());
 	}, [currentValue, onChange, calcView]);
 
+	const _onChange = e => {
+		const value = e.target.value;
+		if (value !== currentValue) {
+			setValue(value);
+		}
+		console.log(value);
+	};
 
 	const _onMouseOver = () => setHovered(true);
 	const _onMouseOut = () => setHovered(false);
@@ -71,7 +80,7 @@ const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret,
 			name: computedId,
 			readOnly: isReadOnly,
 			className: cn,
-			onChange: onChange,
+			onChange: _onChange,
 			value: view,
 			onMouseOver: _onMouseOver,
 			onMouseOut: _onMouseOut
