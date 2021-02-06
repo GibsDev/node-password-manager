@@ -15,6 +15,7 @@
 - Fix className use on custom components
 - Add styles to each custom component
 - Make passwords deletable (with strict confirm)
+- Look into code splitting for imports (react, webpack)
 
 ### Other
 
