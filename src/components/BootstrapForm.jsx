@@ -19,45 +19,43 @@ const BootstrapForm = (props) => {
 	// We need to store titleId within state so that it does not generate a new id each time it updates
 	const [titleId, setTitleId] = useState((props.title) ? htmlId(props.title) : nextId());
 
-	// Format { id: { label: "Field Label", ... }, ... }
-	let preFields = Object.assign({}, props.fields);
+	const parseState = (flds) => {
+		// Format { id: { label: "Field Label", ... }, ... }
+		let resultFields = Object.assign({}, flds);
+		// Parse fields to { id: { label: "Field Label", value: '', labelId: "some_id", isPassword: false } }
+		for (const id in resultFields) {
+			const orig = Object.assign({}, resultFields[id]);
+			if (!orig.label) throw new Error(`Missing 'label' property for field '${id}'`);
+			if (!orig.value) orig.value = '';
+			if (!orig.isPassword) orig.isPassword = false;
+			if (!orig.isSecret) orig.isSecret = false;
+			if (!orig.labelId) orig.labelId = `${titleId}_${id}`;
+			resultFields[id] = orig;
+		}
+		return resultFields;
+	};
 
-	// Parse fields to { id: { label: "Field Label", value: '', labelId: "some_id", isPassword: false } }
-	for (const id in preFields) {
-		const orig = Object.assign({}, preFields[id]);
-		if (!orig.label) throw new Error(`Missing 'label' property for field '${id}'`);
-		if (!orig.value) orig.value = '';
-		if (!orig.isPassword) orig.isPassword = false;
-		if (!orig.isSecret) orig.isSecret = false;
-		if (!orig.labelId) orig.labelId = `${titleId}_${id}`;
-		preFields[id] = orig;
-	}
+	const parseValuesFromState = (flds) => {
+		const values = Object.assign({}, flds);
+		// Converts { id: { label: "Field Label", value: '', labelId: "some_id" } } to { id: "Field Label" }
+		for (const property in values) {
+			values[property] = values[property].value;
+		}
+		return values;
+	};
 
 	// Format { id: { label: "Field Label", value: '', labelId: "some_id" } }
-	const [fields, setFields] = useState(preFields);
+	const [fields, setFields] = useState(parseState(props.fields));
 
 	const submit = e => {
 		// Do not POST
 		e.preventDefault();
-		const values = Object.assign({}, fields);
-		// Converts { id: { label: "Field Label", value: '', labelId: "some_id" } } to { id: "Field Label" }
-		for (const property in fields) {
-			values[property] = values[property].value;
-		}
-		if (props.onSubmit) props.onSubmit(values);
+		if (props.onSubmit) props.onSubmit(parseValuesFromState(fields));
 	};
 
-	const _onChange = value => {
-		// Figure out which fields id changed and update them
-		let fieldsId = '';
-		for (const id in fields) {
-			if (e.target.id == fields[id].labelId) {
-				fieldsId = id;
-				break;
-			}
-		}
+	const _onChange = (value, id) => {
 		const newFields = Object.assign({}, fields);
-		newFields[fieldsId].value = value;
+		newFields[id].value = value;
 		setFields(newFields);
 	};
 
@@ -76,10 +74,9 @@ const BootstrapForm = (props) => {
 					key={`${titleId}_${id}`}
 					inputId={`${titleId}_${id}`}
 					beforeLabel={fields[id].label}
-					value={fields[id].value}
 					isPassword={fields[id].isPassword}
 					isSecret={fields[id].isSecret}
-					onChange={_onChange} />
+					onChange={value => _onChange(value, id)} />
 			);
 		}
 		return fieldElems;

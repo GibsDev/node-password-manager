@@ -54,7 +54,7 @@ const TextField = forwardRef( ({ className, value, hideText, readOnly, isPasswor
 		// Let parent know of changes
 		if (onChange) onChange(currentValue);
 		setView(calcView());
-	}, [currentValue, onChange, calcView]);
+	}, [currentValue]);
 
 	const _onChange = e => {
 		const value = e.target.value;
