@@ -41,9 +41,8 @@ const TextField = ({ className, value, hideText, readOnly, isPassword, isSecret,
 				}
 			}
 			return hideText;
-		} else {
-			return currentValue;
 		}
+		return currentValue;
 	}, [currentValue, hiddenHoverText, hideText, isHovered, isPressed]);
 
 	// Get new value from parent
