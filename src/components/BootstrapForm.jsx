@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import BootstrapField from './BootstrapField.jsx';
 import PropTypes from 'prop-types';
 import { htmlId, nextId } from '../utils/id';
+import TextField from './TextField.jsx';
 
 /**
  * Creates a form that will callback the contents
@@ -69,15 +69,20 @@ const BootstrapForm = (props) => {
 				first = false;
 			}
 			fieldElems.push(
-				<BootstrapField
-					className={marginTop}
-					key={`${titleId}_${id}`}
-					inputId={`${titleId}_${id}`}
-					beforeLabel={fields[id].label}
-					isPassword={fields[id].isPassword}
-					isSecret={fields[id].isSecret}
-					value={fields[id].value}
-					onChange={value => _onChange(value, id)} />
+				<div key={`${titleId}_${id}_label`} className='input-group'>
+					<div className='input-group-prepend'>
+						<label className='input-group-text' htmlFor={`${titleId}_${id}`} >
+							{fields[id].label}
+						</label>
+					</div>
+					<TextField
+						className='form-control'
+						inputId={`${titleId}_${id}`}
+						isPassword={fields[id].isPassword}
+						isSecret={fields[id].isSecret}
+						value={fields[id].value}
+						onChange={value => _onChange(value, id)} />
+				</div>
 			);
 		}
 		return fieldElems;
