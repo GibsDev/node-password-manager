@@ -10,7 +10,6 @@
 ### Fronend
 
 - Confirm overwrite existing key
-- Strict confirm for password deletion
 - Look into code splitting for imports (react, webpack)
 - Redirect to login on any failed AJAX authentication
 
