@@ -2,22 +2,24 @@
 
 ### Server
 
-- Token renewal on good request
+- Rest JWT Token expiration on good request to server
 - More promise error checking/handling?
-- Make passwords deletable
+- Get rid of promise nesting and replace with async await syntax
+- Create custom error types within database.js and passwords.js so we can check for them to send better HTTP responses
 
 ### Fronend
 
 - Confirm overwrite existing key
-- Make passwords deletable (with strict confirm)
+- Strict confirm for password deletion
 - Look into code splitting for imports (react, webpack)
 - Redirect to login on any failed AJAX authentication
-- Should we make a client side library for acessing the REST api?
 
 - Continue simplifying components using subcomponents
 - Fix className use on custom components
 - Add styles to each custom component
 - Add tags for passwords (convert info into object { summary: "some info", tags: ["tag1", "tag2"] } ?)
+
+- Should we make a client side library for acessing the REST api?
 
 ### Other
 
