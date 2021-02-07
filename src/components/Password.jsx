@@ -12,6 +12,8 @@ const Password = (props) => {
 	const [passwordObject, setPasswordObject] = useState(props.password);
 	const [showBody, setShowBody] = useState(false);
 	const [encrypted, setEncrypted] = useState(true);
+	const [deletePrimed, setDeletePrimed] = useState(false);
+	const [deleteField, setDeleteField] = useState('');
 
 	const decryptId = htmlId(passwordObject.name) + '_decrypt_field';
 	const [showDecrypt, setShowDecrypt] = useState(false);
@@ -77,6 +79,8 @@ const Password = (props) => {
 		setShowBody(false);
 		setShowDecrypt(false);
 		setEncrypted(true);
+		setDeletePrimed(false);
+		setDeleteField('');
 		const pass = passwordObject;
 		delete pass.username;
 		delete pass.password;
@@ -114,26 +118,31 @@ const Password = (props) => {
 		}
 	};
 
-	const deleteButton = () => {
-		if (!encrypted) {
-			return (<button className='btn btn-outline-danger ml-2' onClick={deletePassword}>Delete</button>);
-		}
+	const deleteConfirmForm = e => {
+		e.preventDefault();
+		if (deleteField === passwordObject.name) deletePassword();
+	};
+
+	const cancelDeleteConfirm = () => {
+		setDeletePrimed(false);
+		setDeleteField('');
 	};
 
 	const primaryButton = () => {
 		let text = 'Lock';
-		let buttonStyle = 'btn-outline-warning';
+		let buttonStyle = 'btn-warning';
 		let clickHandler = lock;
 		if (encrypted) {
 			if (showDecrypt) {
 				text = 'Cancel';
-				buttonStyle = 'btn-outline-warning';
+				buttonStyle = 'btn-warning';
 			} else {
 				text = 'Unlock';
 				clickHandler = unlock;
 				buttonStyle = 'btn-success';
 			}
 		}
+		if (deletePrimed) return;
 		return (
 			<button
 				type="button"
@@ -155,12 +164,52 @@ const Password = (props) => {
 		}
 	};
 
+	const header = () => {
+		let first = <strong className="mr-auto mb-0 selectable">{passwordObject.name}</strong>;
+		let deletePrimerButton = <button
+			className='btn btn-outline-danger ml-2'
+			onClick={() => setDeletePrimed(true)}>Delete</button>;
+		if (encrypted) deletePrimerButton = null;
+		if (deletePrimed) {
+			if (!encrypted) {
+				deletePrimerButton = null;
+				first = (
+					<form className='w-100' onSubmit={deleteConfirmForm}>
+						<label className='selectable'>
+							Type <strong className='selectable'>{passwordObject.name}</strong> to confirm
+						</label>
+						<div className='input-group'>
+							<input
+								type='text'
+								className='form-control'
+								value={deleteField}
+								onChange={e => { setDeleteField(e.target.value); }} />
+							<div className='input-group-append'>
+								<button
+									className='btn btn-danger'
+									type='submit'>Delete</button>
+								<button
+									className='btn btn-warning'
+									onClick={cancelDeleteConfirm}>Cancel</button>
+							</div>
+						</div>
+					</form>
+				);
+			}
+		}
+		return (
+			<>
+				{first}
+				{deletePrimerButton}
+				{primaryButton()}
+			</>
+		);
+	};
+
 	return (
 		<div className={props.className + ' card'}>
 			<div className="card-header d-flex flex-row align-items-center justify-content-end">
-				<strong className="mr-auto mb-0 selectable">{passwordObject.name}</strong>
-				{deleteButton()}
-				{primaryButton()}
+				{header()}
 			</div>
 			{cardBody()}
 		</div>
