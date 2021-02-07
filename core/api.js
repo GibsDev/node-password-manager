@@ -42,8 +42,14 @@ api.get('/passwords', (req, res) => {
  * Gets a raw password
  */
 api.get('/passwords/:id', (req, res) => {
-	const key = req.get('X-API-Key');
-	if (key) {
+	console.log(req.headers);
+	const key = req.headers['x-api-key'];
+	console.log(`key '${key}'`);
+	if (key !== undefined) {
+		if (key === '') {
+			console.log('Invalid key (empty string)');
+			res.status(404).send('Invalid key (empty string)');
+		} 
 		console.log(`GET key '${key}' from /passwords/${req.params.id}`);
 		passwords.get(req.user, req.params.id, key).then(password => {
 			res.setHeader('Content-Type', 'application/json');

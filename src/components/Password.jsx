@@ -46,6 +46,7 @@ const Password = (props) => {
 	};
 
 	const decrypt = key => {
+		if (key === '') return;
 		const options = {
 			url: 'api/passwords/' + passwordObject.name,
 			type: 'GET',
