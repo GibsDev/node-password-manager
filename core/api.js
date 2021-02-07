@@ -77,17 +77,32 @@ api.get('/passwords/:id', (req, res) => {
  */
 api.post('/passwords', express.json(), (req, res) => {
 	console.log(`'${req.user}' is attempting to insert a password`);
-	const pw = req.body;
+	const passObj = req.body;
 	// In the case the incoming password uses 'username' instead of 'user'
-	if (pw['username']) pw.user = pw['username'];
+	if (passObj['username']) passObj.user = passObj['username'];
 	// In the case the incoming password uses 'password' instead of 'pass'
-	if (pw['password']) pw.pass = pw['password'];
-	pw.username = req.user;
-	passwords.put(pw.username, pw.name, pw.user, pw.pass, pw.info, pw.pinfo, pw.key).then(() => {
+	if (passObj['password']) passObj.pass = passObj['password'];
+	passObj.username = req.user;
+	passwords.put(passObj.username, passObj.name, passObj.user, passObj.pass, passObj.info, passObj.pinfo, passObj.key).then(() => {
 		return req.send('Password inserted');
 	}).catch(err => {
 		return res.send(err);
 	});
 });
+
+/**
+ * Deletes a password
+ */
+api.delete('/passwords/:id', express.json(), (req, res) => {
+	console.log(`'${req.user}' is attempting to delete a password '${req.params.id}'`);
+	passwords.delete(req.user, req.params.id).then(() => {
+		return res.status(200).end();
+	}).catch(err => {
+		console.log(err);
+		// TODO depending on error send back appropriate code
+		return res.status(404).send('Password does not exist');
+	});
+});
+
 
 module.exports = api;

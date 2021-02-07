@@ -4,21 +4,33 @@ import { useEffect, useState } from 'react';
 
 const PasswordList = ({ passwords, query }) => {
 
-	const [allPasswords, setPasswords] = useState(passwords || []);
-	const [filter, setFilter] = useState(query || '');
+	const [allPasswords, setPasswords] = useState(passwords);
+	const [filter, setFilter] = useState(query);
+
+	useEffect(() => {
+		setPasswords(passwords);
+	}, [passwords]);
+
+	const _onPasswordDeleted = name => {
+		const newPasswords = [];
+		allPasswords.forEach(pass => {
+			if (pass.name != name) newPasswords.push(pass);
+		});
+		setPasswords(newPasswords);
+	};
 
 	const getPasswordComponents = () => {
 		return allPasswords.filter(pass => {
 			return pass.name.toLowerCase().includes(filter.toLowerCase())
 				|| pass.info.toLowerCase().includes(filter.toLowerCase());
 		}).map((password) => {
-			return <Password className="mb-2" key={password.name} password={password} />;
+			return <Password
+				className="mb-2"
+				key={password.name}
+				onDelete={_onPasswordDeleted}
+				password={password} />;
 		});
 	};
-
-	useEffect(() => {
-		setPasswords(passwords || []);
-	}, [passwords]);
 
 	return (
 		<>
@@ -34,6 +46,11 @@ const PasswordList = ({ passwords, query }) => {
 		</>
 	);
 
+};
+
+PasswordList.defaultProps = {
+	passwords: [],
+	query: ''
 };
 
 PasswordList.propTypes = {

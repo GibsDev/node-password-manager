@@ -15,8 +15,8 @@ const Password = (props) => {
 
 	const decryptId = htmlId(passwordObject.name) + '_decrypt_field';
 	const [showDecrypt, setShowDecrypt] = useState(false);
-	const [decryptButtonStyle, setDecryptButtonStyle] = useState('btn-primary');
-	const [decryptButtonText, setDecryptButtonText] = useState('Decrypt');
+	const [primaryButtonStyle, setDecryptButtonStyle] = useState('btn-primary');
+	const [primaryButtonText, setDecryptButtonText] = useState('Decrypt');
 
 	const unlock = () => {
 		setShowBody(true);
@@ -26,6 +26,22 @@ const Password = (props) => {
 	useEffect(() => {
 		if (showDecrypt) decryptInputElem.current.focus();
 	}, [showDecrypt]);
+
+	const deletePassword = () => {
+		const options = {
+			url: 'api/passwords/' + passwordObject.name,
+			type: 'DELETE'
+		};
+		$.ajax(options).then(res => {
+			// Success
+			// Let the parent know it needs to be updated
+			if (props.onDelete) props.onDelete(passwordObject.name);
+		}).catch(err => {
+			// Failure
+			console.log('Password deletion failed');
+			console.log(err);
+		});
+	};
 
 	const decrypt = key => {
 		const options = {
@@ -90,17 +106,23 @@ const Password = (props) => {
 			return <SimpleForm
 				ref={decryptInputElem}
 				className='mt-3'
-				label={decryptButtonText}
-				buttonStyle={decryptButtonStyle}
+				label={primaryButtonText}
+				buttonStyle={primaryButtonStyle}
 				isSecret
 				onSubmit={decrypt}
 				id={decryptId} />;
 		}
 	};
 
-	const unlockButton = () => {
+	const deleteButton = () => {
+		if (!encrypted) {
+			return (<button className='btn btn-outline-danger ml-2' onClick={deletePassword}>Delete</button>);
+		}
+	};
+
+	const primaryButton = () => {
 		let text = 'Lock';
-		let buttonStyle = 'btn-outline-danger';
+		let buttonStyle = 'btn-outline-warning';
 		let clickHandler = lock;
 		if (encrypted) {
 			if (showDecrypt) {
@@ -115,7 +137,7 @@ const Password = (props) => {
 		return (
 			<button
 				type="button"
-				className={`btn ${buttonStyle} ml-4`}
+				className={`btn ${buttonStyle} ml-2`}
 				onClick={clickHandler} >
 				{text}
 			</button>
@@ -137,7 +159,8 @@ const Password = (props) => {
 		<div className={props.className + ' card'}>
 			<div className="card-header d-flex flex-row align-items-center justify-content-end">
 				<strong className="mr-auto mb-0 selectable">{passwordObject.name}</strong>
-				{unlockButton()}
+				{deleteButton()}
+				{primaryButton()}
 			</div>
 			{cardBody()}
 		</div>
@@ -146,7 +169,8 @@ const Password = (props) => {
 
 Password.propTypes = {
 	password: PropTypes.object,
-	className: PropTypes.string
+	className: PropTypes.string,
+	onDelete: PropTypes.func
 };
 
 export default Password;

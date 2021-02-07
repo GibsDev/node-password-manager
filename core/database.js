@@ -115,4 +115,25 @@ database.keyExists = (node, key) => {
 	});
 };
 
+/**
+ * 
+ * @param {string} node the node where the key should be deleted
+ * @param {string} key the key that should be deleted
+ */
+database.delete = (node, key) => {
+	console.log(`node: ${node}, key: ${key}`);
+	return new Promise(async (resolve, reject) => {
+		try {
+			await database.keyExists(node, key);
+			const file = path.resolve(__dirname, databaseDir, node + '.json');
+			const fileObj = await jsonfile.readFile(file);
+			delete fileObj[key];
+			await jsonfile.writeFile(file, fileObj, { spaces: 4 });
+			resolve();
+		} catch (err) {
+			reject(err);
+		}
+	});
+};
+
 module.exports = database;

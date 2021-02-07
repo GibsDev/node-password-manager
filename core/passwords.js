@@ -1,6 +1,7 @@
 const database = require('./database.js');
 const cryptography = require('./cryptography.js');
 const users = require('./users.js');
+const { data } = require('jquery');
 
 const passwords_db = 'passwords'; // Directory node
 
@@ -95,6 +96,20 @@ passwords.getNames = (username) => {
 		database.getNode(passwords_db + '/' + username).then(passwords => {
 			resolve(Object.keys(passwords));
 		}).catch(err => reject(err));
+	});
+};
+
+/**
+ * Deletes a given password from the database
+ * @param {string} user the user who is making the delete request
+ * @param {string} passwordname the name of the password to be deleted
+ * @returns {Promise} thet resolves if the password was deleted
+ */
+passwords.delete = (user, passwordname) => {
+	return new Promise((resolve, reject) => {
+		database.delete(passwords_db + '/' + user, passwordname)
+			.then(resolve)
+			.catch(err => reject(err));
 	});
 };
 
