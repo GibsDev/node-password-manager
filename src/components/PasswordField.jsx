@@ -19,9 +19,9 @@ const HIDDEN_HOVER_TEXT = '<peek>';
  */
 const PasswordField = ({ className, style, label, value, hidden }) => {
 
+	const deafultButtonStyle = 'btn-secondary';
 	const [hiddenValue, setHiddenValue] = useState(HIDDEN_TEXT);
 	const [currentLabel, setLabel] = useState(label);
-	const deafultButtonStyle = 'btn-secondary';
 	const [copyButtonStyle, setCopyButtonStyle] = useState(deafultButtonStyle);
 
 	const copy = () => {
