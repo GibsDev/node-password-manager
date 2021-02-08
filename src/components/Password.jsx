@@ -5,44 +5,57 @@ import SimpleForm from './SimpleForm.jsx';
 import { htmlId } from '../utils/id';
 const $ = require('jquery');
 
-const Password = (props) => {
+/**
+ * A component for viewing and interacting with passwords
+ * @param {Object} props The properties for this component
+ * @param {string} props.className The className to append to the root component
+ * @param {Object} props.style The style for this component
+ * @param {Object} props.password The password object
+ * @param {function} props.onDelete The callback for when this password is deleted
+ */
+const Password = ({ className, style, password, onDelete }) => {
 
+	// Reference to the input element so that we can programatically focus it
 	const decryptInputElem = useRef(null);
 
-	const [passwordObject, setPasswordObject] = useState(props.password);
+	// The password object for this component (can be encrypted or decrypted)
+	const [passwordObject, setPasswordObject] = useState(password);
+	// If we should show the body of the password bootstrap card
 	const [showBody, setShowBody] = useState(false);
+	// If the password is still encrypted
 	const [encrypted, setEncrypted] = useState(true);
+	// Intermediate state for confirming password deletion
 	const [deletePrimed, setDeletePrimed] = useState(false);
+	// The current value of the delete confirmation field
 	const [deleteField, setDeleteField] = useState('');
-
-	const decryptId = htmlId(passwordObject.name) + '_decrypt_field';
+	// If we should be showing the decrypt key entry field
 	const [showDecrypt, setShowDecrypt] = useState(false);
+	// The current look of the primary button in the header of the bootstrap card
 	const [primaryButtonStyle, setDecryptButtonStyle] = useState('btn-primary');
+	// The current text of the primary button in the header of the bootstrap card
 	const [primaryButtonText, setDecryptButtonText] = useState('Decrypt');
+
+	useEffect(() => {
+		if (showDecrypt) decryptInputElem.current.focus();
+	}, [showDecrypt]);
 
 	const unlock = () => {
 		setShowBody(true);
 		setShowDecrypt(true);
 	};
 
-	useEffect(() => {
-		if (showDecrypt) decryptInputElem.current.focus();
-	}, [showDecrypt]);
-
-	const deletePassword = () => {
-		const options = {
-			url: 'api/passwords/' + passwordObject.name,
-			type: 'DELETE'
-		};
-		$.ajax(options).then(res => {
-			// Success
-			// Let the parent know it needs to be updated
-			if (props.onDelete) props.onDelete(passwordObject.name);
-		}).catch(err => {
-			// Failure
-			console.log('Password deletion failed');
-			console.log(err);
-		});
+	// Reset everything
+	const lock = () => {
+		setShowBody(false);
+		setShowDecrypt(false);
+		setEncrypted(true);
+		setDeletePrimed(false);
+		setDeleteField('');
+		const pass = passwordObject;
+		delete pass.username;
+		delete pass.password;
+		delete pass.pinfo;
+		setPasswordObject(pass);
 	};
 
 	const decrypt = key => {
@@ -66,7 +79,7 @@ const Password = (props) => {
 			}, 1000);
 		}).catch(err => {
 			console.log(err);
-			document.getElementById(decryptId).value = '';
+			decryptInputElem.current.value = '';
 			setDecryptButtonStyle('btn-danger');
 			setDecryptButtonText('Failed');
 			setTimeout(() => {
@@ -74,36 +87,6 @@ const Password = (props) => {
 				setDecryptButtonText('Decrypt');
 			}, 1000);
 		});
-	};
-
-	const lock = () => {
-		setShowBody(false);
-		setShowDecrypt(false);
-		setEncrypted(true);
-		setDeletePrimed(false);
-		setDeleteField('');
-		const pass = passwordObject;
-		delete pass.username;
-		delete pass.password;
-		delete pass.pinfo;
-		setPasswordObject(pass);
-	};
-
-	const credentials = () => {
-		if (passwordObject.password) {
-			return (
-				<>
-					<PasswordField className='mb-2' label='Info' value={passwordObject.info} />
-					<PasswordField className='mb-2' hidden label='Username' value={passwordObject.username} />
-					<PasswordField className='mb-2' hidden label='Password' value={passwordObject.password} />
-					<PasswordField className='mb-0' hidden label='Private Info' value={passwordObject.pinfo} />
-				</>
-			);
-		} else {
-			return (
-				<PasswordField label='Info' value={passwordObject.info} />
-			);
-		}
 	};
 
 	const decryptForm = () => {
@@ -115,8 +98,24 @@ const Password = (props) => {
 				buttonStyle={primaryButtonStyle}
 				isSecret
 				onSubmit={decrypt}
-				id={decryptId} />;
+				id={htmlId(passwordObject.name) + '_decrypt_field'} />;
 		}
+	};
+
+	const deletePassword = () => {
+		const options = {
+			url: 'api/passwords/' + passwordObject.name,
+			type: 'DELETE'
+		};
+		$.ajax(options).then(res => {
+			// Success
+			// Let the parent know it needs to be updated
+			if (onDelete) onDelete(passwordObject.name);
+		}).catch(err => {
+			// Failure
+			console.log('Password deletion failed');
+			console.log(err);
+		});
 	};
 
 	const deleteConfirmForm = e => {
@@ -154,11 +153,28 @@ const Password = (props) => {
 		);
 	};
 
+	const getPasswordFields = () => {
+		if (passwordObject.password) {
+			return (
+				<>
+					<PasswordField className='mb-2' label='Info' value={passwordObject.info} />
+					<PasswordField className='mb-2' hidden label='Username' value={passwordObject.username} />
+					<PasswordField className='mb-2' hidden label='Password' value={passwordObject.password} />
+					<PasswordField className='mb-0' hidden label='Private Info' value={passwordObject.pinfo} />
+				</>
+			);
+		} else {
+			return (
+				<PasswordField label='Info' value={passwordObject.info} />
+			);
+		}
+	};
+
 	const cardBody = () => {
 		if (showBody) {
 			return (
 				<div className='card-body d-flex flex-column'>
-					{credentials()}
+					{getPasswordFields()}
 					{decryptForm()}
 				</div>
 			);
@@ -208,7 +224,7 @@ const Password = (props) => {
 	};
 
 	return (
-		<div className={props.className + ' card'}>
+		<div className={`card ${className}`.trim()} stlye={style}>
 			<div className='card-header d-flex flex-row align-items-center justify-content-end'>
 				{header()}
 			</div>
@@ -217,9 +233,16 @@ const Password = (props) => {
 	);
 };
 
+
+Password.defaultProps = {
+	className: '',
+	style: {}
+};
+
 Password.propTypes = {
-	password: PropTypes.object,
 	className: PropTypes.string,
+	style: PropTypes.string,
+	password: PropTypes.object.isRequired,
 	onDelete: PropTypes.func
 };
 
