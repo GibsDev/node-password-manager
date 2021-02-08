@@ -8,8 +8,8 @@ import { htmlId, nextId } from '../utils/id';
  * @param {object} props The props object for this component
  * @param {string} props.className className appended to the root component
  * @param {string} props.value The value of the field
- * @param {bool} props.isPassword Set type="password"
- * @param {bool} props.isSecret Obscure text without setting type="password" (so browsers no not ask to save)
+ * @param {bool} props.isPassword Set type='password'
+ * @param {bool} props.isSecret Obscure text without setting type='password' (so browsers no not ask to save)
  * @param {bool} props.readOnly Set readonly
  * @param {string} props.hideText The text to show when hidden. The field is hidden by default, and can be peeked by pressing on it. Sets props.readOnly=true.
  * @param {string} props.hiddenHover the hidden message while hovering

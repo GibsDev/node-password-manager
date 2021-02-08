@@ -44,4 +44,4 @@ const onLogin = login => {
 	console.log('Submitted!');
 };
 
-ReactDOM.render(<LoginForm className="mx-auto my-3" onLogin={onLogin} />, domContainer);
+ReactDOM.render(<LoginForm className='mx-auto my-3' onLogin={onLogin} />, domContainer);

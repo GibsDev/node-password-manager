@@ -25,7 +25,7 @@ const PasswordList = ({ passwords, query }) => {
 				|| pass.info.toLowerCase().includes(filter.toLowerCase());
 		}).map((password) => {
 			return <Password
-				className="mb-2"
+				className='mb-2'
 				key={password.name}
 				onDelete={_onPasswordDeleted}
 				password={password} />;
@@ -34,13 +34,13 @@ const PasswordList = ({ passwords, query }) => {
 
 	return (
 		<>
-			<div className="input-group mb-3">
-				<div className="input-group-prepend">
-					<span className="input-group-text">Filter</span>
+			<div className='input-group mb-3'>
+				<div className='input-group-prepend'>
+					<span className='input-group-text'>Filter</span>
 				</div>
-				<input onChange={e => { setFilter(e.target.value); }} type="text" className="form-control" id="filter" />
+				<input onChange={e => { setFilter(e.target.value); }} type='text' className='form-control' id='filter' />
 			</div>
-			<div className="d-flex flex-column unselectable">
+			<div className='d-flex flex-column unselectable'>
 				{getPasswordComponents()}
 			</div>
 		</>

@@ -28,7 +28,7 @@ const onPassword = (password) => {
 	console.log('Submitted!');
 };
 
-const page = <div className="mt-3">
+const page = <div className='mt-3'>
 	<NewPasswordForm onPassword={onPassword} />
 </div>;
 

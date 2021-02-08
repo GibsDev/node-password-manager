@@ -29,9 +29,9 @@ const BootstrapForm = ({ className, style, fields, title, onSubmit, submitText, 
 	const [titleId, setTitleId] = useState((title) ? htmlId(title) : nextId());
 
 	const parseState = (flds) => {
-		// Format { id: { label: "Field Label", ... }, ... }
+		// Format { id: { label: 'Field Label', ... }, ... }
 		let resultFields = Object.assign({}, flds);
-		// Parse fields to { id: { label: "Field Label", value: '', labelId: "some_id", isPassword: false } }
+		// Parse fields to { id: { label: 'Field Label', value: '', labelId: 'some_id', isPassword: false } }
 		for (const id in resultFields) {
 			const orig = Object.assign({}, resultFields[id]);
 			if (!orig.label) throw new Error(`Missing 'label' property for field '${id}'`);
@@ -44,11 +44,11 @@ const BootstrapForm = ({ className, style, fields, title, onSubmit, submitText, 
 		return resultFields;
 	};
 
-	// Format { id: { label: "Field Label", value: '', labelId: "some_id" } }
+	// Format { id: { label: 'Field Label', value: '', labelId: 'some_id' } }
 	const [currentFields, setFields] = useState(parseState(fields));
 
 	// Creates an object mapping the field name to current value
-	// { <field name>: "<current value>", ... }
+	// { <field name>: '<current value>', ... }
 	const parseValuesFromState = (flds) => {
 		const values = Object.assign({}, flds);
 		for (const property in values) {
@@ -96,7 +96,7 @@ const BootstrapForm = ({ className, style, fields, title, onSubmit, submitText, 
 		return (
 			<>
 				{items}
-				<button className={`mt-1 btn ${buttonStyle}`} type="submit">
+				<button className={`mt-1 btn ${buttonStyle}`} type='submit'>
 					{submitText}
 				</button>
 			</>
@@ -107,10 +107,10 @@ const BootstrapForm = ({ className, style, fields, title, onSubmit, submitText, 
 		// Wrap in a bootstrap card
 		return (
 			<form style={style} onSubmit={submit} className={`card ${className}`}>
-				<div className="card-header">
+				<div className='card-header'>
 					<strong>{title}</strong>
 				</div>
-				<div className="card-body">
+				<div className='card-body'>
 					{getBody()}
 				</div>
 			</form >

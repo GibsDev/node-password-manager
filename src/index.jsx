@@ -34,10 +34,10 @@ const Index = () => {
 
 	return (
 		<>
-			<div className="d-flex flex-row align-items-center my-2">
-				<h1 className="mr-auto">Passwords</h1>
-				<a className="btn btn-outline-info ml-2" href="/insert">Insert</a>
-				<a className="btn btn-outline-danger ml-2" href="/logout">Logout</a>
+			<div className='d-flex flex-row align-items-center my-2'>
+				<h1 className='mr-auto'>Passwords</h1>
+				<a className='btn btn-outline-info ml-2' href='/insert'>Insert</a>
+				<a className='btn btn-outline-danger ml-2' href='/logout'>Logout</a>
 			</div>
 			<PasswordList passwords={passwords} />
 		</>

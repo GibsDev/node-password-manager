@@ -17,10 +17,10 @@ const LoginForm = ({ className, style, onLogin }) => {
 
 	const fields = {
 		username: {
-			label: "Username"
+			label: 'Username'
 		},
 		password: {
-			label: "Password",
+			label: 'Password',
 			isPassword: true
 		}
 	};
@@ -29,11 +29,11 @@ const LoginForm = ({ className, style, onLogin }) => {
 		<BootstrapForm
 			className={className}
 			style={style}
-			title="Login required"
+			title='Login required'
 			fields={fields}
 			onSubmit={submit}
-			submitText="Login"
-			buttonStyle="btn-primary btn-block"
+			submitText='Login'
+			buttonStyle='btn-primary btn-block'
 		/>
 	);
 };

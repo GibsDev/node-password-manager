@@ -53,7 +53,7 @@ const Password = (props) => {
 			contentType: 'application/json; charset=utf-8',
 			dataType: 'json',
 			beforeSend: function (xhr) {
-				xhr.setRequestHeader("X-API-Key", key);
+				xhr.setRequestHeader('X-API-Key', key);
 			}
 		};
 		$.ajax(options).then(res => {
@@ -93,15 +93,15 @@ const Password = (props) => {
 		if (passwordObject.password) {
 			return (
 				<>
-					<PasswordField className="mb-2" label="Info" value={passwordObject.info} />
-					<PasswordField className="mb-2" hidden label="Username" value={passwordObject.username} />
-					<PasswordField className="mb-2" hidden label="Password" value={passwordObject.password} />
-					<PasswordField className="mb-0" hidden label="Private Info" value={passwordObject.pinfo} />
+					<PasswordField className='mb-2' label='Info' value={passwordObject.info} />
+					<PasswordField className='mb-2' hidden label='Username' value={passwordObject.username} />
+					<PasswordField className='mb-2' hidden label='Password' value={passwordObject.password} />
+					<PasswordField className='mb-0' hidden label='Private Info' value={passwordObject.pinfo} />
 				</>
 			);
 		} else {
 			return (
-				<PasswordField label="Info" value={passwordObject.info} />
+				<PasswordField label='Info' value={passwordObject.info} />
 			);
 		}
 	};
@@ -146,7 +146,7 @@ const Password = (props) => {
 		if (deletePrimed) return;
 		return (
 			<button
-				type="button"
+				type='button'
 				className={`btn ${buttonStyle} ml-2`}
 				onClick={clickHandler} >
 				{text}
@@ -157,7 +157,7 @@ const Password = (props) => {
 	const cardBody = () => {
 		if (showBody) {
 			return (
-				<div className="card-body d-flex flex-column">
+				<div className='card-body d-flex flex-column'>
 					{credentials()}
 					{decryptForm()}
 				</div>
@@ -166,7 +166,7 @@ const Password = (props) => {
 	};
 
 	const header = () => {
-		let first = <strong className="mr-auto mb-0 selectable">{passwordObject.name}</strong>;
+		let first = <strong className='mr-auto mb-0 selectable'>{passwordObject.name}</strong>;
 		let deletePrimerButton = <button
 			className='btn btn-outline-danger ml-2'
 			onClick={() => setDeletePrimed(true)}>Delete</button>;
@@ -209,7 +209,7 @@ const Password = (props) => {
 
 	return (
 		<div className={props.className + ' card'}>
-			<div className="card-header d-flex flex-row align-items-center justify-content-end">
+			<div className='card-header d-flex flex-row align-items-center justify-content-end'>
 				{header()}
 			</div>
 			{cardBody()}

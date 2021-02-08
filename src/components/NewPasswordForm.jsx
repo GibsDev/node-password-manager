@@ -12,25 +12,25 @@ const NewPasswordForm = ({ className, style, onPassword }) => {
 
 	const fields = {
 		name: {
-			label: "Name"
+			label: 'Name'
 		},
 		username: {
-			label: "Username",
+			label: 'Username',
 			isSecret: true
 		},
 		password: {
-			label: "Password",
+			label: 'Password',
 			isSecret: true
 		},
 		info: {
-			label: "Info"
+			label: 'Info'
 		},
 		pinfo: {
-			label: "Private info",
+			label: 'Private info',
 			isSecret: true
 		},
 		key: {
-			label: "Key",
+			label: 'Key',
 			isSecret: true
 		}
 	};
@@ -43,15 +43,15 @@ const NewPasswordForm = ({ className, style, onPassword }) => {
 
 	return (
 		<div className={`card ${className}`.trim()} style={style} >
-			<div className="card-header d-flex flex-row align-items-center justify-content-end">
-				<strong className="mr-auto mb-0 selectable">Insert password</strong>
-				<a className="btn btn-outline-warning ml-4" href="/">Cancel</a>
+			<div className='card-header d-flex flex-row align-items-center justify-content-end'>
+				<strong className='mr-auto mb-0 selectable'>Insert password</strong>
+				<a className='btn btn-outline-warning ml-4' href='/'>Cancel</a>
 			</div>
-			<div className="card-body">
+			<div className='card-body'>
 				<BootstrapForm
 					onSubmit={submit}
-					submitText="Insert"
-					buttonStyle="btn-primary btn-block"
+					submitText='Insert'
+					buttonStyle='btn-primary btn-block'
 					fields={fields}
 				/>
 			</div>
