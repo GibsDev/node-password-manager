@@ -1,5 +1,5 @@
 /**
- * Middlware to authorize requests using JWT tokens
+ * Middleware to authorize requests using JWT tokens
  */
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
@@ -124,7 +124,7 @@ auth.use(authorize);
 /**
  * Validates a given JWT token
  * @param token The JWT token string to be verified
- * @throws Will throw an error if the token is invalid
+ * @throws an error if the token is invalid
  * @returns The username from the auth token. The user will always be 'noauth' if --noauth enabled
  */
 function validateToken(token) {
