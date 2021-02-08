@@ -13,7 +13,6 @@
 - Look into code splitting for imports (react, webpack)
 - Redirect to login on any failed AJAX authentication
 
-- Continue simplifying components using subcomponents
 - Fix className use on custom components
 - Add styles to each custom component
 - Add tags for passwords (convert info into object { summary: "some info", tags: ["tag1", "tag2"] } ?)
