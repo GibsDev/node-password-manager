@@ -4,20 +4,29 @@ import { htmlId, nextId } from '../utils/id';
 import TextField from './TextField.jsx';
 
 /**
+ * @typedef {Object} FormFieldObject
+ * @property {string} label The label for this field
+ * @property {string} value The label for this field
+ * @property {boolean} isPassword The label for this field
+ * @property {boolean} isSecret The label for this field
+ * @property {string} labelId The label for this field
+ */
+
+/**
  * Creates a form that will callback the contents
- * @param {object} props the properties object
- * @param {string} props.className className appended root element
- * @param {obj} props.style The style to be applied to the root element
- * @param {object} props.fields An object mapping { id: "Field Label" }
+ * @param {Object} props The properties object
+ * @param {string} props.className className for the root element
+ * @param {Object} props.style The style for the root element
  * @param {string} props.title The title of the form. If set the form will be wrapped in a card
- * @param {function} props.onSubmit callback for the content of the form
+ * @param {function} props.onSubmit Callback for the content of the form
  * @param {string} props.submitText The text for the submit button
  * @param {string} props.buttonStyle The bootstrap button class for the submit button
+ * @param {Object.<string, FormFieldObject>} props.fields An object that specifies details about each field in the form
  */
-const BootstrapForm = (props) => {
+const BootstrapForm = ({ className, style, fields, title, onSubmit, submitText, buttonStyle }) => {
 
 	// We need to store titleId within state so that it does not generate a new id each time it updates
-	const [titleId, setTitleId] = useState((props.title) ? htmlId(props.title) : nextId());
+	const [titleId, setTitleId] = useState((title) ? htmlId(title) : nextId());
 
 	const parseState = (flds) => {
 		// Format { id: { label: "Field Label", ... }, ... }
@@ -36,11 +45,12 @@ const BootstrapForm = (props) => {
 	};
 
 	// Format { id: { label: "Field Label", value: '', labelId: "some_id" } }
-	const [fields, setFields] = useState(parseState(props.fields));
+	const [currentFields, setFields] = useState(parseState(fields));
 
+	// Creates an object mapping the field name to current value
+	// { <field name>: "<current value>", ... }
 	const parseValuesFromState = (flds) => {
 		const values = Object.assign({}, flds);
-		// Converts { id: { label: "Field Label", value: '', labelId: "some_id" } } to { id: "Field Label" }
 		for (const property in values) {
 			values[property] = values[property].value;
 		}
@@ -50,16 +60,17 @@ const BootstrapForm = (props) => {
 	const submit = e => {
 		// Do not POST
 		e.preventDefault();
-		if (props.onSubmit) props.onSubmit(parseValuesFromState(fields));
+		if (onSubmit) onSubmit(parseValuesFromState(currentFields));
 	};
 
 	const _onChange = (value, id) => {
-		const newFields = Object.assign({}, fields);
+		const newFields = Object.assign({}, currentFields);
 		newFields[id].value = value;
 		setFields(newFields);
 	};
 
-	const items = Object.entries(fields).map(([id, field], index) => {
+	// Build a list of field components
+	const items = Object.entries(currentFields).map(([id, field], index) => {
 		const baseClassName = 'input-group';
 		// Add margin top 1 to everything but the top
 		const finalClassName = (index === 0) ? baseClassName : baseClassName + ' mt-1';
@@ -85,19 +96,19 @@ const BootstrapForm = (props) => {
 		return (
 			<>
 				{items}
-				<button className={`mt-1 btn ${props.buttonStyle}`} type="submit">
-					{props.submitText}
+				<button className={`mt-1 btn ${buttonStyle}`} type="submit">
+					{submitText}
 				</button>
 			</>
 		);
 	};
 
-	if (props.title) {
-		// Card version
+	if (title) {
+		// Wrap in a bootstrap card
 		return (
-			<form style={props.style} onSubmit={submit} className={`card ${props.className}`}>
+			<form style={style} onSubmit={submit} className={`card ${className}`}>
 				<div className="card-header">
-					<strong>{props.title}</strong>
+					<strong>{title}</strong>
 				</div>
 				<div className="card-body">
 					{getBody()}
@@ -107,7 +118,7 @@ const BootstrapForm = (props) => {
 	} else {
 		// Naked
 		return (
-			<form style={props.style} onSubmit={submit} className={`${props.className}`}>
+			<form style={style} onSubmit={submit} className={`${className}`}>
 				{getBody()}
 			</form >
 		);
