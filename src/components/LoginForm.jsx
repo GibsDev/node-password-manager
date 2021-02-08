@@ -38,7 +38,7 @@ const LoginForm = ({ className, style, onLogin }) => {
 	);
 };
 
-BootstrapForm.defaultProps = {
+LoginForm.defaultProps = {
 	className: '',
 	style: { width: '20rem' }
 };
