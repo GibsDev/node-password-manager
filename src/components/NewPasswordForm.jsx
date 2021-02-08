@@ -1,7 +1,14 @@
 import PropTypes from 'prop-types';
 import BootstrapForm from './BootstrapForm.jsx';
 
-const NewPasswordForm = ({ onPassword }) => {
+/**
+ * 
+ * @param {Object} props
+ * @param {string} props.className className appended to the root element
+ * @param {Object} props.style the style for the root element
+ * @param {function} props.onPassword callback for when the password info is submitted
+ */
+const NewPasswordForm = ({ className, style, onPassword }) => {
 
 	const fields = {
 		name: {
@@ -35,7 +42,7 @@ const NewPasswordForm = ({ onPassword }) => {
 	};
 
 	return (
-		<div className="card">
+		<div className={`card ${className}`.trim()} style={style} >
 			<div className="card-header d-flex flex-row align-items-center justify-content-end">
 				<strong className="mr-auto mb-0 selectable">Insert password</strong>
 				<a className="btn btn-outline-warning ml-4" href="/">Cancel</a>
@@ -52,8 +59,14 @@ const NewPasswordForm = ({ onPassword }) => {
 	);
 };
 
+NewPasswordForm.defaultProps = {
+	className: '',
+	style: {}
+};
 
 NewPasswordForm.propTypes = {
+	className: PropTypes.string,
+	style: PropTypes.object,
 	onPassword: PropTypes.func
 };
 
