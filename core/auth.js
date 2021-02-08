@@ -18,7 +18,7 @@ const auth = express.Router();
 const privateKey = crypto.randomBytes(16).toString('hex');
 
 // Hard coded value for how long tokens last (milliseconds)
-const TOKEN_TIME = 60 * 1000; // TODO configure this in dotenv
+const TOKEN_TIME = 60 * 1000 * 5; // TODO configure this in dotenv
 
 // The identifier used for storing JWT token in cookies
 const jwtCookieName = 'jwt';
