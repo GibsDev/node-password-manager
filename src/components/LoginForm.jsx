@@ -3,11 +3,14 @@ import BootstrapForm from './BootstrapForm.jsx';
 
 /**
  * Gets a username and password
+ * @param props The properties object
+ * @param {string} props.className className for the root element
+ * @param {Object} props.style The style for the root element
+ * @param {Object} props.onLogin Callback for when the user submits credentials
  */
-const LoginForm = ({ className, onLogin }) => {
+const LoginForm = ({ className, style, onLogin }) => {
 
 	const submit = (credentials) => {
-		console.log(credentials);
 		// Forward login info
 		if (onLogin) onLogin(credentials);
 	};
@@ -25,7 +28,7 @@ const LoginForm = ({ className, onLogin }) => {
 	return (
 		<BootstrapForm
 			className={className}
-			style={{ width: '20rem' }}
+			style={style}
 			title="Login required"
 			fields={fields}
 			onSubmit={submit}
@@ -35,8 +38,14 @@ const LoginForm = ({ className, onLogin }) => {
 	);
 };
 
+BootstrapForm.defaultProps = {
+	className: '',
+	style: { width: '20rem' }
+};
+
 LoginForm.propTypes = {
 	className: PropTypes.string,
+	style: PropTypes.object,
 	onLogin: PropTypes.func
 };
 
