@@ -21,7 +21,7 @@ database.put = (node, key, object) => {
 		const filepath = path.parse(file);
 		const dir = filepath.dir;
 
-		console.log(`Put "${key}" in ${file} as:`);
+		console.log(`Put '${key}' in ${file} as:`);
 		console.log(object);
 
 		const stat = util.promisify(fs.stat);
@@ -64,7 +64,7 @@ database.get = (node, key) => {
 		if (!key) reject(new Error('Node undefined'));
 		if (!key) reject(new Error('Key undefined'));
 		const file = path.resolve(__dirname, databaseDir, node + '.json');
-		console.log(`Get "${key}" from ${file}:`);
+		console.log(`Get '${key}' from ${file}:`);
 		jsonfile.readFile(file).then(fileobj => {
 			console.log(fileobj[key]);
 			resolve(fileobj[key]);
