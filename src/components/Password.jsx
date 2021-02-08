@@ -241,7 +241,7 @@ Password.defaultProps = {
 
 Password.propTypes = {
 	className: PropTypes.string,
-	style: PropTypes.string,
+	style: PropTypes.object,
 	password: PropTypes.object.isRequired,
 	onDelete: PropTypes.func
 };
