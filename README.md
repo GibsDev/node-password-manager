@@ -1,61 +1,27 @@
-## TODO
+# Password Manager
 
-### Server
+A password manager webserver that runs on NodeJS. Make sure to use HTTPS!
 
-- Rest JWT Token expiration on good request to server
-- More promise error checking/handling?
-- Get rid of promise nesting and replace with async await syntax
-- Create custom error types within database.js and passwords.js so we can check for them to send better HTTP responses
+## Getting started
 
-### Fronend
+- Clone this repository into your local workspace.
+- Make sure that the front end is built: `npm run build`
+The latest version should already be built and commited to the repository, but this step ensures you are running the latest code.
+- Start the webserver: `npm start`
+- Open your web browser to `localhost:30000`
+- Access your password
 
-- Confirm overwrite existing key
-- Look into code splitting for imports (react, webpack)
-- Redirect to login on any failed AJAX authentication
+## Development
 
-- Fix className use on custom components
-- Add styles to each custom component
-- Add tags for passwords (convert info into object { summary: "some info", tags: ["tag1", "tag2"] } ?)
+To begin modifying code yourself, start the server in development mode:
+`npm run start:dev`
 
-- Should we make a client side library for acessing the REST api?
+This will set `NODE_ENV` to `development` and will start the server in development mode. Nodemon will automatically restart the server when applicable files are modified. Webpack will be running in watch mode, and will rebuild the fronend when changes are made. The only time you should need to manually restart is if you make changes to `webpack.config.js`.
 
-### Other
+You may notice that each time you make a change, you will need to login again. This is because the server restarts and authentication data is not persistant. So if you are not working on authentication behavior, you should start the server with the `--noauth` flag by using the built in script:
+`npm run start:dev:noauth`
 
-- Document document document
-- Write file sctructure section in README
-- Fix documentation of props argument to follow correct format
-
-## Things learned
-How to make use of the Set-Cookie and Cookie headers for more secure JWT storage.
-
-When Firefox receives a Set-Cookie header from an XMLHttpRequest, it DOES set the Cookie header for all subsequent "regular" browser requests
-
-AES256 requires specific initialization vector (128 bit) and key (256 bit) lengths.
-
-How to React
-
-## Hosting
-
-In order for the NodeJS server to be visible on shared hosting, you need to setup an .htaccess rewrite rule to proxy traffic from the subdomain to the local NodeJS webserver.
-
-`.htaccess` located in the subdomain public_html folder
-```
-DirectoryIndex disabled
-
-RewriteEngine On
-
-# Force HTTPS
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-
-
-# Proxy for NodeJS app
-RewriteRule ^$ http://127.0.0.1:30000/ [P,L]
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
-
-```
+When the server is running in this mode, all requests will automatically be authenticated using the `noauth` user. The behavior of the application will be as a user named `noauth` who never had to login. This is usefuly when you are working on front end code that you want to test quickly. Currently, you need to manually create the noauth user using `/utilities/new-user.js`.
 
 ## `package.json` scripts
 
@@ -83,7 +49,7 @@ Starts the server using nodemon for auto restarts on crashes and changes.
 
 Starts webpack (it will default to watch mode because of the development flag)
 
-### start:dev:noauth
+### `start:dev:noauth`
 
 `concurrently -n "webpack,server" "cross-env NODE_ENV=development npx webpack" "cross-env NODE_ENV=development nodemon server.js --noauth"`
 
@@ -196,4 +162,29 @@ database.js
     },
     ...
 }
+```
+
+## Hosting
+
+Make sure you are using an HTTPS enabled connection! Note that this does not necessarily require you to start the server in HTTPS mode. If you are connecting to a webserver via HTTPS and the traffic is forwarded to a locally running instance of this application then unencrypted traffic will not leave the server.
+
+In order for the NodeJS server to be visible on shared hosting, you need to setup an .htaccess rewrite rule to proxy traffic from the subdomain to the local NodeJS webserver.
+
+`.htaccess` located in the subdomain public_html folder
+```
+DirectoryIndex disabled
+
+RewriteEngine On
+
+# Force HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+
+# Proxy for NodeJS app
+RewriteRule ^$ http://127.0.0.1:30000/ [P,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://127.0.0.1:30000/$1 [P,L]
+
 ```
