@@ -1,7 +1,5 @@
 const database = require('./database.js');
 const cryptography = require('./cryptography.js');
-const users = require('./users.js');
-const { data } = require('jquery');
 
 const passwords_db = 'passwords'; // Directory node
 
