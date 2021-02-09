@@ -186,33 +186,30 @@ const Password = ({ className, style, password, onDelete }) => {
 		let deletePrimerButton = <button
 			className='btn btn-outline-danger ml-2'
 			onClick={() => setDeletePrimed(true)}>Delete</button>;
-		if (encrypted) deletePrimerButton = null;
+		if (!showBody || deletePrimed) deletePrimerButton = null;
 		if (deletePrimed) {
-			if (!encrypted) {
-				deletePrimerButton = null;
-				first = (
-					<form className='w-100' onSubmit={deleteConfirmForm}>
-						<label className='selectable'>
-							Type <strong className='selectable'>{passwordObject.name}</strong> to confirm
-						</label>
-						<div className='input-group'>
-							<input
-								type='text'
-								className='form-control'
-								value={deleteField}
-								onChange={e => { setDeleteField(e.target.value); }} />
-							<div className='input-group-append'>
-								<button
-									className='btn btn-danger'
-									type='submit'>Delete</button>
-								<button
-									className='btn btn-warning'
-									onClick={cancelDeleteConfirm}>Cancel</button>
-							</div>
+			first = (
+				<form className='w-100' onSubmit={deleteConfirmForm}>
+					<label className='selectable'>
+						Type <strong className='selectable'>{passwordObject.name}</strong> to confirm
+					</label>
+					<div className='input-group'>
+						<input
+							type='text'
+							className='form-control'
+							value={deleteField}
+							onChange={e => { setDeleteField(e.target.value); }} />
+						<div className='input-group-append'>
+							<button
+								className='btn btn-danger'
+								type='submit'>Delete</button>
+							<button
+								className='btn btn-warning'
+								onClick={cancelDeleteConfirm}>Cancel</button>
 						</div>
-					</form>
-				);
-			}
+					</div>
+				</form>
+			);
 		}
 		return (
 			<>
