@@ -28,28 +28,71 @@ const PasswordList = ({ className, style, passwords, query }) => {
 		setPasswords(newPasswords);
 	};
 
+	const _onTagSelected = tag => {
+		setFilter(tag);
+	};
+
 	const getPasswordComponents = () => {
 		return allPasswords.filter(pass => {
-			return pass.name.toLowerCase().includes(filter.toLowerCase())
-				|| pass.info.toLowerCase().includes(filter.toLowerCase());
+			if (pass.info instanceof String) {
+				if (pass.info.toLowerCase().includes(filter.toLowerCase())) return true;
+			} else if (pass.info instanceof Object && pass.info.tags) {
+				if (pass.info.tags.includes(filter.toLowerCase())) return true;
+			}
+			return pass.name.toLowerCase().includes(filter.toLowerCase());
 		}).map((password) => {
 			return <Password
 				className='mb-2'
 				key={password.name}
 				onDelete={_onPasswordDeleted}
-				password={password} />;
+				password={password}
+				onTagSelected={_onTagSelected} />;
 		});
+	};
+
+	const clearButton = () => {
+		if (filter.length > 0) {
+			return (
+				<div className='input-group-append'>
+					<button className='btn btn-primary' onClick={() => {setFilter('');}}>Clear</button>
+				</div>
+			);
+		}
+	};
+
+	const getTags = () => {
+		// Use an object like a dictionary so we dont duplicate tags
+		const tagDictionary = {};
+		for (const password of allPasswords) {
+			if (password.info.tags) {
+				for (const tag of password.info.tags) {
+					tagDictionary[tag] = true;
+				}
+			}
+		}
+		const tagNames = Object.keys(tagDictionary);
+		const tagComps = tagNames.map(tag => {
+			return <button key={tag} className='btn badge badge-pill badge-primary mr-2 mb-2' onClick={() => {setFilter(tag);}}>{tag}</button>;
+		});
+		if (tagComps.length == 0) return;
+		return (
+			<div className='d-flex flex-wrap pt-2'>
+				{tagComps}
+			</div>
+		);
 	};
 
 	return (
 		<div className={className} style={style}>
-			<div className='input-group mb-3'>
+			<div className='input-group pb-2'>
 				<div className='input-group-prepend'>
 					<span className='input-group-text'>Filter</span>
 				</div>
-				<input onChange={e => { setFilter(e.target.value); }} type='text' className='form-control' id='filter' />
+				<input value={filter} onChange={e => { setFilter(e.target.value); }} type='text' className='form-control' id='filter' />
+				{clearButton()}
 			</div>
-			<div className='d-flex flex-column unselectable'>
+			{getTags()}
+			<div className='d-flex flex-column unselectable pt-2'>
 				{getPasswordComponents()}
 			</div>
 		</div>

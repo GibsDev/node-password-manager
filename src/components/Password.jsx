@@ -12,8 +12,9 @@ const $ = require('jquery');
  * @param {Object} props.style The style for this component
  * @param {Object} props.password The password object
  * @param {function} props.onDelete The callback for when this password is deleted
+ * @param {function} props.onTagSelected The callback for when a tag is selected
  */
-const Password = ({ className, style, password, onDelete }) => {
+const Password = ({ className, style, password, onDelete, onTagSelected }) => {
 
 	// Reference to the input element so that we can programatically focus it
 	const decryptInputElem = useRef(null);
@@ -154,10 +155,14 @@ const Password = ({ className, style, password, onDelete }) => {
 	};
 
 	const getPasswordFields = () => {
+		let info = passwordObject.info;
+		if (info instanceof Object && info.summary) {
+			info = info.summary;
+		}
 		if (passwordObject.password) {
 			return (
 				<>
-					<PasswordField className='mb-2' label='Info' value={passwordObject.info} />
+					<PasswordField className='mb-2' label='Info' value={info} />
 					<PasswordField className='mb-2' hidden label='Username' value={passwordObject.username} />
 					<PasswordField className='mb-2' hidden label='Password' value={passwordObject.password} />
 					<PasswordField className='mb-0' hidden label='Private Info' value={passwordObject.pinfo} />
@@ -165,7 +170,7 @@ const Password = ({ className, style, password, onDelete }) => {
 			);
 		} else {
 			return (
-				<PasswordField label='Info' value={passwordObject.info} />
+				<PasswordField label='Info' value={info} />
 			);
 		}
 	};
@@ -181,8 +186,28 @@ const Password = ({ className, style, password, onDelete }) => {
 		}
 	};
 
+	const title = () => {
+		const tagComps = [];
+		// If we have tags
+		if (passwordObject.info instanceof Object) {
+			let baseClass = 'btn badge badge-dark ml-1 mt-1';
+			const tags = passwordObject.info.tags.map((tag) => {
+				return <button key={tag} className={baseClass} onClick={() => { onTagSelected(tag); }}>{tag}</button>;
+			});
+			tagComps.push(...tags);
+		}
+		return (
+			<>
+				<strong key='name' className={'mb-0 selectable mr-2'}>{passwordObject.name}</strong>
+				<div className='d-flex flex-wrap mr-auto align-items-baseline'>
+					{tagComps}
+				</div>
+			</>
+		);
+	};
+
 	const header = () => {
-		let first = <strong className='mr-auto mb-0 selectable'>{passwordObject.name}</strong>;
+		let first = title();
 		let deletePrimerButton = <button
 			className='btn btn-outline-danger ml-2'
 			onClick={() => setDeletePrimed(true)}>Delete</button>;
@@ -240,7 +265,8 @@ Password.propTypes = {
 	className: PropTypes.string,
 	style: PropTypes.object,
 	password: PropTypes.object.isRequired,
-	onDelete: PropTypes.func
+	onDelete: PropTypes.func,
+	onTagSelected: PropTypes.func
 };
 
 export default Password;

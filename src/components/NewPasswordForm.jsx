@@ -17,6 +17,7 @@ const NewPasswordForm = ({ className, style }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [info, setInfo] = useState('');
+	const [tags, setTags] = useState('');
 	const [pinfo, setPinfo] = useState('');
 	const [key, setKey] = useState('');
 
@@ -29,12 +30,26 @@ const NewPasswordForm = ({ className, style }) => {
 		}
 	}, [name]);
 
+
 	const getPasswordObj = () => {
+		// String only info
+		let finalInfo = info;
+		if (tags.length > 0) {
+			// With tags
+			const finalTags = tags.split(',');
+			finalTags.forEach((t, index) => {
+				finalTags[index] = t.trim().toLowerCase();
+			});
+			finalInfo = {
+				summary: info,
+				tags: finalTags
+			};
+		}
 		return {
 			name: name,
 			username: username,
 			password: password,
-			info: info,
+			info: finalInfo,
 			pinfo: pinfo,
 			key: key
 		};
@@ -163,6 +178,19 @@ const NewPasswordForm = ({ className, style }) => {
 							name='info'
 							value={info}
 							onChange={setInfo} />
+					</div>
+					<div className='input-group mt-1'>
+						<div className='input-group-prepend'>
+							<label className='input-group-text' htmlFor='tags' >
+								Tags
+							</label>
+						</div>
+						<TextField
+							className='form-control'
+							inputId='tags'
+							name='tags'
+							value={tags}
+							onChange={setTags} />
 					</div>
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
