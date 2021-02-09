@@ -8,7 +8,6 @@ import { get, ajax } from 'jquery';
  * @param {Object} props
  * @param {string} props.className className appended to the root element
  * @param {Object} props.style the style for the root element
- * @param {function} props.onPassword callback for when the password info is submitted
  */
 const NewPasswordForm = ({ className, style }) => {
 
@@ -207,8 +206,7 @@ NewPasswordForm.defaultProps = {
 
 NewPasswordForm.propTypes = {
 	className: PropTypes.string,
-	style: PropTypes.object,
-	onPassword: PropTypes.func
+	style: PropTypes.object
 };
 
 export default NewPasswordForm;
