@@ -14,9 +14,9 @@ import { htmlId, nextId } from '../utils/id';
  * @param {string} props.hideText The text to show when hidden. The field is hidden by default, and can be peeked by pressing on it. Sets props.readOnly=true.
  * @param {string} props.hiddenHover the hidden message while hovering
  * @param {function} props.onChange Callback to the current value
- * @param {string} props.id The id to be set on the input field. Best to make sure id === htmlId(id)
+ * @param {string} props.id Sets the placeholder property on the input tag
  */
-const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText }, ref) => {
+const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText, placeholder }, ref) => {
 
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
@@ -79,7 +79,7 @@ const TextField = forwardRef(({ className, style, props, value, hideText, readOn
 
 	const type = (isPassword) ? 'password' : 'text';
 	let cn = className;
-	if (isSecret) cn += ' secret';
+	if (isSecret && value.length > 0) cn += ' secret';
 	let extraProps = {};
 	if (isSecret || isPassword) {
 		extraProps.autoComplete = 'off';
@@ -100,6 +100,7 @@ const TextField = forwardRef(({ className, style, props, value, hideText, readOn
 			value={view}
 			onMouseOver={_onMouseOver}
 			onMouseOut={_onMouseOut}
+			placeholder={placeholder}
 			{...props}
 			{...extraProps} />
 	</Pressable>;
@@ -129,6 +130,7 @@ TextField.propTypes = {
 	hideText: PropTypes.string,
 	hiddenHoverText: PropTypes.string,
 	onChange: PropTypes.func,
+	placeholder: PropTypes.string,
 	id: (props, propName, componentName) => {
 		if (props[propName]) {
 			const id = props[propName];

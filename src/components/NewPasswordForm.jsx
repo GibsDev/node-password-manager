@@ -136,6 +136,7 @@ const NewPasswordForm = ({ className, style }) => {
 							inputId='name'
 							name='name'
 							value={name}
+							placeholder='The name of this password'
 							onChange={setName} />
 					</div>
 					<div className='input-group mt-1'>
@@ -177,6 +178,7 @@ const NewPasswordForm = ({ className, style }) => {
 							inputId='info'
 							name='info'
 							value={info}
+							placeholder='Visible info'
 							onChange={setInfo} />
 					</div>
 					<div className='input-group mt-1'>
@@ -190,6 +192,7 @@ const NewPasswordForm = ({ className, style }) => {
 							inputId='tags'
 							name='tags'
 							value={tags}
+							placeholder='Comma separated tags'
 							onChange={setTags} />
 					</div>
 					<div className='input-group mt-1'>
@@ -204,6 +207,7 @@ const NewPasswordForm = ({ className, style }) => {
 							name='private-info'
 							isSecret
 							value={pinfo}
+							placeholder='Info visible when unlocked'
 							onChange={setPinfo} />
 					</div>
 					<div className='input-group mt-1'>
@@ -218,6 +222,7 @@ const NewPasswordForm = ({ className, style }) => {
 							name='key'
 							isSecret
 							value={key}
+							placeholder='Key for decrypting'
 							onChange={setKey} />
 					</div>
 					{getButtons()}
