@@ -48,7 +48,7 @@ api.get('/passwords/:id', (req, res) => {
 	if (key !== undefined) {
 		if (key === '') {
 			console.log('Invalid key (empty string)');
-			res.status(404).send('Invalid key (empty string)');
+			res.status(403).send('Invalid key (empty string)');
 		} 
 		console.log(`GET key '${key}' from /passwords/${req.params.id}`);
 		passwords.get(req.user, req.params.id, key).then(password => {
@@ -73,7 +73,7 @@ api.get('/passwords/:id', (req, res) => {
 		}).catch(err => {
 			console.log('Could not get password');
 			console.log(err);
-			return res.status(404).send('Invalid key');
+			return res.status(404).send('Could not get password');
 		});
 	}
 });
