@@ -4,12 +4,12 @@
 	"description": "A NodeJS password manager server",
 	"main": "./core/server.js",
 	"scripts": {
-		"build": "cross-env NODE_ENV=production npx webpack",
-		"start:dev": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js\"",
-		"start:dev:https": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js --https\"",
-		"start:dev:noauth": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js --noauth\"",
-		"start": "npx pm2 start ./core/server.js",
-		"stop": "npx pm2 stop server && npx pm2 delete server",
+		"build": "cross-env NODE_ENV=production webpack",
+		"start:dev": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js\"",
+		"start:dev:https": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js --https\"",
+		"start:dev:noauth": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js --noauth\"",
+		"start": "pm2 start ./core/server.js",
+		"stop": "pm2 stop server && pm2 delete server",
 		"start:https": "node ./core/server.js --https"
 	},
 	"author": "GibsDev",
