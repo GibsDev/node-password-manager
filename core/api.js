@@ -42,7 +42,6 @@ api.get('/passwords', (req, res) => {
  * Gets a raw password
  */
 api.get('/passwords/:id', (req, res) => {
-	console.log(req.headers);
 	const key = req.headers['x-api-key'];
 	console.log(`key '${key}'`);
 	if (key !== undefined) {
