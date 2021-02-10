@@ -8,7 +8,8 @@
 		"start:dev": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js\"",
 		"start:dev:https": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js --https\"",
 		"start:dev:noauth": "concurrently -n \"webpack,server\" \"cross-env NODE_ENV=development npx webpack\" \"cross-env NODE_ENV=development nodemon ./core/server.js --noauth\"",
-		"start": "node ./core/server.js",
+		"start": "npx pm2 start ./core/server.js",
+		"stop": "npx pm2 stop server && npx pm2 delete server",
 		"start:https": "node ./core/server.js --https"
 	},
 	"author": "GibsDev",
@@ -18,6 +19,7 @@
 		"express": "^4.17.1",
 		"jsonfile": "^6.1.0",
 		"jsonwebtoken": "^8.5.1",
+		"pm2": "^4.5.4",
 		"prompt": "^1.1.0"
 	},
 	"devDependencies": {
