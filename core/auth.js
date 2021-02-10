@@ -35,9 +35,9 @@ auth.post('/login', express.json(), (req, res) => {
 	console.log(`'${req.body.username}' is attempting to login`);
 	users.verify(req.body.username, req.body.password).then(() => {
 		const token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: TOKEN_TIME });
-		res.cookie(jwtCookieName, token, { maxAge: TOKEN_TIME });
+		res.cookie(jwtCookieName, token, { maxAge: TOKEN_TIME, sameSite: 'Strict', httpOnly });
 		res.type('application/json');
-		return res.send(JSON.stringify({ token: token }));
+		return res.send('Success');
 	}).catch((err) => {
 		console.log(err);
 		return res.status(401).send('Invalid login');
