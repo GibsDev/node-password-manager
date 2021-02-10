@@ -10,13 +10,14 @@ import { htmlId, nextId } from '../utils/id';
  * @param {string} props.value The value of the field
  * @param {bool} props.isPassword Set type='password'
  * @param {bool} props.isSecret Obscure text without setting type='password' (so browsers no not ask to save)
+ * @param {bool} props.rawInput Disable autocomplete autocorrect autocapitalize and spellcheck
  * @param {bool} props.readOnly Set readonly
  * @param {string} props.hideText The text to show when hidden. The field is hidden by default, and can be peeked by pressing on it. Sets props.readOnly=true.
  * @param {string} props.hiddenHover the hidden message while hovering
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id Sets the placeholder property on the input tag
  */
-const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, onChange, id, hiddenHoverText, placeholder }, ref) => {
+const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, rawInput, onChange, id, hiddenHoverText, placeholder }, ref) => {
 
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
@@ -81,7 +82,7 @@ const TextField = forwardRef(({ className, style, props, value, hideText, readOn
 	let cn = className;
 	if (isSecret && value.length > 0) cn += ' secret';
 	let extraProps = {};
-	if (isSecret || isPassword) {
+	if (isSecret || isPassword || rawInput) {
 		extraProps.autoComplete = 'off';
 		extraProps.autoCorrect = 'off';
 		extraProps.autoCapitalize = 'off';
@@ -113,6 +114,7 @@ TextField.defaultProps = {
 	value: '',
 	isPassword: false,
 	isSecret: false,
+	rawInput: false,
 	readOnly: false,
 	peekTooltip: false,
 	props: {},
@@ -126,6 +128,7 @@ TextField.propTypes = {
 	value: PropTypes.string,
 	isPassword: PropTypes.bool,
 	isSecret: PropTypes.bool,
+	rawInput: PropTypes.bool,
 	readOnly: PropTypes.bool,
 	hideText: PropTypes.string,
 	hiddenHoverText: PropTypes.string,

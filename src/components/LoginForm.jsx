@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import BootstrapForm from './BootstrapForm.jsx';
+import TextField from './TextField.jsx';
+import { useState } from 'react';
 
 /**
  * Gets a username and password
@@ -10,31 +11,53 @@ import BootstrapForm from './BootstrapForm.jsx';
  */
 const LoginForm = ({ className, style, onLogin }) => {
 
-	const submit = (credentials) => {
-		// Forward login info
-		if (onLogin) onLogin(credentials);
-	};
+	const [username, setUsername] = useState('');
+	const [password, setPassword] = useState('');
 
-	const fields = {
-		username: {
-			label: 'Username'
-		},
-		password: {
-			label: 'Password',
-			isPassword: true
-		}
+	const submit = e => {
+		e.preventDefault();
+		// Forward login info
+		if (onLogin) onLogin({ username: username, password: password });
 	};
 
 	return (
-		<BootstrapForm
-			className={className}
-			style={style}
-			title='Login required'
-			fields={fields}
-			onSubmit={submit}
-			submitText='Login'
-			buttonStyle='btn-primary btn-block'
-		/>
+		<form className={`card ${className.trim()}`.trim()} style={style} onSubmit={submit}>
+			<div className='card-header'>
+				<strong>Login required</strong>
+			</div>
+			<div className='card-body'>
+				<div className='input-group'>
+					<div className='input-group-prepend'>
+						<label className='input-group-text' htmlFor='username' >
+							Username
+						</label>
+					</div>
+					<TextField
+						className='form-control'
+						inputId='username'
+						name='username'
+						rawInput
+						value={username}
+						onChange={setUsername} />
+				</div>
+				<div className='input-group mt-1'>
+					<div className='input-group-prepend'>
+						<label className='input-group-text' htmlFor='password' >
+							Password
+						</label>
+					</div>
+					<TextField
+						className='form-control'
+						inputId='password'
+						name='password'
+						isPassword
+						rawInput
+						value={password}
+						onChange={setPassword} />
+				</div>
+				<button type='submit' className='btn btn-block btn-primary mt-1'>Login</button>
+			</div>
+		</form>
 	);
 };
 
