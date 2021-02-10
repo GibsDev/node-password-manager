@@ -21,7 +21,7 @@ const LoginForm = ({ className, style, onLogin }) => {
 	};
 
 	return (
-		<form className={`card ${className.trim()}`.trim()} style={style} onSubmit={submit}>
+		<form className={`card ${className}`.trim()} style={style} onSubmit={submit}>
 			<div className='card-header'>
 				<strong>Login required</strong>
 			</div>
