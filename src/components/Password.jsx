@@ -190,19 +190,23 @@ const Password = ({ className, style, password, onDelete, onTagSelected }) => {
 		const tagComps = [];
 		// If we have tags
 		if (passwordObject.info instanceof Object) {
-			let baseClass = 'btn badge badge-dark ml-1 mt-1';
-			const tags = passwordObject.info.tags.map((tag) => {
-				return <button key={tag} className={baseClass} onClick={() => { onTagSelected(tag); }}>{tag}</button>;
+			const baseClass = 'btn badge badge-dark mt-1';
+			const tags = passwordObject.info.tags.map((tag, index) => {
+				let cn = baseClass;
+				if (index != 0) {
+					cn += ' ml-1';
+				}
+				return <button key={tag} className={cn} onClick={() => { onTagSelected(tag); }}>{tag}</button>;
 			});
 			tagComps.push(...tags);
 		}
 		return (
-			<>
+			<div className='d-flex flex-wrap' style={{flexGrow: '1'}}>
 				<strong key='name' className={'mb-0 selectable mr-2'}>{passwordObject.name}</strong>
 				<div className='d-flex flex-wrap mr-auto align-items-baseline'>
 					{tagComps}
 				</div>
-			</>
+			</div>
 		);
 	};
 

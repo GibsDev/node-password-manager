@@ -35,7 +35,3 @@ input[type="text"].secret, input[type="password"] {
 		@extend %unselectable;
 	}
 }
-
-div.card-header > div {
-	overflow-x: hidden;
-}
