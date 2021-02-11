@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import PasswordField from './PasswordField.jsx';
 import SimpleForm from './SimpleForm.jsx';
 import { htmlId } from '../utils/id';
-const $ = require('jquery');
+const { ajax } = require('jquery');
 
 /**
  * A component for viewing and interacting with passwords
@@ -70,7 +70,7 @@ const Password = ({ className, style, password, onDelete, onTagSelected }) => {
 				xhr.setRequestHeader('X-API-Key', key);
 			}
 		};
-		$.ajax(options).then(res => {
+		ajax(options).then(res => {
 			setPasswordObject(res);
 			setShowDecrypt(false);
 			setEncrypted(false);
@@ -108,7 +108,7 @@ const Password = ({ className, style, password, onDelete, onTagSelected }) => {
 			url: 'api/passwords/' + passwordObject.name,
 			type: 'DELETE'
 		};
-		$.ajax(options).then(res => {
+		ajax(options).then(res => {
 			// Success
 			// Let the parent know it needs to be updated
 			if (onDelete) onDelete(passwordObject.name);
