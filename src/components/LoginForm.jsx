@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import TextField from './TextField.jsx';
 import { useState } from 'react';
+import { ajax } from 'jquery';
 
 /**
  * Gets a username and password
@@ -14,10 +15,42 @@ const LoginForm = ({ className, style, onLogin }) => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 
+	const [buttonText, setButtonText] = useState('Login');
+	const [buttonStyle, setButtonStyle] = useState('btn-primary');
+	const [loginLoading, setLoginLoading] = useState(false);
+
 	const submit = e => {
 		e.preventDefault();
-		// Forward login info
-		if (onLogin) onLogin({ username: username, password: password });
+		_onLogin({ username: username, password: password });
+	};
+
+	const _onLogin = login => {
+		// AJAX username and password
+		const options = {
+			url: 'api/login',
+			type: 'POST',
+			contentType: 'application/json; charset=utf-8',
+			data: JSON.stringify(login)
+		};
+	
+		ajax(options).then(res => {
+			console.log(res);
+			if (onLogin) onLogin();
+		}).catch(err => {
+			console.log('Login failed');
+			console.log(err);
+			setButtonText('Login failed');
+			setButtonStyle('btn-danger');
+			setTimeout(() => {
+				setButtonText('Login');
+				setButtonStyle('btn-primary');
+			}, 1000);
+		}).finally(() => {
+			setLoginLoading(false);
+		});
+
+		setLoginLoading(true);
+
 	};
 
 	return (
@@ -55,7 +88,7 @@ const LoginForm = ({ className, style, onLogin }) => {
 						value={password}
 						onChange={setPassword} />
 				</div>
-				<button type='submit' className='btn btn-block btn-primary mt-1'>Login</button>
+				<button type='submit' className={`btn btn-block ${buttonStyle} mt-1`} disabled={loginLoading}>{buttonText}</button>
 			</div>
 		</form>
 	);
