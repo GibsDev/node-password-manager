@@ -45,7 +45,7 @@ const LoginForm = ({ className, style, onLogin }) => {
 				setButtonText('Login');
 				setButtonStyle('btn-primary');
 			}, 1000);
-		}).finally(() => {
+		}).always(() => {
 			setLoginLoading(false);
 		});
 

@@ -36,7 +36,6 @@ auth.post('/login', express.json(), (req, res) => {
 	users.verify(req.body.username, req.body.password).then(() => {
 		const token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: TOKEN_TIME });
 		res.cookie(jwtCookieName, token, { maxAge: TOKEN_TIME, sameSite: 'Strict', httpOnly: true });
-		// res.type('text');
 		return res.send('Success');
 	}).catch((err) => {
 		console.log(err);
