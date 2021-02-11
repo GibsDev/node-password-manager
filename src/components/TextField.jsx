@@ -80,7 +80,7 @@ const TextField = forwardRef(({ className, style, props, value, hideText, readOn
 
 	const type = (isPassword) ? 'password' : 'text';
 	let cn = className;
-	if (isSecret && value.length > 0) cn += ' secret';
+	if (isSecret && currentValue.length > 0) cn += ' secret';
 	let extraProps = {};
 	if (isSecret || isPassword || rawInput) {
 		extraProps.autoComplete = 'off';
