@@ -25,18 +25,18 @@ const PasswordField = ({ className, style, label, value, hidden }) => {
 	const [copyButtonStyle, setCopyButtonStyle] = useState(deafultButtonStyle);
 
 	const copy = () => {
+		const msgTime = 1000;
 		browser.copy(value).then(() => {
 			setHiddenValue(COPY_MESSAGE);
 			setCopyButtonStyle('btn-success');
 			setLabel('Copied');
 		}).catch(err => {
 			console.log(err);
-			displayMessage(COPY_FAIL_MESSAGE, msgTime);
+			setHiddenValue(COPY_FAIL_MESSAGE);
 			setCopyButtonStyle('btn-danger');
 			setLabel('Copy failed');
 		}).finally(() => {
 			// Reset
-			const msgTime = 1000;
 			setTimeout(() => {
 				setCopyButtonStyle(deafultButtonStyle);
 				setHiddenValue(HIDDEN_TEXT);
