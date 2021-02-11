@@ -15,13 +15,23 @@ const AUTH_USERNAME = 'noauth';
 const auth = express.Router();
 
 // Generate a private key for signing JWT tokens each time the server starts
-const privateKey = crypto.randomBytes(16).toString('hex');
+const PRIVATE_KEY = crypto.randomBytes(16).toString('hex');
 
 // Hard coded value for how long tokens last (milliseconds)
 const TOKEN_TIME = 60 * 1000 * 5; // TODO configure this in dotenv
 
 // The identifier used for storing JWT token in cookies
-const jwtCookieName = 'jwt';
+const JWT_COOKIE_NAME = 'jwt';
+
+/**
+ * Useed for handing out initial tokens and rereshing upon successful requests
+ * @param {string} username the username stored in the token
+ * @param {Object} res the response object to set the .cookie with
+ */
+function giveFreshToken(username, res) {
+	const token = jwt.sign({ username: username }, PRIVATE_KEY, { expiresIn: TOKEN_TIME });
+	res.cookie(JWT_COOKIE_NAME, token, { maxAge: TOKEN_TIME, sameSite: 'Strict', httpOnly: true });
+}
 
 /**
  * Enable cookie parsing
@@ -34,8 +44,7 @@ auth.use(cookieParser);
 auth.post('/login', express.json(), (req, res) => {
 	console.log(`'${req.body.username}' is attempting to login`);
 	users.verify(req.body.username, req.body.password).then(() => {
-		const token = jwt.sign({ username: req.body.username }, privateKey, { expiresIn: TOKEN_TIME });
-		res.cookie(jwtCookieName, token, { maxAge: TOKEN_TIME, sameSite: 'Strict', httpOnly: true });
+		giveFreshToken(req.body.username, res);
 		return res.send('Success');
 	}).catch((err) => {
 		console.log(err);
@@ -48,12 +57,12 @@ auth.post('/login', express.json(), (req, res) => {
  */
 auth.get('/logout', (req, res) => {
 	try {
-		const username = validateToken(req.cookies[jwtCookieName]);
+		const username = validateToken(req.cookies[JWT_COOKIE_NAME]);
 		console.log(`'${username}' is logging out`);
 	} catch (err) {
 		console.log(err);
 	}
-	res.clearCookie(jwtCookieName);
+	res.clearCookie(JWT_COOKIE_NAME);
 	return res.redirect('/');
 });
 
@@ -85,6 +94,7 @@ function authorize(req, res, next) {
 		try {
 			const username = validateToken(token);
 			req.user = username;
+			giveFreshToken(req.user, res);
 			return next();
 		} catch (err) {
 			errorMessage = 'Authorization header token error: ' + err.message;
@@ -92,18 +102,19 @@ function authorize(req, res, next) {
 	}
 
 	// Check for JWT in HTTP cookies
-	const cookieToken = req.cookies[jwtCookieName];
+	const cookieToken = req.cookies[JWT_COOKIE_NAME];
 	if (cookieToken) {
 		// Check validity of token
 		try {
 			const username = validateToken(cookieToken);
 			req.user = username;
+			giveFreshToken(req.user, res);
 			return next();
 		} catch (err) {
 			console.log(err);
 			errorMessage = 'Cookie token error: ' + err.message;
 			// Remove invalid JWT from cookies;
-			res.clearCookie(jwtCookieName);
+			res.clearCookie(JWT_COOKIE_NAME);
 		}
 	}
 
@@ -131,7 +142,7 @@ function validateToken(token) {
 
 	try {
 		console.log(`Token: ${token}`);
-		const decoded = jwt.verify(token, privateKey);
+		const decoded = jwt.verify(token, PRIVATE_KEY);
 		console.log('Successfullly validated token: ', decoded);
 		// Add the .user object to the req object for future request processors
 		return decoded.username;
