@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import PasswordField from './PasswordField.jsx';
 import SimpleForm from './SimpleForm.jsx';
 import { htmlId } from '../utils/id';
-const { ajax } = require('jquery');
+import { ajax } from 'jquery';
 
 /**
  * A component for viewing and interacting with passwords
