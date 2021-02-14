@@ -33,13 +33,29 @@ const PasswordList = ({ className, style, passwords, query }) => {
 	};
 
 	const getPasswordComponents = () => {
+		const tagRegex = /tag:\w+/g;
+		const filterNoTags = filter.replaceAll(tagRegex, '').trim();
+		const tagFilters = filter.match(tagRegex) || [];
+		tagFilters.forEach((tag, index) => {
+			tagFilters[index] = tag.split(':')[1];
+		});
 		return allPasswords.filter(pass => {
-			if (pass.info instanceof String) {
-				if (pass.info.toLowerCase().includes(filter.toLowerCase())) return true;
-			} else if (pass.info instanceof Object && pass.info.tags) {
-				if (pass.info.tags.includes(filter.toLowerCase())) return true;
+			if (tagFilters.length > 0) {
+				if (pass.info instanceof Object && pass.info.tags) {
+					for (const searchTag of tagFilters) {
+						for (const passTag of pass.info.tags) {
+							if (passTag.includes(searchTag.toLowerCase())) return true;
+						}
+					}
+				}
+			} else {
+				if (typeof pass.info === 'string') {
+					if (pass.info.toLowerCase().includes(filterNoTags.toLowerCase())) return true;
+				} else if (typeof pass.info.summary === 'string') {
+					if (pass.info.summary.toLowerCase().includes(filterNoTags.toLowerCase())) return true;
+				}
+				return pass.name.toLowerCase().includes(filterNoTags.toLowerCase());
 			}
-			return pass.name.toLowerCase().includes(filter.toLowerCase());
 		}).map((password) => {
 			return <Password
 				className='mb-2'
