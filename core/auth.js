@@ -10,7 +10,8 @@ const cookieParser = require('cookie-parser')();
 const users = require('./users.js');
 
 const NO_AUTH = process.argv.includes('--noauth');
-const AUTH_USERNAME = 'noauth';
+const NO_AUTH_USERNAME = 'noauth';
+const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
 // For module.exports
 const auth = express.Router();
@@ -43,14 +44,25 @@ auth.use(cookieParser);
  * Node for handing out JWT tokens
  */
 auth.post('/login', express.json(), async (req, res) => {
-	log.info(`'${req.body.username}' is attempting to login`);
+	const username = req.body.username;
+	const password = req.body.password;
+	log.info(`'${username}' is attempting to login`);
+	if (username === NO_AUTH_USERNAME) {
+		if (!NO_AUTH) {
+			log.info(`'--noauth' is not enabled`);
+			return res.status(401).send('Invalid login');
+		} else if (!IS_DEVELOPMENT) {
+			log.info(`User '${NO_AUTH_USERNAME}' is not available in production mode`);
+			return res.status(401).send('Invalid login');
+		}
+	}
 	try {
-		await users.verify(req.body.username, req.body.password);
-		giveFreshToken(req.body.username, res);
-		log.info(`'${req.body.username}' logged in`);
+		await users.verify(username, password);
+		giveFreshToken(username, res);
+		log.info(`'${username}' logged in`);
 		return res.send('Success');
 	} catch (err) {
-		log.info(`'${req.body.username}' failed to login`);
+		log.info(`'${username}' failed to login`);
 		log.debug(err);
 		return res.status(401).send('Invalid login');
 	}
@@ -79,9 +91,9 @@ auth.get('/logout', (req, res) => {
 function authorize(req, res, next) {
 	log.debug(`Authorizing: ${req.url}`);
 
-	if (NO_AUTH) {
+	if (NO_AUTH && IS_DEVELOPMENT) {
 		log.debug(`Authorization disabled, req.user = 'noauth'`);
-		req.user = AUTH_USERNAME;
+		req.user = NO_AUTH_USERNAME;
 		return next();
 	}
 
@@ -142,7 +154,13 @@ auth.use(authorize);
  * @returns The username from the auth token. The user will always be 'noauth' if --noauth enabled
  */
 function validateToken(token) {
-	if (NO_AUTH) return AUTH_USERNAME;
+	if (NO_AUTH) {
+		if (IS_DEVELOPMENT) {
+			return NO_AUTH_USERNAME;
+		} else {
+			throw new Error(`'noauth' user can only be used in development mode`);
+		}
+	}
 
 	try {
 		log.trace(`Token: ${token}`);
