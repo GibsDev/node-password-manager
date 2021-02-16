@@ -1,5 +1,6 @@
 const database = require('./database.js');
 const cryptography = require('./cryptography.js');
+const log = require('loglevel');
 
 const passwords_db = 'passwords'; // Directory node
 
@@ -53,7 +54,7 @@ const passwords = {};
  * @returns {Promise<void>} when the password is stored
  */
 passwords.put = (username, name, user, pass, info, pinfo, key) => {
-	console.log(`KEY!!! '${key}'.length = ${key.length}`);
+	log.debug(`Inserting password '${name}' for '${username}'`);
 	const password = new Password(name, user, pass, info, pinfo);
 	password.encrypt(key);
 	return database.put(passwords_db + '/' + username, password.name, password);
@@ -67,7 +68,7 @@ passwords.put = (username, name, user, pass, info, pinfo, key) => {
  * @returns {Promise} that resolves to the decrypted password
  */
 passwords.get = (username, passwordname, key) => {
-	console.log(`Getting password '${passwordname}' for '${username}' with '${key}'`);
+	log.debug(`Getting password '${passwordname}' for '${username}'`);
 	return new Promise((resolve, reject) => {
 		database.get(passwords_db + '/' + username, passwordname).then(p => {
 			const password = new Password(p.name, p.username, p.password, p.info, p.pinfo, p.iv);
@@ -75,7 +76,7 @@ passwords.get = (username, passwordname, key) => {
 				try {
 					password.decrypt(key);
 				} catch (e) {
-					console.log('Could not decrypt key');
+					log.debug('Could not decrypt password with given key');
 					reject(e);
 				}
 			}

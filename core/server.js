@@ -1,3 +1,17 @@
+const USE_HTTPS = process.argv.includes('--https');
+const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
+
+// Logging
+const log = require('loglevel');
+if (IS_DEVELOPMENT) {
+	log.setDefaultLevel('debug');
+} else {
+	log.setDefaultLevel('info');
+}
+if (process.argv.includes('--trace')) {
+	log.setDefaultLevel('trace');
+}
+
 const express = require('express');
 const app = express();
 const api = require('./api.js');
@@ -8,14 +22,11 @@ const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
 const port = 30000;
 
-const USE_HTTPS = process.argv.includes('--https');
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
-
 /**
  * A middleware function for inspecting every request to the server
  */
 function requestInspector(req, res, next) {
-	console.log(`\n${req.method} ${req.url}`);
+	log.debug(`\n${req.method} ${req.url}`);
 	next();
 }
 app.use(requestInspector);
@@ -30,7 +41,7 @@ app.use('/api', api);
  * @param {string} filename path of the file 
  */
 const getDevHTML = async (filename) => {
-	let html = await (await readFileAsync(filename, 'utf8')).toString();
+	let html = await readFileAsync(filename, 'utf8');
 	if (IS_DEVELOPMENT) {
 		html = html.replace(/\/dist\//g, '/dist-dev/');
 	}
@@ -100,12 +111,12 @@ if (USE_HTTPS) {
 		cert: fs.readFileSync('./server.cert')
 	};
 	https.createServer(options, app).listen(port, () => {
-		console.log(`Password Manager Server listening at https://localhost:${port}`);
+		log.info(`Password Manager Server listening at https://localhost:${port}`);
 	});
 
 } else {
 	app.listen(port, () => {
-		console.log(`Password Manager Server listening at http://localhost:${port}`);
+		log.info(`Password Manager Server listening at http://localhost:${port}`);
 	});
 }
 

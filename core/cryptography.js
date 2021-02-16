@@ -2,6 +2,7 @@
  * A simplified library of cryptography functions used for this app
  */
 const crypto = require('crypto');
+const log = require('loglevel');
 
 // For module.exports
 const cryptography = {};
@@ -24,8 +25,6 @@ cryptography.hash = (plaintext, salt) => {
 		hash: value
 	};
 };
-
-// TODO our ouput seems way too short to be storing all information, and causing decrypts to fail
 
 /**
  * @param {string} plaintext plaintext

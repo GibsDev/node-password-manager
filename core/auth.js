@@ -3,6 +3,7 @@
  */
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const log = require('loglevel');
 const express = require('express');
 const { JsonWebTokenError, TokenExpiredError } = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')();
@@ -41,15 +42,18 @@ auth.use(cookieParser);
 /**
  * Node for handing out JWT tokens
  */
-auth.post('/login', express.json(), (req, res) => {
-	console.log(`'${req.body.username}' is attempting to login`);
-	users.verify(req.body.username, req.body.password).then(() => {
+auth.post('/login', express.json(), async (req, res) => {
+	log.info(`'${req.body.username}' is attempting to login`);
+	try {
+		await users.verify(req.body.username, req.body.password);
 		giveFreshToken(req.body.username, res);
+		log.info(`'${req.body.username}' logged in`);
 		return res.send('Success');
-	}).catch((err) => {
-		console.log(err);
+	} catch (err) {
+		log.info(`'${req.body.username}' failed to login`);
+		log.debug(err);
 		return res.status(401).send('Invalid login');
-	});
+	}
 });
 
 /**
@@ -58,12 +62,12 @@ auth.post('/login', express.json(), (req, res) => {
 auth.get('/logout', (req, res) => {
 	try {
 		const username = validateToken(req.cookies[JWT_COOKIE_NAME]);
-		console.log(`'${username}' is logging out`);
+		log.info(`'${username}' logged out`);
 	} catch (err) {
-		console.log(err);
+		log.debug('Someone who was not logged in tried to logout');
+		log.debug(err);
 	}
-	res.clearCookie(JWT_COOKIE_NAME);
-	return res.redirect('/');
+	return res.clearCookie(JWT_COOKIE_NAME).redirect('/');
 });
 
 /**
@@ -73,10 +77,10 @@ auth.get('/logout', (req, res) => {
  * authorization for downstream request interpretters.
  */
 function authorize(req, res, next) {
-	console.log(`Authorizing: ${req.url}`);
+	log.debug(`Authorizing: ${req.url}`);
 
 	if (NO_AUTH) {
-		console.log(`Authorization disabled, req.user = 'noauth'`);
+		log.debug(`Authorization disabled, req.user = 'noauth'`);
 		req.user = AUTH_USERNAME;
 		return next();
 	}
@@ -87,7 +91,7 @@ function authorize(req, res, next) {
 	// Check JWT in the 'Authorization' header
 	const authorization = req.headers.authorization;
 	// 'Bearer <token>' (or undefined)
-	console.log(`Authorization header: ${authorization}`);
+	log.debug(`Authorization header: ${authorization}`);
 	if (authorization) {
 		const token = authorization.split(' ')[1];
 		// Check validity of token
@@ -111,7 +115,7 @@ function authorize(req, res, next) {
 			giveFreshToken(req.user, res);
 			return next();
 		} catch (err) {
-			console.log(err);
+			log.debug(err);
 			errorMessage = 'Cookie token error: ' + err.message;
 			// Remove invalid JWT from cookies;
 			res.clearCookie(JWT_COOKIE_NAME);
@@ -119,14 +123,14 @@ function authorize(req, res, next) {
 	}
 
 	if (req.accepts('html')) {
+		log.debug('Redirecting unauthorized request');
 		// req.url is relative to where this middlware function is intercepting
 		// req.originalUrl is the full path
 		// Set redirect for after login
 		let redirect = '?returnurl=' + encodeURIComponent(req.originalUrl);
 		return res.redirect('/login' + redirect);
 	} else {
-		res.status(401);
-		return res.send(errorMessage);
+		return res.status(401).send(errorMessage);
 	}
 }
 auth.use(authorize);
@@ -141,13 +145,13 @@ function validateToken(token) {
 	if (NO_AUTH) return AUTH_USERNAME;
 
 	try {
-		console.log(`Token: ${token}`);
+		log.trace(`Token: ${token}`);
 		const decoded = jwt.verify(token, PRIVATE_KEY);
-		console.log('Successfullly validated token: ', decoded);
+		log.trace('Successfullly validated token: ', decoded);
 		// Add the .user object to the req object for future request processors
 		return decoded.username;
 	} catch (err) {
-		console.log(err);
+		log.debug(err);
 		if (err instanceof JsonWebTokenError) {
 			throw new Error('Token invalid');
 		} else if (err instanceof TokenExpiredError) {

@@ -42,7 +42,9 @@ users.verify = (username, password) => {
 			const hashObj = cryptography.hash(password, dbobj.salt);
 			if (dbobj.password == hashObj.hash) resolve();
 			reject(new Error('Password hash did not match'));
-		}).catch(err => reject(err));
+		}).catch(err => {
+			reject(new Error(`User '${username}' does not exist`));
+		});
 	});
 };
 

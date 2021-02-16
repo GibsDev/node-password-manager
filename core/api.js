@@ -2,12 +2,13 @@ const express = require('express');
 const api = express.Router();
 const auth = require('./auth.js');
 const passwords = require('./passwords.js');
+const log = require('loglevel');
 
 /**
  * Middleare function to intercept every request made to the API node
  */
 function apiRequest(req, res, next) {
-	console.log(`API request: ${req.method} ${req.url}`);
+	log.debug(`API request: ${req.method} ${req.url}`);
 	next();
 }
 api.use(apiRequest);
@@ -43,20 +44,20 @@ api.get('/passwords', (req, res) => {
  */
 api.get('/passwords/:id', (req, res) => {
 	const key = req.headers['x-api-key'];
-	console.log(`key '${key}'`);
+	log.trace(`x-api-key: '${key}'`);
 	if (key !== undefined) {
 		if (key === '') {
-			console.log('Invalid key (empty string)');
+			log.info('Client tried to decrypt a password with empty string');
 			res.status(403).send('Invalid key (empty string)');
 		} 
-		console.log(`GET key '${key}' from /passwords/${req.params.id}`);
+		log.trace(`GET key '${key}' from /passwords/${req.params.id}`);
 		passwords.get(req.user, req.params.id, key).then(password => {
 			res.setHeader('Content-Type', 'application/json');
 			res.setHeader('Cache-Control', 'no-store');
 			return res.send(JSON.stringify(password));
 		}).catch(err => {
-			console.log(err);
-			console.log('Invalid key');
+			log.debug(err);
+			log.info('Client provided an invalid decryption key for password');
 			return res.status(403).send('Invalid key');
 		});
 	} else {
@@ -70,8 +71,8 @@ api.get('/passwords/:id', (req, res) => {
 			res.setHeader('Cache-Control', 'no-store');
 			return res.send(JSON.stringify(password, null, 4));
 		}).catch(err => {
-			console.log('Could not get password');
-			console.log(err);
+			log.debug('Could not get password');
+			log.debug(err);
 			return res.status(404).send('Could not get password');
 		});
 	}
@@ -81,7 +82,7 @@ api.get('/passwords/:id', (req, res) => {
  * Inserts a password into the manager
  */
 api.post('/passwords', express.json(), (req, res) => {
-	console.log(`'${req.user}' is attempting to insert a password`);
+	log.info(`'${req.user}' is attempting to insert a password`);
 	const passObj = req.body;
 	// In the case the incoming password uses 'username' instead of 'user'
 	if (passObj['username']) passObj.user = passObj['username'];
@@ -89,8 +90,11 @@ api.post('/passwords', express.json(), (req, res) => {
 	if (passObj['password']) passObj.pass = passObj['password'];
 	passObj.username = req.user;
 	passwords.put(passObj.username, passObj.name, passObj.user, passObj.pass, passObj.info, passObj.pinfo, passObj.key).then(() => {
+		log.info(`'${req.user}' inserted a password`);
 		return req.send('Password inserted');
 	}).catch(err => {
+		log.debug(`Password insertion for '${req.user}' failed`);
+		log.debug(err);
 		return res.send(err);
 	});
 });
@@ -99,12 +103,13 @@ api.post('/passwords', express.json(), (req, res) => {
  * Deletes a password
  */
 api.delete('/passwords/:id', express.json(), (req, res) => {
-	console.log(`'${req.user}' is attempting to delete a password '${req.params.id}'`);
+	log.info(`'${req.user}' is attempting to delete password '${req.params.id}'`);
 	passwords.delete(req.user, req.params.id).then(() => {
+		log.info(`'${req.user}' deleted password '${req.params.id}'`);
 		return res.status(200).end();
 	}).catch(err => {
-		console.log(err);
-		// TODO depending on error send back appropriate code
+		log.info(`'${req.user}' failed to deleted password '${req.params.id}'`);
+		log.debug(err);
 		return res.status(404).send('Password does not exist');
 	});
 });

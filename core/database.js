@@ -2,6 +2,7 @@ const jsonfile = require('jsonfile');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+const log = require('loglevel');
 
 const databaseDir = '../database';
 
@@ -21,8 +22,8 @@ database.put = (node, key, object) => {
 		const filepath = path.parse(file);
 		const dir = filepath.dir;
 
-		console.log(`Put '${key}' in ${file} as:`);
-		console.log(object);
+		log.trace(`Put '${key}' in ${file} as:`);
+		log.trace(object);
 
 		const stat = util.promisify(fs.stat);
 		const mkdir = util.promisify(fs.mkdir);
@@ -64,9 +65,9 @@ database.get = (node, key) => {
 		if (!key) reject(new Error('Node undefined'));
 		if (!key) reject(new Error('Key undefined'));
 		const file = path.resolve(__dirname, databaseDir, node + '.json');
-		console.log(`Get '${key}' from ${file}:`);
+		log.trace(`Get '${key}' from ${file}:`);
 		jsonfile.readFile(file).then(fileobj => {
-			console.log(fileobj[key]);
+			log.trace(fileobj[key]);
 			resolve(fileobj[key]);
 		}).catch(err => reject(err));
 	});
@@ -80,7 +81,7 @@ database.get = (node, key) => {
 database.getNode = (node) => {
 	return new Promise((resolve, reject) => {
 		const file = path.resolve(__dirname, databaseDir, node + '.json');
-		console.log(`Get all from ${file}:`);
+		log.trace(`Get all from ${file}:`);
 		jsonfile.readFile(file).then(fileobj => {
 			resolve(fileobj);
 		}).catch(err => reject(err));
@@ -121,7 +122,7 @@ database.keyExists = (node, key) => {
  * @param {string} key the key that should be deleted
  */
 database.delete = (node, key) => {
-	console.log(`node: ${node}, key: ${key}`);
+	log.trace(`node: ${node}, key: ${key}`);
 	return new Promise(async (resolve, reject) => {
 		try {
 			await database.keyExists(node, key);
