@@ -59,7 +59,7 @@ const PasswordField = ({ className, style, label, value, hidden }) => {
 			<div className='input-group-prepend'>
 				<Pressable onPress={copy}>
 					<button className={'input-group-text btn ' + copyButtonStyle}>
-						{(hidden) ? label : currentLabel}
+						{(hidden) ? label : currentLabel}&nbsp;<i className="bi-clipboard" style={{marginTop:'-4px'}}></i>
 					</button>
 				</Pressable>
 			</div>
