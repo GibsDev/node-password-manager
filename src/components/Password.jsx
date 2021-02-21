@@ -156,7 +156,7 @@ const Password = ({ className, style, password, onDelete, onTagSelected }) => {
 
 	const getPasswordFields = () => {
 		let info = passwordObject.info;
-		if (info instanceof Object && info.summary) {
+		if (typeof info.summary === 'string') {
 			info = info.summary;
 		}
 		if (passwordObject.password) {
