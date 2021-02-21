@@ -28,8 +28,8 @@ const PasswordList = ({ className, style, passwords, query }) => {
 		setPasswords(newPasswords);
 	};
 
-	const _onTagSelected = tag => {
-		setFilter(tag);
+	const _filterByTag = tag => {
+		setFilter('tag:' + tag);
 	};
 
 	const getPasswordComponents = () => {
@@ -62,7 +62,7 @@ const PasswordList = ({ className, style, passwords, query }) => {
 				key={password.name}
 				onDelete={_onPasswordDeleted}
 				password={password}
-				onTagSelected={_onTagSelected} />;
+				onTagSelected={_filterByTag} />;
 		});
 	};
 
@@ -88,7 +88,7 @@ const PasswordList = ({ className, style, passwords, query }) => {
 		}
 		const tagNames = Object.keys(tagDictionary);
 		const tagComps = tagNames.map(tag => {
-			return <button key={tag} className='btn badge badge-pill badge-primary mr-2 mb-2' onClick={() => {setFilter(tag);}}>{tag}</button>;
+			return <button key={tag} className='btn badge badge-pill badge-primary mr-2 mb-2' onClick={() => {_filterByTag(tag);}}>{tag}</button>;
 		});
 		if (tagComps.length == 0) return;
 		return (
