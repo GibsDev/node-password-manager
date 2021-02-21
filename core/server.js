@@ -96,9 +96,14 @@ app.get('/logout', (req, res) => {
 });
 
 /**
- * Servers static content at the root node (/)
+ * Serves static content at the root node (/)
  */
 app.use(express.static(path.resolve(__dirname, '../public')));
+
+/**
+ * Serves bootstrap icons 
+ */
+app.use('/icons', express.static(path.resolve(__dirname, '../node_modules/bootstrap-icons/icons')));
 
 /**
  * Start the server

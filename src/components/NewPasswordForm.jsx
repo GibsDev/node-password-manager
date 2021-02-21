@@ -150,8 +150,8 @@ const NewPasswordForm = ({ className, style }) => {
 							<Pressable
 								onPress={() => { setUsernameHidden(false); }}
 								onRelease={() => { setUsernameHidden(true); }}>
-								<label className='input-group-text unselectable' htmlFor='username' >
-									Username
+								<label className='input-group-text unselectable' htmlFor='username' style={{cursor: 'pointer'}} >
+									Username&nbsp;<i className="bi-eye"></i>
 								</label>
 							</Pressable>
 						</div>
@@ -168,8 +168,8 @@ const NewPasswordForm = ({ className, style }) => {
 							<Pressable
 								onPress={() => { setPasswordHidden(false); }}
 								onRelease={() => { setPasswordHidden(true); }}>
-								<label className='input-group-text unselectable' htmlFor='password' >
-									Password
+								<label className='input-group-text unselectable' htmlFor='password' style={{cursor: 'pointer'}} >
+									Password&nbsp;<i className="bi-eye"></i>
 								</label>
 							</Pressable>
 						</div>
@@ -214,8 +214,8 @@ const NewPasswordForm = ({ className, style }) => {
 							<Pressable
 								onPress={() => { setPinfoHidden(false); }}
 								onRelease={() => { setPinfoHidden(true); }}>
-								<label className='input-group-text unselectable' htmlFor='private-info' >
-									Private info
+								<label className='input-group-text unselectable' htmlFor='private-info' style={{cursor: 'pointer'}} >
+									Private info&nbsp;<i className="bi-eye"></i>
 								</label>
 							</Pressable>
 						</div>
@@ -233,8 +233,8 @@ const NewPasswordForm = ({ className, style }) => {
 							<Pressable
 								onPress={() => { setKeyHidden(false); }}
 								onRelease={() => { setKeyHidden(true); }}>
-								<label className='input-group-text unselectable' htmlFor='key' >
-									Key
+								<label className='input-group-text unselectable' htmlFor='key' style={{cursor: 'pointer'}} >
+									Key&nbsp;<i className="bi-eye"></i>
 								</label>
 							</Pressable>
 						</div>
