@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import TextField from './TextField.jsx';
 import { useEffect, useState } from 'react';
 import { get, ajax } from 'jquery';
+import Pressable from './Pressable.jsx';
 
 /**
  * Form for inserting a new password
@@ -20,6 +21,11 @@ const NewPasswordForm = ({ className, style }) => {
 	const [tags, setTags] = useState('');
 	const [pinfo, setPinfo] = useState('');
 	const [key, setKey] = useState('');
+
+	const [usernameHidden, setUsernameHidden] = useState(true);
+	const [passwordHidden, setPasswordHidden] = useState(true);
+	const [pinfoHidden, setPinfoHidden] = useState(true);
+	const [keyHidden, setKeyHidden] = useState(true);
 
 	useEffect(() => {
 		setInsertConfirm(false);
@@ -127,7 +133,7 @@ const NewPasswordForm = ({ className, style }) => {
 				<form onSubmit={submit} >
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
-							<label className='input-group-text' htmlFor='name' >
+							<label className='input-group-text unselectable' htmlFor='name' >
 								Name
 							</label>
 						</div>
@@ -141,35 +147,43 @@ const NewPasswordForm = ({ className, style }) => {
 					</div>
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
-							<label className='input-group-text' htmlFor='username' >
-								Username
-							</label>
+							<Pressable
+								onPress={() => { setUsernameHidden(false); }}
+								onRelease={() => { setUsernameHidden(true); }}>
+								<label className='input-group-text unselectable' htmlFor='username' >
+									Username
+								</label>
+							</Pressable>
 						</div>
 						<TextField
 							className='form-control'
 							inputId='username'
 							name='username'
-							isSecret
+							isSecret={usernameHidden}
 							value={username}
 							onChange={setUsername} />
 					</div>
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
-							<label className='input-group-text' htmlFor='password' >
-								Password
-							</label>
+							<Pressable
+								onPress={() => { setPasswordHidden(false); }}
+								onRelease={() => { setPasswordHidden(true); }}>
+								<label className='input-group-text unselectable' htmlFor='password' >
+									Password
+								</label>
+							</Pressable>
 						</div>
 						<TextField
 							className='form-control'
 							inputId='password'
 							name='password'
-							isSecret
+							isSecret={passwordHidden}
 							value={password}
 							onChange={setPassword} />
 					</div>
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
-							<label className='input-group-text' htmlFor='info' >
+							<label className='input-group-text unselectable' htmlFor='info' >
 								Info
 							</label>
 						</div>
@@ -183,7 +197,7 @@ const NewPasswordForm = ({ className, style }) => {
 					</div>
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
-							<label className='input-group-text' htmlFor='tags' >
+							<label className='input-group-text unselectable' htmlFor='tags' >
 								Tags
 							</label>
 						</div>
@@ -197,30 +211,38 @@ const NewPasswordForm = ({ className, style }) => {
 					</div>
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
-							<label className='input-group-text' htmlFor='private-info' >
-								Private info
-							</label>
+							<Pressable
+								onPress={() => { setPinfoHidden(false); }}
+								onRelease={() => { setPinfoHidden(true); }}>
+								<label className='input-group-text unselectable' htmlFor='private-info' >
+									Private info
+								</label>
+							</Pressable>
 						</div>
 						<TextField
 							className='form-control'
 							inputId='private-info'
 							name='private-info'
-							isSecret
+							isSecret={pinfoHidden}
 							value={pinfo}
 							placeholder='Info visible when unlocked'
 							onChange={setPinfo} />
 					</div>
 					<div className='input-group mt-1'>
 						<div className='input-group-prepend'>
-							<label className='input-group-text' htmlFor='key' >
-								Key
-							</label>
+							<Pressable
+								onPress={() => { setKeyHidden(false); }}
+								onRelease={() => { setKeyHidden(true); }}>
+								<label className='input-group-text unselectable' htmlFor='key' >
+									Key
+								</label>
+							</Pressable>
 						</div>
 						<TextField
 							className='form-control'
 							inputId='key'
 							name='key'
-							isSecret
+							isSecret={keyHidden}
 							value={key}
 							placeholder='Key for decrypting'
 							onChange={setKey} />
