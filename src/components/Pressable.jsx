@@ -22,7 +22,9 @@ const Pressable = ({ onPress, onRelease, onClick, children, component }) => {
 	const onReleaseEvent = () => { if (onRelease) onRelease(); };
 
 	// Called called for every event that could make isPressed > true
-	const press = () => {
+	const press = e => {
+		// Left click only for mouse
+		if (e.button && e.button != 0) return;
 		if (!isPressed) {
 			setPressed(true);
 			onPressEvent();
@@ -30,7 +32,9 @@ const Pressable = ({ onPress, onRelease, onClick, children, component }) => {
 	};
 
 	// Called called for every event that could make isPressed > false
-	const release = () => {
+	const release = e => {
+		// Left click only for mouse
+		if (e.button && e.button != 0) return;
 		if (isPressed) {
 			setPressed(false);
 			onReleaseEvent();
