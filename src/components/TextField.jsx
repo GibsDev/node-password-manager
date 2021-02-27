@@ -19,6 +19,9 @@ import { htmlId, nextId } from '../utils/id';
  */
 const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, rawInput, onChange, id, hiddenHoverText, placeholder }, ref) => {
 
+
+	const [currentId, setId] = useState((id) ? htmlId(id) : nextId());
+
 	// The actual current value of the field
 	const [currentValue, setValue] = useState(value);
 	const [prevValue, setPrevValue] = useState(value);
@@ -27,7 +30,6 @@ const TextField = forwardRef(({ className, style, props, value, hideText, readOn
 	const [isPressed, setPressed] = useState(false);
 	const [isHovered, setHovered] = useState(false);
 
-	const computedId = (id) ? htmlId(id) : nextId();
 	const isReadOnly = hideText || readOnly;
 
 	// Calculates what the view should be
@@ -94,8 +96,8 @@ const TextField = forwardRef(({ className, style, props, value, hideText, readOn
 			className={cn}
 			style={style}
 			type={type}
-			id={computedId}
-			name={computedId}
+			id={currentId}
+			name={currentId}
 			readOnly={isReadOnly}
 			onChange={_onChange}
 			value={view}
