@@ -1,0 +1,18 @@
+{
+	"_comment": "The default config for the password manager. If you would like to use your own values, please copy this file and call it 'config.json' in the same directory(root). You only need to include the fields you would like to override.",
+	"token_time": 300000,
+	"two_factor_auth": {
+		"enabled": false,
+		"expiration_time": 120000,
+		"email_name": "Password Manager Authenticator",
+		"nodemail_transporter": {
+			"host": "",
+			"port": "465",
+			"secure": true,
+			"auth": {
+				"user": "id@example.com",
+				"pass": ""
+			}
+		}
+	}
+}

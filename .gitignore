@@ -2,3 +2,4 @@ test.js
 database/
 node_modules/
 public/dist-dev/
+config.json

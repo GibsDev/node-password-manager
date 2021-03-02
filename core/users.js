@@ -48,4 +48,28 @@ users.verify = (username, password) => {
 	});
 };
 
+/**
+ * Check if the user has two factor authentication email set
+ * @param {string} username
+ * @returns {Promise<boolean>} if the user has 2fa email
+ */
+users.hasTwoFactorEnabled = async (username) => {
+	return Boolean(await users.getTwoFactorEmail(username));
+};
+
+/**
+ * Get the users two factor authentication email address
+ * @param {string} username
+ * @returns {Promise<string|undefined>} the users two factor authentication email or undefined
+ */
+users.getTwoFactorEmail = (username) => {
+	return new Promise((resolve, reject) => {
+		database.get(users_db, username).then(dbobj => {
+			return resolve(dbobj.two_factor_email);
+		}).catch(err => {
+			reject(new Error(`User '${username}' does not exist`));
+		});
+	});
+};
+
 module.exports = users;
