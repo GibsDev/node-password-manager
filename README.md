@@ -11,6 +11,47 @@ The latest version should already be built and commited to the repository, but t
 - Open your web browser to `localhost:30000`
 - Access your password
 
+## Configuration
+
+Configurations beyond command line arguments are specified in the `config.json` file. This file needs to be created by the deployer of the password manager (if they wish to change configurable behaviors). The `config.json` file does not exist in the default project structure because it is specified in the `.gitignore`. To create the `config.json` file you can just copy the `default-config.json` file and rename it. But it is important to note that you do not need to include all of the values from the `default-config.json`. Any properties that are not specified in `config.json` will be inherited from `default-config.json`. Any property values that are specified in `config.json` will override corrosponding values from `default-config.json`.
+
+## Two Factor Authentication
+
+To enable two factor authentication you must override the following fields in `config.json`:
+
+```
+{
+	"two_factor_auth": {
+		"enabled": true,
+		"nodemail_transporter": {
+			"host": "<example.com>",
+			"auth": {
+				"user": "<email>",
+				"pass": "<password>"
+			}
+		}
+	}
+}
+```
+
+You may also need to specify `two_factor_auth.nodemail_transporter.port` and `two_factor_auth.nodemail_transporter.secure` fields depending on your usage. The `two_factor_auth.nodemail_transporter` is the object used directly inside the code for creating a `nodemailer` `transporter`. So you can refer to [Nodemailer's website](https://nodemailer.com/about/) for more information on those options.
+
+You will also need to specify an email for each user that will use two factor authentication in the `database/users.json` by adding the `two_factor_email` field:
+
+```
+{
+    "<user>": {
+        "password": "...",
+        "salt": "...",
+        "two_factor_email": "<email@example.com>"
+    },
+}
+```
+
+Currently the only way to do this is to manually edit the `database/users.json` file.
+
+When two factor authentication is enabled, users will be sent an authentication code to the specified email and they will need to enter it to login. Originally this project intended on keeping the rest API open to clients other than web browsers, but accounts with two factor authentication can currently only be logged in using a browser (or a client that can track http cookies).
+
 ## Development
 
 To begin modifying code yourself, start the server in development mode:
