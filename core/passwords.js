@@ -1,6 +1,9 @@
 const database = require('./database.js');
 const cryptography = require('./cryptography.js');
 const log = require('loglevel');
+const crypto = require('crypto');
+require('./array-utils.js');
+require('./string-utils.js');
 
 const passwords_db = 'passwords'; // Directory node
 
@@ -110,6 +113,111 @@ passwords.delete = (user, passwordname) => {
 			.then(resolve)
 			.catch(err => reject(err));
 	});
+};
+
+passwords.utils = {};
+
+const LOWERCASE = 'abcdefghijklmnopqrstuvwxyz';
+const UPPERCASE = LOWERCASE.toUpperCase();
+const NUMBERS = '0123456789';
+// In ASCII order (no space)
+const SYMBOLS = '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~';
+// (no space)
+const ALL_CHARACTERS = LOWERCASE + UPPERCASE + NUMBERS + SYMBOLS;
+// Characters that could potentially mess up poorly written software
+const AMBIGUOUS_CHARACTERS = '{}[]()/\\\'"`~,;:.<>';
+
+/**
+ * Helper function for passwords.utils.generateWithOptions. Ensures the password complies with the given requirement.
+ * @param {string} password the base password to modify
+ * @param {Array<Number>} indexes a shuffled queue of remaining modifiable character indexes in the password
+ * @param {string} pool the password specific pool of characters
+ * @param {string} categoryPool the pool of all characters in this category
+ * @param {string} optionName the name of the option for the error message eg forceSymbol for options.forceSymbol
+ * @param {string} optionType the type of the forced character for the error message
+ */
+function forceOption(password, indexes, pool, categoryPool, optionName, optionType) {
+	// Get the symbols from the pool
+	const forcePool = pool.intersect(categoryPool);
+	// Make sure that we have the characters needed for this rule
+	if (forcePool.length == 0) {
+		throw new Error(`options.${optionName} is true, but there are no ${optionType} characters in the pool`);
+	}
+	// Get the next random modifiable index
+	const forceIndex = indexes.pop();
+	// Check if we have run out of indexes to modify
+	if (forceIndex === undefined) {
+		throw new Error('password is too short to meet specified requirements');
+	}
+	// Make sure we dont call crypto.randomInt(0);
+	const poolIndex = (forcePool.length > 1) ? crypto.randomInt(forcePool.length - 1) : 0;
+	// Replace the character at the index from the pool
+	return password.replaceAt(forceIndex, forcePool[poolIndex]);
+}
+
+/**
+ * Generates a password with the given contraints
+ * @param {Number} length amount of characters
+ * @param {Object} options boolean options for password generation
+ * @param {boolean} options.lowercase include lowercase
+ * @param {boolean} options.uppercase include uppercase
+ * @param {boolean} options.numbers include numbers
+ * @param {boolean} options.symbols include special character
+ * @param {boolean} options.space include the space character
+ * @param {boolean} options.ambiguous include the ambiguous characters
+ * @param {boolean} options.forceSymbol force at least one special character
+ * @param {boolean} options.forceNumber force at least one number
+ * @param {boolean} options.forceUpperLower force at least one upper and lower
+ * @param {string} custom characters to be included in the pool
+ * @returns {string} generated password
+ */
+passwords.utils.generateWithOptions = (length = 16, { lowercase = true, uppercase = true, numbers = true, symbols = true, space = false, ambiguous = false, forceSymbol = false, forceNumber = false, forceUpperLower = false } = {}, custom = '') => {
+	let pool = '';
+
+	// Build the pool of characters
+	if (lowercase) pool += LOWERCASE;
+	if (uppercase) pool += UPPERCASE;
+	if (numbers) pool += NUMBERS;
+	if (symbols) pool += SYMBOLS;
+	if (space) pool += ' ';
+	if (!ambiguous) pool = pool.difference(AMBIGUOUS_CHARACTERS);
+	pool += custom;
+	// Remove duplicate character bias
+	pool = pool.unique();
+
+	// Generate a base password
+	let password = passwords.utils.generate(length, pool);
+
+	// Modify password to meet requirements
+	// Generate indexes for making modifications
+	let indexes = Array.from(Array(password.length).keys()).shuffle();
+	if (forceSymbol === true) {
+		password = forceOption(password, indexes, pool, SYMBOLS, 'forceSymbol', 'symbol');
+	}
+	if (forceNumber === true) {
+		password = forceOption(password, indexes, pool, NUMBERS, 'forceNumber', 'number');
+	}
+	if (forceUpperLower === true) {
+		password = forceOption(password, indexes, pool, LOWERCASE, 'forceUpperLower', 'lower case');
+		password = forceOption(password, indexes, pool, UPPERCASE, 'forceUpperLower', 'upper case');
+	}
+
+	return password;
+};
+
+/**
+ * Generates a random password with the given length and character pool.
+ * This function DOES NOT check for duplicate characters in characterPool. Multiple of the same character will increase the liklihood of appearing in password.
+ * @param {Number} length length of the password
+ * @param {string} characterPool pool of characters to use for generating the password
+ */
+passwords.utils.generate = (length = 16, characterPool = ALL_CHARACTERS) => {
+	let password = '';
+	for (let i = 0; i < length; i++) {
+		const poolIndex = crypto.randomInt(characterPool.length - 1);
+		password += characterPool[poolIndex];
+	}
+	return password;
 };
 
 module.exports = passwords;
