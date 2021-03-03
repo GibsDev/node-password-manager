@@ -157,8 +157,8 @@ function forceOption(password, indexes, pool, categoryPool, optionName, optionTy
 
 /**
  * Generates a password with the given contraints
- * @param {Number} length amount of characters
  * @param {Object} options boolean options for password generation
+ * @param {Number} options.length amount of characters
  * @param {boolean} options.lowercase include lowercase
  * @param {boolean} options.uppercase include uppercase
  * @param {boolean} options.numbers include numbers
@@ -168,10 +168,10 @@ function forceOption(password, indexes, pool, categoryPool, optionName, optionTy
  * @param {boolean} options.forceSymbol force at least one special character
  * @param {boolean} options.forceNumber force at least one number
  * @param {boolean} options.forceUpperLower force at least one upper and lower
- * @param {string} custom characters to be included in the pool
+ * @param {string} options.custom characters to be included in the pool
  * @returns {string} generated password
  */
-passwords.utils.generateWithOptions = (length = 16, { lowercase = true, uppercase = true, numbers = true, symbols = true, space = false, ambiguous = false, forceSymbol = false, forceNumber = false, forceUpperLower = false } = {}, custom = '') => {
+passwords.utils.generateWithOptions = ({ length = 16, lowercase = true, uppercase = true, numbers = true, symbols = true, space = false, ambiguous = false, forceSymbol = false, forceNumber = false, forceUpperLower = false, custom = '' } = {}) => {
 	let pool = '';
 
 	// Build the pool of characters
