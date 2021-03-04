@@ -89,9 +89,14 @@ api.post('/passwords', express.json(), (req, res) => {
 	// In the case the incoming password uses 'password' instead of 'pass'
 	if (passObj['password']) passObj.pass = passObj['password'];
 	passObj.username = req.user;
-	passwords.put(passObj.username, passObj.name, passObj.user, passObj.pass, passObj.info, passObj.pinfo, passObj.key).then(() => {
+	let password = passObj.pass;
+	// Password is an options object
+	if (typeof password === 'object') {
+		password = passwords.utils.generateWithOptions(password);
+	}
+	passwords.put(passObj.username, passObj.name, passObj.user, password, passObj.info, passObj.pinfo, passObj.key).then(() => {
 		log.info(`'${req.user}' inserted a password`);
-		return req.send('Password inserted');
+		return res.send('Password inserted');
 	}).catch(err => {
 		log.debug(`Password insertion for '${req.user}' failed`);
 		log.debug(err);

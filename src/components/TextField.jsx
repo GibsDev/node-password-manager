@@ -17,7 +17,7 @@ import { htmlId, nextId } from '../utils/id';
  * @param {function} props.onChange Callback to the current value
  * @param {string} props.id Sets the placeholder property on the input tag
  */
-const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, rawInput, onChange, id, hiddenHoverText, placeholder }, ref) => {
+const TextField = forwardRef(({ className, style, props, value, hideText, readOnly, isPassword, isSecret, rawInput, onChange, id, hiddenHoverText, placeholder, disabled }, ref) => {
 
 
 	const [currentId, setId] = useState((id) ? htmlId(id) : nextId());
@@ -101,6 +101,7 @@ const TextField = forwardRef(({ className, style, props, value, hideText, readOn
 			readOnly={isReadOnly}
 			onChange={_onChange}
 			value={view}
+			disabled={disabled}
 			onMouseOver={_onMouseOver}
 			onMouseOut={_onMouseOut}
 			placeholder={placeholder}
@@ -136,6 +137,7 @@ TextField.propTypes = {
 	hiddenHoverText: PropTypes.string,
 	onChange: PropTypes.func,
 	placeholder: PropTypes.string,
+	disabled: PropTypes.bool,
 	id: (props, propName, componentName) => {
 		if (props[propName]) {
 			const id = props[propName];
