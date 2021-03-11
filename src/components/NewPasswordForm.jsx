@@ -119,10 +119,8 @@ const NewPasswordForm = ({ className, style }) => {
 		get(`/api/passwords/${passwordObj.name}`).promise().then(() => {
 			console.log('Password already exists, are you sure?');
 			setInsertConfirm(true);
-		}).catch((a, b, c) => {
-			console.log(a);
-			console.log(b);
-			console.log(c);
+		}).catch((jqXHR, textStatus, errorThrown) => {
+			submitPasswordToAPI();
 		});
 	};
 
