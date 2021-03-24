@@ -1,6 +1,14 @@
 const USE_HTTPS = process.argv.includes('--https');
 const IS_DEVELOPMENT = process.env.NODE_ENV === 'development';
 
+const selfsigned = require('selfsigned');
+const attrs = [{ name: 'commonName', value: 'GibsDev Password Manager' }];
+const pems = selfsigned.generate(attrs, {
+	keySize: 2048, // the size for the private key in bits (default: 1024)
+	days: 365, // how long till expiry of the signed certificate (default: 365)
+	algorithm: 'sha256', // sign the certificate with specified algorithm (default: 'sha1')
+});
+
 // Logging
 const log = require('loglevel');
 if (IS_DEVELOPMENT) {
@@ -112,9 +120,10 @@ if (USE_HTTPS) {
 	const https = require('https');
 
 	const options = {
-		key: fs.readFileSync('./server.key'),
-		cert: fs.readFileSync('./server.cert')
+		key: pems.private,
+		cert: pems.cert
 	};
+
 	https.createServer(options, app).listen(port, () => {
 		log.info(`Password Manager Server listening at https://localhost:${port}`);
 	});

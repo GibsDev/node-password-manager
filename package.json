@@ -22,7 +22,8 @@
 		"loglevel": "^1.7.1",
 		"nodemailer": "^6.5.0",
 		"pm2": "^4.5.5",
-		"prompt": "^1.1.0"
+		"prompt": "^1.1.0",
+		"selfsigned": "^1.10.8"
 	},
 	"devDependencies": {
 		"@babel/cli": "^7.13.10",
