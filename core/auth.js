@@ -143,7 +143,7 @@ auth.post('/login', express.json(), async (req, res) => {
 			// User has 2FA enabled
 			log.info(`'${username}' started two factor authentication`);
 			// Generate code
-			const code = crypto.randomInt(100000, 999999);
+			const code = crypto.randomInt(10000, 99999);
 			// Set the token on the client
 			giveTwoFactorToken(username, code, res);
 			// Email the code to the configured email
