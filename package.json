@@ -7,9 +7,7 @@
 		"build": "npx webpack",
 		"start:dev": "node start-dev.js",
 		"start:dev:noauth": "npm run start:dev -- --noauth",
-		"start": "pm2 start ./core/server.js -- --https",
-		"stop": "pm2 stop server && pm2 delete server",
-		"monitor": "pm2 monit"
+		"start": "node ./core/server.js"
 	},
 	"author": "GibsDev",
 	"license": "MIT",
