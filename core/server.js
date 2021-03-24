@@ -20,7 +20,7 @@ const path = require('path');
 const fs = require('fs');
 const { promisify } = require('util');
 const readFileAsync = promisify(fs.readFile);
-const port = 30000;
+const port = (USE_HTTPS) ? 443 : 80;
 
 /**
  * A middleware function for inspecting every request to the server
